@@ -189,6 +189,7 @@
                 <h1 class="text-3xl font-bold mb-2 masonic-font text-slate-900 uppercase tracking-widest">Le Quizz Maçonnique</h1>
                 <p class="text-slate-600 mb-4 italic">Quizz d'Instruction - 1er Degré REAA</p>
             </div>
+            <p id="masonic-date-today" class="text-slate-600 italic mb-4"></p>
             <div id="global-progress-container" class="mb-6">
                 <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                     <div id="global-progress-bar" class="h-full bg-slate-700 transition-all" style="width:0%"></div>
@@ -211,6 +212,21 @@
                     <span class="stone-ic">🗝️📖</span>
                     <span>Mémento Tuilage</span>
                     <span class="memento-sub">LECTURE</span>
+                </button>
+                <button onclick="openThemeEmpty('Philosophie')" class="stone-btn p-4 rounded-lg">
+                    <span class="stone-ic">📚</span>
+                    <span>Philosophie</span>
+                    <span class="memento-sub">BIENTÔT</span>
+                </button>
+                <button onclick="openThemeEmpty('Alchimie')" class="stone-btn p-4 rounded-lg">
+                    <span class="stone-ic">⚗️</span>
+                    <span>Alchimie</span>
+                    <span class="memento-sub">BIENTÔT</span>
+                </button>
+                <button onclick="openThemeEmpty('Francs-Maçons célèbres')" class="stone-btn p-4 rounded-lg">
+                    <span class="stone-ic">👤</span>
+                    <span>Francs-Maçons célèbres</span>
+                    <span class="memento-sub">BIENTÔT</span>
                 </button>
             </div>
             <button onclick="openCompagnonGate()" class="stone-btn p-4 rounded-lg mt-3 w-full compagnon-btn">
@@ -262,6 +278,12 @@
             <h2 class="text-2xl font-bold mb-2 masonic-font text-slate-900 uppercase tracking-widest">Grade de Maître</h2>
             <p class="text-slate-600 mb-6 italic">Le contenu de ce grade est en cours de taille. Reviens bientôt, mon Frère.</p>
             <button onclick="quitMaitreEmpty()" class="stone-btn p-4 rounded-lg w-full max-w-xs mx-auto">Retour au parvis</button>
+        </div>
+
+        <div id="theme-empty-screen" class="hidden text-center">
+            <h2 id="theme-empty-title" class="text-2xl font-bold mb-2 masonic-font text-slate-900 uppercase tracking-widest"></h2>
+            <p class="text-slate-600 mb-6 italic">Ce thème est en cours de taille. Reviens bientôt, mon Frère.</p>
+            <button onclick="quitThemeEmpty()" class="stone-btn p-4 rounded-lg w-full max-w-xs mx-auto">Retour au parvis</button>
         </div>
 
         <div id="quiz-screen" class="hidden flex flex-col min-h-[400px]">
@@ -517,6 +539,7 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
         function retourAccueil() {
             switchScreen(['result-screen'], 'welcome-screen');
             renderThemeStats();
+            displayMasonicDateToday();
         }
         let currentTheme = '';
         let wrongAnswers = [];
@@ -695,6 +718,7 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
             const welcome = document.getElementById('welcome-screen');
             logVisit();
             renderThemeStats();
+            displayMasonicDateToday();
             welcome.classList.remove('hidden');
             // Menu inerte tant que le fondu n'est pas termine : evite les clics par erreur
             welcome.style.pointerEvents = 'none';
@@ -778,6 +802,38 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
         }
         function quitMaitreEmpty() {
             switchScreen(['maitre-empty-screen'], 'welcome-screen');
+        }
+
+        // --- Thèmes en attente de contenu (Philosophie, Alchimie, Francs-Maçons célèbres...) ---
+        // Générique : dès qu'un thème reçoit ses vraies questions dans allQuestions, remplacer
+        // son onclick par startQuiz('nom du thème') comme pour les autres thèmes, et supprimer
+        // son passage par cet écran d'attente.
+        function openThemeEmpty(themeName) {
+            document.getElementById('theme-empty-title').textContent = themeName;
+            switchScreen(['welcome-screen'], 'theme-empty-screen');
+        }
+        function quitThemeEmpty() {
+            switchScreen(['theme-empty-screen'], 'welcome-screen');
+        }
+
+        // Affiche la date du jour au calendrier de la Vraie Lumière (règle des loges bleues REAA :
+        // année maçonnique = année civile + 4000, débutant le 1er mars ; mois comptés par quantième).
+        function displayMasonicDateToday() {
+            const el = document.getElementById('masonic-date-today');
+            if (!el) return;
+            const today = new Date();
+            const day = today.getDate();
+            const month0 = today.getMonth(); // 0=janvier...11=décembre
+            const year = today.getFullYear();
+
+            const masonicMonth = ((month0 - 2 + 12) % 12) + 1;
+            const masonicYear = (month0 <= 1) ? year + 4000 - 1 : year + 4000;
+
+            const ordinals = ['1ᵉʳ', '2ᵉ', '3ᵉ', '4ᵉ', '5ᵉ', '6ᵉ', '7ᵉ', '8ᵉ', '9ᵉ', '10ᵉ', '11ᵉ', '12ᵉ'];
+            const gregMonthNames = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+            const ordinalJour = (n) => n === 1 ? '1ᵉʳ' : n + 'ᵉ';
+
+            el.textContent = `Nous sommes le ${ordinalJour(day)} jour du ${ordinals[masonicMonth - 1]} mois de l'An de la Vraie Lumière ${masonicYear}, soit le ${day} ${gregMonthNames[month0]} ${year} de l'ère vulgaire.`;
         }
 
         function switchScreen(hideIds, showId) {
