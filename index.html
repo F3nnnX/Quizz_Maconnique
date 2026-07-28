@@ -572,17 +572,18 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
             } catch (err) {}
         }
 
-        // Envoie la liste anonymisée des identifiants de questions ratées lors de cette session (aucune info sur le frère lui-même),
-        // pour permettre d'identifier, agrégé sur tous les utilisateurs, les questions à durcir en priorité.
-        function logErreurs(theme, questionIds) {
+        // Envoie le détail des questions ratées lors de cette session (question, bonne réponse, réponse donnée),
+        // pour permettre d'identifier, agrégé sur tous les utilisateurs, les questions à durcir en priorité
+        // ou les pièges qui trompent trop souvent.
+        function logErreurs(theme, erreurs) {
             if (!GAS_URL || GAS_URL.includes('COLLE_TON_ID_ICI')) return; // pas encore configuré
-            if (!questionIds || questionIds.length === 0) return;
+            if (!erreurs || erreurs.length === 0) return;
             try {
                 fetch(GAS_URL, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ type: 'erreurs', date: new Date().toISOString(), theme: theme, questionIds: questionIds, token: ANALYTICS_TOKEN })
+                    body: JSON.stringify({ type: 'erreurs', date: new Date().toISOString(), theme: theme, erreurs: erreurs, token: ANALYTICS_TOKEN })
                 }).catch(() => {});
             } catch (err) {}
         }
@@ -1148,7 +1149,10 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
                 document.getElementById('feedback-text').className = 'text-sm mt-1 text-green-800';
                 document.getElementById('feedback-title').textContent = "Juste !";
             } else {
-                colorRow(container.querySelector('.selected'), 'bg-red-500');
+                const selectedRow = container.querySelector('.selected');
+                const selectedSpans = selectedRow ? selectedRow.querySelectorAll('span') : null;
+                const selectedText = selectedSpans && selectedSpans[1] ? selectedSpans[1].textContent.trim() : '';
+                colorRow(selectedRow, 'bg-red-500');
                 container.querySelectorAll('.option-row').forEach((row) => {
                     if (row.dataset.isCorrect === 'true') colorRow(row, 'bg-green-500');
                 });
@@ -1161,6 +1165,7 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
                 wrongAnswers.push({
                     question: q.question,
                     correctText: correctOption ? correctOption.text : '',
+                    selectedText: selectedText,
                     explanation: q.explanation,
                     fullQuestion: q
                 });
@@ -1194,7 +1199,13 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
             document.getElementById('final-score-total').textContent = currentQuestions.length;
             logResult(currentTheme, score, currentQuestions.length);
             recordThemeResult(currentTheme, score, currentQuestions.length);
-            logErreurs(currentTheme, wrongAnswers.map(w => w.fullQuestion && w.fullQuestion.id).filter(Boolean));
+            const erreursDetail = wrongAnswers.map(w => ({
+                id: w.fullQuestion && w.fullQuestion.id,
+                question: w.question,
+                bonneReponse: w.correctText,
+                reponseDonnee: w.selectedText
+            })).filter(e => e.id);
+            logErreurs(currentTheme, erreursDetail);
             const ratio = currentQuestions.length ? score / currentQuestions.length : 0;
             const isPerfectScore = currentQuestions.length > 0 && score === currentQuestions.length;
             const messageEl = document.getElementById('masonic-message');
