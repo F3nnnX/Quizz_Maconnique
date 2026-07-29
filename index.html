@@ -897,6 +897,14 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
         function quitQuiz() {
             if (confirm('Quitter ce quizz et revenir au menu ? Ta progression sera perdue.')) {
                 logAbandon(currentTheme, currentQuestionIndex + 1, currentQuestions.length);
+                // Envoie aussi les erreurs déjà commises dans cette session, même si elle n'est pas finalisée.
+                const erreursDetail = wrongAnswers.map(w => ({
+                    id: w.fullQuestion && w.fullQuestion.id,
+                    question: w.question,
+                    bonneReponse: w.correctText,
+                    reponseDonnee: w.selectedText
+                })).filter(e => e.id);
+                logErreurs(currentTheme, erreursDetail);
                 document.getElementById('feedback-container').classList.add('hidden');
                 switchScreen(['quiz-screen'], 'welcome-screen');
                 document.getElementById('app-body').className = 'theme-tous min-h-screen flex flex-col text-slate-800';
