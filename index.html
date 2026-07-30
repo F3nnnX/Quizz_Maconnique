@@ -42,6 +42,10 @@
         #app-body { background-color: #0a1128 !important; background-image: radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.45), transparent), radial-gradient(1px 1px at 80px 70px, rgba(255,255,255,0.35), transparent), radial-gradient(1px 1px at 140px 20px, rgba(255,255,255,0.45), transparent), radial-gradient(1px 1px at 200px 90px, rgba(255,255,255,0.3), transparent), radial-gradient(1px 1px at 260px 40px, rgba(255,255,255,0.45), transparent), radial-gradient(1px 1px at 40px 110px, rgba(255,255,255,0.35), transparent), radial-gradient(1px 1px at 320px 60px, rgba(255,255,255,0.35), transparent), radial-gradient(1px 1px at 170px 120px, rgba(255,255,255,0.3), transparent), radial-gradient(1px 1px at 110px 140px, rgba(255,255,255,0.4), transparent), radial-gradient(1px 1px at 280px 130px, rgba(255,255,255,0.35), transparent), radial-gradient(1.5px 1.5px at 55px 15px, rgba(255,255,255,0.7), transparent), radial-gradient(2px 2px at 155px 95px, rgba(255,255,255,0.75), transparent), radial-gradient(1.5px 1.5px at 235px 15px, rgba(255,255,255,0.65), transparent), radial-gradient(2px 2px at 305px 105px, rgba(255,255,255,0.7), transparent), radial-gradient(1.5px 1.5px at 15px 85px, rgba(255,255,255,0.65), transparent) !important; background-size: 340px 160px !important; background-attachment: fixed !important; }
         .masonic-font { font-family: 'Cinzel', serif; }
         .corde-a-noeuds { border: 4px solid #1e293b; border-radius: 12px; background-color: white; box-shadow: inset 0 0 0 2px #f1f5f9, 0 10px 25px rgba(0,0,0,0.1); }
+        .tb-hotspot { fill: rgba(186,117,23,0.03); stroke: rgba(90,70,50,0.4); stroke-width: 1.5; stroke-dasharray: 4,3; cursor: pointer; transition: fill 0.15s, stroke 0.15s; }
+        .tb-hotspot:hover, .tb-hotspot:active { fill: rgba(186,117,23,0.18); stroke: rgba(186,117,23,0.85); stroke-dasharray: none; }
+        .tb-hotspot-btn { position: absolute; border-radius: 50%; background: rgba(186,117,23,0.10); border: 2px dashed rgba(90,70,50,0.75); cursor: pointer; padding: 0; transition: background 0.15s, border-color 0.15s; }
+        .tb-hotspot-btn:hover, .tb-hotspot-btn:active { background: rgba(186,117,23,0.28); border: 2px solid rgba(186,117,23,1); }
         .theme-score { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.65; margin-top: 2px; letter-spacing: 0; text-transform: none; white-space: pre-line; }
         .theme-tous { background-color: #0a1128; } .theme-symbolisme { background-color: #e0e7ff; } 
         .theme-histoire { background-color: #fef3c7; } .theme-rituel { background-color: #fee2e2; }
@@ -165,7 +169,7 @@
             
             <div class="absolute inset-0 bg-black/50 z-10 pointer-events-none"></div>
 
-            <button id="heurtoir" onclick="frapperPorte()" style="cursor: pointer !important; opacity: 1 !important;" class="absolute inset-0 w-full h-full z-20 bg-transparent border-none focus:outline-none flex flex-col items-center justify-between py-10 px-6">
+            <button id="heurtoir" onclick="frapperPorte(); secretTapCheck();" style="cursor: pointer !important; opacity: 1 !important;" class="absolute inset-0 w-full h-full z-20 bg-transparent border-none focus:outline-none flex flex-col items-center justify-between py-10 px-6">
                 
                 <div class="w-full text-center mt-4">
                     <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-100 masonic-font uppercase tracking-widest drop-shadow-[0_4px_10px_rgba(0,0,0,0.9)]">Le Quiz maçonnique</h1>
@@ -232,6 +236,7 @@
                 <button onclick="startQuiz('philosophie')" class="stone-btn p-4 rounded-lg"><span class="stone-ic">📚</span>Philosophie<span class="theme-score" data-theme-stat="philosophie"></span></button>
                 <button onclick="startQuiz('alchimie')" class="stone-btn p-4 rounded-lg"><span class="stone-ic">⚗️</span>Alchimie<span class="theme-score" data-theme-stat="alchimie"></span></button>
                 <button onclick="startQuiz('francs-maçons célèbres')" class="stone-btn p-4 rounded-lg"><span class="stone-ic">👤</span>Francs-Maçons célèbres<span class="theme-score" data-theme-stat="francs-maçons célèbres"></span></button>
+                <button onclick="openHiver()" class="stone-btn p-4 rounded-lg"><span class="stone-ic">🧰</span>Boîte à outils<span class="memento-sub">JEUX</span></button>
             </div>
             <button onclick="openCompagnonGate()" class="stone-btn p-4 rounded-lg mt-3 w-full compagnon-btn">
                 <span class="stone-ic">🔒</span>
@@ -246,6 +251,125 @@
             <button id="review-errors-home-btn" onclick="startErrorReview()" class="hidden stone-btn p-4 rounded-lg mt-3 w-full">
                 <span class="stone-ic">🎯</span>Révision des erreurs<span class="theme-score" id="review-errors-count-label"></span>
             </button>
+        </div>
+
+        <div id="hiver-screen" class="hidden text-center">
+            <h2 class="text-2xl font-bold mb-2 masonic-font text-slate-900 uppercase tracking-widest">🧰 Boîte à outils</h2>
+            <p class="text-slate-600 mb-6 italic">Petits jeux et exercices d'instruction, pour les soirées d'hiver.</p>
+            <div class="grid grid-cols-1 gap-3 max-w-sm mx-auto">
+                <button onclick="openTableau()" class="stone-btn p-4 rounded-lg"><span class="stone-ic">🖼️</span>Tableau de Loge<span class="memento-sub">EN COURS</span></button>
+                <button onclick="openOfficiersGame()" class="stone-btn p-4 rounded-lg"><span class="stone-ic">🎗️</span>Cordons &amp; Officiers<span class="memento-sub">EN COURS</span></button>
+                <button onclick="openMemoireGame()" class="stone-btn p-4 rounded-lg"><span class="stone-ic">🃏</span>Mémoire des Symboles<span class="memento-sub">EN COURS</span></button>
+            </div>
+            <button onclick="quitHiver()" class="stone-btn p-4 rounded-lg mt-6 w-full max-w-xs mx-auto">Retour au parvis</button>
+        </div>
+
+        <div id="tableau-screen" class="hidden">
+            <div class="flex justify-between items-center mb-3">
+                <button onclick="quitTableau()" title="Retour" aria-label="Retour" class="text-slate-400 hover:text-red-600 transition p-1 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" clip-rule="evenodd" /></svg>
+                </button>
+                <h2 class="text-lg font-bold masonic-font text-slate-900 uppercase tracking-widest">Tableau de Loge — 1er Degré</h2>
+                <div class="flex gap-1">
+                    <button onclick="tbZoom(0.7)" class="w-8 h-8 rounded bg-slate-700 text-white font-bold">−</button>
+                    <button onclick="tbZoomReset()" class="w-8 h-8 rounded bg-slate-700 text-white text-xs">⟲</button>
+                    <button onclick="tbZoom(1.4)" class="w-8 h-8 rounded bg-slate-700 text-white font-bold">+</button>
+                </div>
+            </div>
+            <p class="text-xs text-slate-500 mb-3 text-center italic">Touche un symbole entouré pour découvrir sa signification. Pince pour zoomer.</p>
+                        <div id="tb-viewport" style="overflow:hidden;border-radius:8px;background:#e9e3d3;touch-action:none;height:65vh;position:relative;">
+                <div id="tb-canvas" style="transform-origin:0 0;width:500px;height:719px;position:relative;">
+                    <img src="data:image/jpeg;base64,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" style="width:500px;height:719px;display:block;user-select:none;-webkit-user-drag:none;" draggable="false" alt="Tableau de loge, 1er degre REAA">
+                    <div id="tb-hotspots" style="position:absolute;top:0;left:0;width:500px;height:719px;">
+<button class="tb-hotspot-btn" data-sym="lune" style="left:40px;top:60px;width:88px;height:88px;"></button>
+<button class="tb-hotspot-btn" data-sym="delta" style="left:213px;top:63px;width:76px;height:76px;"></button>
+<button class="tb-hotspot-btn" data-sym="soleil" style="left:373px;top:57px;width:88px;height:88px;"></button>
+<button class="tb-hotspot-btn" data-sym="planche_a_tracer" style="left:131px;top:149px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="trois_lumieres" style="left:215px;top:194px;width:72px;height:72px;"></button>
+<button class="tb-hotspot-btn" data-sym="pierre_cubique" style="left:380px;top:211px;width:60px;height:60px;"></button>
+<button class="tb-hotspot-btn" data-sym="pierre_brute" style="left:35px;top:207px;width:88px;height:88px;"></button>
+<button class="tb-hotspot-btn" data-sym="maillet_ciseau" style="left:39px;top:291px;width:90px;height:90px;"></button>
+<button class="tb-hotspot-btn" data-sym="regle_24" style="left:56px;top:390px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="fenetre_1" style="left:314px;top:148px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="fenetre_2" style="left:400px;top:300px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="fenetre_3" style="left:385px;top:540px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="fil_a_plomb" style="left:400px;top:378px;width:52px;height:52px;"></button>
+<button class="tb-hotspot-btn" data-sym="lacs_damour" style="left:440px;top:8px;width:46px;height:46px;"></button>
+<button class="tb-hotspot-btn" data-sym="niveau" style="left:10px;top:600px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="houppes" style="left:5px;top:648px;width:60px;height:60px;"></button>
+<button class="tb-hotspot-btn" data-sym="temple" style="left:210px;top:326px;width:80px;height:80px;"></button>
+<button class="tb-hotspot-btn" data-sym="porte" style="left:222px;top:495px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="colonne_b" style="left:128px;top:449px;width:64px;height:64px;"></button>
+<button class="tb-hotspot-btn" data-sym="colonne_j" style="left:308px;top:449px;width:64px;height:64px;"></button>
+<button class="tb-hotspot-btn" data-sym="marches" style="left:210px;top:585px;width:80px;height:42px;"></button>
+<button class="tb-hotspot-btn" data-sym="pave_mosaique" style="left:340px;top:600px;width:100px;height:100px;"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="officiers-screen" class="hidden">
+            <div class="flex justify-between items-center mb-3">
+                <button onclick="quitOfficiersGame()" title="Retour" aria-label="Retour" class="text-slate-400 hover:text-red-600 transition p-1 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" clip-rule="evenodd" /></svg>
+                </button>
+                <h2 class="text-lg font-bold masonic-font text-slate-900 uppercase tracking-widest text-center">Cordons &amp; Officiers</h2>
+                <button onclick="resetOfficiersGame()" title="Recommencer" class="text-slate-400 hover:text-slate-700 transition p-1 rounded text-xl">&#8635;</button>
+            </div>
+            <p class="text-xs text-slate-500 mb-2 text-center italic">Touche un bijou puis l'officier correspondant (ou l'inverse) pour former une paire.</p>
+            <p class="text-center text-sm font-semibold text-slate-700 mb-3"><span id="og-score">0</span>/10 correctes</p>
+            <div id="og-board" style="position:relative;user-select:none;-webkit-user-select:none;">
+                <svg id="og-lines" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;"></svg>
+                <div class="flex justify-between gap-3">
+                    <div id="og-col-icons" class="flex flex-col gap-2" style="width:24%;"></div>
+                    <div id="og-col-names" class="flex flex-col gap-2" style="width:48%;"></div>
+                </div>
+            </div>
+            <div id="og-win" class="hidden mt-6 text-center bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                <p class="font-bold text-emerald-800 mb-1">Bravo, tous les cordons sont a leur place !</p>
+                <p class="text-sm text-emerald-700">Le Temple est prêt pour l'ouverture des travaux.</p>
+                <button onclick="resetOfficiersGame()" class="mt-3 stone-btn px-4 py-2 rounded-lg">Rejouer</button>
+            </div>
+        </div>
+
+        <div id="memoire-screen" class="hidden">
+            <div class="flex justify-between items-center mb-3">
+                <button onclick="quitMemoireGame()" title="Retour" aria-label="Retour" class="text-slate-400 hover:text-red-600 transition p-1 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" clip-rule="evenodd" /></svg>
+                </button>
+                <h2 class="text-lg font-bold masonic-font text-slate-900 uppercase tracking-widest text-center">Memoire des Symboles</h2>
+                <button onclick="resetMemoireGame()" title="Recommencer" class="text-slate-400 hover:text-slate-700 transition p-1 rounded text-xl">&#8635;</button>
+            </div>
+            <p class="text-xs text-slate-500 mb-2 text-center italic">Retourne deux cartes pour trouver un symbole et son sens.</p>
+            <p class="text-center text-sm font-semibold text-slate-700 mb-3"><span id="mem-pairs">0</span>/8 paires — <span id="mem-moves">0</span> coups</p>
+            <div id="mem-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-width:420px;margin:0 auto;"></div>
+            <div id="mem-win" class="hidden mt-6 text-center bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                <p class="font-bold text-emerald-800 mb-1">Bravo, toutes les paires sont trouvees !</p>
+                <p id="mem-win-moves" class="text-sm text-emerald-700"></p>
+                <button onclick="resetMemoireGame()" class="mt-3 stone-btn px-4 py-2 rounded-lg">Rejouer</button>
+            </div>
+        </div>
+
+        <div id="tb-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4" onclick="if(event.target===this) closeSymbolModal()">
+            <div class="bg-white rounded-t-2xl sm:rounded-2xl p-6 w-full sm:max-w-md max-h-[80vh] overflow-y-auto">
+                <div class="flex justify-between items-start mb-3">
+                    <h3 id="tb-modal-title" class="text-xl font-bold masonic-font text-slate-900"></h3>
+                    <button onclick="closeSymbolModal()" class="text-slate-400 hover:text-red-600 p-1">✕</button>
+                </div>
+                <p id="tb-modal-text" class="text-slate-700 mb-4 leading-relaxed"></p>
+                <a id="tb-modal-link" href="#" target="_blank" rel="noopener noreferrer" class="inline-block text-sm font-semibold text-amber-700 hover:text-amber-900 underline">En savoir plus →</a>
+            </div>
+        </div>
+
+        <div id="tb-submenu" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4" onclick="if(event.target===this) closeSubMenu()">
+            <div class="bg-white rounded-t-2xl sm:rounded-2xl p-6 w-full sm:max-w-md">
+                <div class="flex justify-between items-start mb-4">
+                    <h3 id="tb-submenu-title" class="text-lg font-bold masonic-font text-slate-900"></h3>
+                    <button onclick="closeSubMenu()" class="text-slate-400 hover:text-red-600 p-1">✕</button>
+                </div>
+                <p class="text-sm text-slate-500 mb-4 italic">Ces éléments sont représentés ensemble sur le tableau. Choisis celui qui t'intéresse :</p>
+                <div id="tb-submenu-buttons" class="flex flex-col gap-2"></div>
+            </div>
         </div>
 
         <div id="compagnon-gate-screen" class="hidden text-center">
@@ -688,6 +812,36 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
             }
         }
 
+        // Fonctionnalite cachee : 4 taps rapides (moins de 600ms entre chaque) sur la porte
+        // sautent directement au menu, sans les 3 coups ni le fondu d'ouverture.
+        let secretTapCount = 0;
+        let secretTapLast = 0;
+        function secretTapCheck() {
+            const now = Date.now();
+            if (now - secretTapLast > 600) {
+                secretTapCount = 1;
+            } else {
+                secretTapCount++;
+            }
+            secretTapLast = now;
+            if (secretTapCount >= 4) {
+                secretTapCount = 0;
+                skipToMenuInstant();
+            }
+        }
+        function skipToMenuInstant() {
+            const door = document.getElementById('door-screen');
+            const welcome = document.getElementById('welcome-screen');
+            renderThemeStats();
+            displayMasonicDateToday();
+            renderGlobalProgress();
+            door.style.transition = 'none';
+            door.classList.add('hidden');
+            door.style.display = 'none';
+            welcome.classList.remove('hidden');
+            welcome.style.pointerEvents = '';
+        }
+
         function frapperPorte() {
             const now = Date.now();
             if (compteurCoups > 0 && now - dernierCoup < DELAI_MIN_COUP) return;
@@ -818,6 +972,568 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
         }
         function quitThemeEmpty() {
             switchScreen(['theme-empty-screen'], 'welcome-screen');
+        }
+
+        const TABLEAU_SYMBOLS = {
+"lune": {
+"nom": "La Lune",
+"explication": "Placée à l'Occident du Temple, la lune éclaire les travaux durant la nuit et symbolise la réflexion, l'imagination et le temps qui passe. Principe passif et féminin, elle reçoit et reflète la lumière du soleil, rappelant que la vérité se dévoile progressivement, par phases, comme l'apprenti qui découvre peu à peu le sens des symboles.",
+"source": "JePense.org — Les trois grands luminaires en franc-maçonnerie",
+"url": "https://www.jepense.org/trois-grands-luminaires/"
+},
+"delta": {
+"nom": "Le Delta Lumineux",
+"explication": "Triangle rayonnant surmontant le tableau, souvent orné d'un œil en son centre, il représente le Grand Architecte de l'Univers veillant sur les travaux. Placé entre la Lune et le Soleil qu'il équilibre et harmonise, il est une fenêtre sur la Vérité, aussi bien intérieure qu'extérieure, et invite à la connaissance de soi comme à la connaissance métaphysique.",
+"source": "JePense.org — Les trois grands luminaires en franc-maçonnerie",
+"url": "https://www.jepense.org/trois-grands-luminaires/"
+},
+"soleil": {
+"nom": "Le Soleil",
+"explication": "Placé à l'Orient, à droite du delta lumineux, le soleil éclaire la Loge durant le jour et gouverne le temps sacré de la tenue, dans sa trajectoire d'Est en Ouest. Principe actif et masculin, il symbolise l'intelligence, la connaissance et la vérité révélée qui doit guider chaque frère dans son cheminement.",
+"source": "JePense.org — Les trois grands luminaires en franc-maçonnerie",
+"url": "https://www.jepense.org/trois-grands-luminaires/"
+},
+"pierre_brute": {
+"nom": "La Pierre Brute",
+"explication": "Bloc de matière informe issu de la carrière, la pierre brute représente l'homme à l'état de nature — le profane, tout juste extrait de la carrière des jours, encore façonné par ses passions et ses préjugés. C'est sur cette pierre que l'apprenti doit exercer le maillet et le ciseau afin de la dégrossir et de se rapprocher de la perfection.",
+"source": "JePense.org — La pierre brute, planche maçonnique",
+"url": "https://www.jepense.org/pierre-brute-planche/"
+},
+"equerre": {
+"nom": "L'Équerre",
+"explication": "L'une des Trois Grandes Lumières, posée avec le Compas sur le Volume de la Loi Sacrée. Elle incarne la dualité et la matière, ouvrant le domaine de l'action et de la rectitude morale : la marche, le signe d'ordre et le signe pénal de l'Apprenti se font tous en équerre.",
+"source": "JePense.org — L'équerre : symbolisme en franc-maçonnerie, interprétation",
+"url": "https://www.jepense.org/equerre-symbolisme-franc-maconnerie/"
+},
+"compas": {
+"nom": "Le Compas",
+"explication": "L'une des Trois Grandes Lumières, posé avec l'Équerre sur le Volume de la Loi Sacrée. Il exprime l'unité et l'esprit, ouvrant le domaine de la pensée : il fait naître le cercle à partir du point, et invite le maçon à circonscrire ses passions dans de justes limites.",
+"source": "JePense.org — Le symbolisme du compas (signification ésotérique)",
+"url": "https://www.jepense.org/compas-symbolisme/"
+},
+"bible": {
+"nom": "Le Volume de la Loi Sacrée",
+"explication": "Troisième des Trois Grandes Lumières, ce livre ouvert (Bible ou tout autre texte selon les convictions du maçon) représente la Loi morale et spirituelle. Avec l'Équerre et le Compas posés sur lui, il forme un symbole initiatique complet, à la fois tradition transmise et alliance entre matière et esprit.",
+"source": "L'Edifice — La Bible / Volume de la Loi Sacrée",
+"url": "https://ledifice.net/planches/apprenti/la-bible"
+},
+"fenetre_1": {
+"nom": "La Première Fenêtre",
+"explication": "La Loge communique avec le monde extérieur grâce à trois fenêtres, qui diffusent symboliquement la lumière à l'intérieur du Temple selon la marche apparente du Soleil. Cette première fenêtre marque l'heure où les ouvriers se mettent à l'ouvrage — l'ouverture des travaux, quand la lumière commence tout juste à poindre.",
+"source": "JePense.org — Le tableau de loge au grade d'apprenti : symbolisme",
+"url": "https://www.jepense.org/tableau-de-loge-symbolisme/"
+},
+"fenetre_2": {
+"nom": "La Deuxième Fenêtre",
+"explication": "Seconde des trois fenêtres par lesquelles la lumière pénètre dans le Temple selon la course du Soleil. Elle marque l'heure où les ouvriers accomplissent leur ouvrage — le milieu des travaux, quand la lumière est à son plus haut, l'heure de midi symbolique de la Loge.",
+"source": "JePense.org — Le tableau de loge au grade d'apprenti : symbolisme",
+"url": "https://www.jepense.org/tableau-de-loge-symbolisme/"
+},
+"fenetre_3": {
+"nom": "La Troisième Fenêtre",
+"explication": "Dernière des trois fenêtres par lesquelles la lumière pénètre dans le Temple selon la course du Soleil. Elle marque l'heure où les ouvriers quittent l'ouvrage — la fermeture des travaux, quand la lumière décline à son tour, comme le soleil qui se couche à l'Occident.",
+"source": "JePense.org — Le tableau de loge au grade d'apprenti : symbolisme",
+"url": "https://www.jepense.org/tableau-de-loge-symbolisme/"
+},
+"lacs_damour": {
+"nom": "Les Lacs d'Amour",
+"explication": "Ce cordon qui fait le tour de la loge, de la colonne B à la colonne J, est composé de nœuds en forme de huit (le lacs d'amour, souvent au nombre de douze au REAA) délimitant l'espace sacré du Temple. Ils représentent le lien indéfectible de la chaîne d'union et la fraternité qui unit tous les francs-maçons du monde, malgré leurs différences.",
+"source": "JePense.org — La corde à nœuds et les lacs d'amour en franc-maçonnerie",
+"url": "https://www.jepense.org/corde-a-noeuds-franc-maconnerie-lacs-amour/"
+},
+"niveau": {
+"nom": "Le Niveau",
+"explication": "Bijou du Premier Surveillant, le niveau est l'outil qui garantit l'horizontalité. Il rappelle qu'en loge, les distinctions sociales, professionnelles ou économiques s'effacent devant l'égalité fraternelle : tous les frères se retrouvent au même niveau, symboliquement débarrassés de leurs titres profanes.",
+"source": "JePense.org — Le niveau : planche maçonnique",
+"url": "https://www.jepense.org/le-niveau-planche-maconnique/"
+},
+"houppes": {
+"nom": "Les Houppes Dentelées",
+"explication": "La corde se termine à chaque extrémité par une houppe, dont les fils peuvent symboliser les racines de l'arbre de vie ou la communauté des humains assemblée, formant une corde unique et impossible à rompre. Avec le pavé mosaïque et l'étoile flamboyante, la houppe dentelée compte parmi les trois grands ornements de la Loge.",
+"source": "JePense.org — La corde à nœuds et les lacs d'amour en franc-maçonnerie",
+"url": "https://www.jepense.org/corde-a-noeuds-franc-maconnerie-lacs-amour/"
+},
+"pierre_cubique": {
+"nom": "La Pierre Cubique",
+"explication": "Aussi appelée pierre taillée, elle est pierre taillée à angles droits dont les surfaces sont polies : le résultat du travail de l'apprenti sur la pierre brute. Elle symbolise l'homme qui a poli ses aspérités et dont la vie s'accorde désormais avec les exigences de l'Ordre — la « pierre cachée » que la formule V.I.T.R.I.O.L. invite à découvrir en soi.",
+"source": "JePense.org — Pierre brute, cubique, à pointe, plate : définition, interprétation",
+"url": "https://www.jepense.org/pierre-brute-cubique-a-pointe-plate-definition/"
+},
+"planche_a_tracer": {
+"nom": "La Planche à Tracer",
+"explication": "Rectangle sur lequel figurent des grilles d'alphabet maçonnique, c'est sur cette planche que les maîtres établissaient autrefois leurs plans, à la craie, avant chaque tenue. Elle symbolise l'apprentissage et la nécessité de tracer avec méthode le chemin de sa propre construction avant de l'entreprendre.",
+"source": "JePense.org — Le tableau de loge au grade d'apprenti : symbolisme",
+"url": "https://www.jepense.org/tableau-de-loge-symbolisme/"
+},
+"maillet": {
+"nom": "Le Maillet",
+"explication": "Premier des trois outils remis à l'Apprenti avec la règle et le ciseau. Actif et puissant, il symbolise la volonté de perfectionnement qui doit animer le franc-maçon : c'est lui qui donne l'impulsion et le rythme, frappant le ciseau pour dégrossir la pierre brute.",
+"source": "JePense.org — Le maillet et le ciseau : planche d'apprenti",
+"url": "https://www.jepense.org/maillet-ciseau-planche-apprenti/"
+},
+"ciseau": {
+"nom": "Le Ciseau",
+"explication": "Second outil de l'Apprenti, indissociable du maillet. Passif mais précis, il vient parfaire l'œuvre en rendant la pierre conforme à son emploi : il symbolise la méthode maçonnique qui guide et canalise la volonté, grâce à laquelle le maçon devient un membre utile et conscient de la société.",
+"source": "JePense.org — Le maillet et le ciseau : planche d'apprenti",
+"url": "https://www.jepense.org/maillet-ciseau-planche-apprenti/"
+},
+"regle_24": {
+"nom": "La Règle à 24 Divisions",
+"explication": "Autrefois appelée jauge à 24 pouces, elle constitue avec le maillet et le ciseau l'un des trois outils de l'Apprenti. Elle symbolise la journée du franc-maçon, dont toutes les heures doivent être utilement employées entre le travail, le repos et le service d'autrui — donnant mesure et rectitude à toute construction, de la conception à la réalisation.",
+"source": "JePense.org — La règle à 24 divisions et son symbolisme",
+"url": "https://www.jepense.org/regle-24-divisions-planche-maconnique/"
+},
+"fil_a_plomb": {
+"nom": "Le Fil à Plomb",
+"explication": "Présent au centre de la loge, le fil à plomb relie symboliquement la voûte étoilée à la terre, le céleste au terrestre. Il rappelle la formule d'Hermès Trismégiste — ce qui est en bas est comme ce qui est en haut — et symbolise la position du franc-maçon entre matière et esprit, ainsi que la droiture de conduite qu'il doit rechercher.",
+"source": "JePense.org — Le fil à plomb : planche au grade d'apprenti",
+"url": "https://www.jepense.org/fil-a-plomb-planche-maconnique/"
+},
+"colonne_b": {
+"nom": "La Colonne B (Boaz)",
+"explication": "Colonne dressée à l'entrée du Temple de Salomon, son nom signifie « en Lui la force » ou « dans la force ». Au Rite Écossais Ancien et Accepté, elle se trouve à gauche en entrant, du côté du Septentrion, colonne des Apprentis. Elle peut être associée au fil à plomb : un appel à descendre en soi pour tailler sa pierre brute.",
+"source": "JePense.org — Colonnes Boaz et Jakin du Temple de Salomon",
+"url": "https://www.jepense.org/colonnes-jakin-et-boaz/"
+},
+"colonne_j": {
+"nom": "La Colonne J (Jakin)",
+"explication": "Colonne jumelle de Boaz à l'entrée du Temple de Salomon, son nom signifie « il établira » ou « il affermira ». Au Rite Écossais Ancien et Accepté, elle se trouve à droite en entrant, colonne des Compagnons. Associée à Boaz, elle évoque la dualité complémentaire de la force et de la stabilité, de l'esprit et de l'action.",
+"source": "JePense.org — Colonnes Boaz et Jakin du Temple de Salomon",
+"url": "https://www.jepense.org/colonnes-jakin-et-boaz/"
+},
+"porte": {
+"nom": "La Porte du Temple",
+"explication": "La porte du Temple, entre les deux colonnes, marque le passage entre deux mondes : le profane et le sacré, l'ignorance et la connaissance. Lors de l'initiation, le récipiendaire la franchit courbé, par une porte volontairement basse, en signe d'humilité et de soumission consciente à l'ordre qu'il découvre.",
+"source": "JePense.org — La porte basse en franc-maçonnerie : symbolisme",
+"url": "https://www.jepense.org/porte-basse-franc-maconnerie/"
+},
+"marches": {
+"nom": "Les Trois Marches",
+"explication": "Les trois marches qui mènent au portique du Temple représentent l'élévation de l'individu selon un rythme ternaire. Le parvis qu'elles bordent est le lieu de transition qui ne donne pas la Connaissance, mais indique la voie pour y accéder — un espace de recueillement avant de franchir le seuil sacré.",
+"source": "JePense.org — Le parvis : symbolisme maçonnique",
+"url": "https://www.jepense.org/parvis-symbolisme-maconnique/"
+},
+"temple": {
+"nom": "Le Fronton du Temple",
+"explication": "Représentation du Temple de Salomon, modèle architectural et spirituel de la Loge. Son fronton triangulaire évoque le Delta lumineux qui le surmonte symboliquement, rappelant que toute la construction du Temple — comme celle de l'individu — s'élève vers un même sommet de lumière et de perfection.",
+"source": "JePense.org — Le tableau de loge au grade d'apprenti : symbolisme",
+"url": "https://www.jepense.org/tableau-de-loge-symbolisme/"
+},
+"pave_mosaique": {
+"nom": "Le Pavé Mosaïque",
+"explication": "Sol en damier noir et blanc de la loge, sur lequel est traditionnellement déroulé le tableau de loge. Il symbolise la dualité inhérente à la condition humaine — ombre et lumière, bien et mal — mais aussi, par l'assemblage parfait de ses carrés en un ensemble plus vaste, l'idée d'une construction ordonnée où chaque microcosme s'intègre au macrocosme.",
+"source": "JePense.org — Le pavé mosaïque : planche d'apprenti franc-maçon",
+"url": "https://www.jepense.org/pave-mosaique-planche-apprenti/"
+}
+};
+
+        function openHiver() { switchScreen(['welcome-screen'], 'hiver-screen'); }
+        function quitHiver() { switchScreen(['hiver-screen'], 'welcome-screen'); }
+const OG_OFFICIERS = [{"id": "venerable", "nom": "Vénérable Maître", "icon": "equerre", "desc": "Préside les travaux et dirige la Loge depuis l'Orient."}, {"id": "surv1", "nom": "Premier Surveillant", "icon": "niveau", "desc": "Dirige la colonne du Midi, veille à l'égalité entre les Frères."}, {"id": "surv2", "nom": "Second Surveillant", "icon": "perpendiculaire", "desc": "Instruit les Apprentis, veille à la droiture des travaux."}, {"id": "orateur", "nom": "Orateur", "icon": "livre", "desc": "Gardien de la loi, veille au respect des règlements."}, {"id": "secretaire", "nom": "Secrétaire", "icon": "plumes", "desc": "Tient les registres et rédige les procès-verbaux."}, {"id": "tresorier", "nom": "Trésorier", "icon": "cles", "desc": "Gère les fonds et la comptabilité de la Loge."}, {"id": "expert", "nom": "Expert", "icon": "regle_oeil", "desc": "Veille à la conformité rituelle, tuile les visiteurs."}, {"id": "mc", "nom": "Maître des Cérémonies", "icon": "batons", "desc": "Organise les déplacements et la marche rituelle."}, {"id": "couvreur", "nom": "Couvreur", "icon": "glaives", "desc": "Garde la porte du Temple pendant les travaux."}, {"id": "hospitalier", "nom": "Hospitalier", "icon": "bourse", "desc": "Collecte le Tronc de la Veuve, organise la bienfaisance."}];
+const OG_ICONS = {"equerre": "<path d=\"M-14,14 L-14,-10 L10,-10\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"3.5\" stroke-linejoin=\"miter\"/>", "niveau": "<path d=\"M-16,12 L0,-14 L16,12 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linejoin=\"round\"/><line x1=\"-16\" y1=\"12\" x2=\"16\" y2=\"12\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/><line x1=\"0\" y1=\"-14\" x2=\"0\" y2=\"9\" stroke=\"#1a1a1a\" stroke-width=\"1.3\"/><circle cx=\"0\" cy=\"9\" r=\"2\" fill=\"#1a1a1a\"/>", "perpendiculaire": "<circle cx=\"0\" cy=\"-14\" r=\"3.5\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"-10.5\" x2=\"0\" y2=\"8\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><path d=\"M-5,8 L5,8 L0,16 Z\" fill=\"#1a1a1a\"/>", "livre": "<path d=\"M0,-10 C-6,-13 -15,-12 -15,-9 L-15,10 C-15,7 -6,8 0,11 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><path d=\"M0,-10 C6,-13 15,-12 15,-9 L15,10 C15,7 6,8 0,11 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>", "plumes": "<g transform=\"rotate(-30)\"><path d=\"M0,-16 C6,-10 6,6 0,16 C-2,6 -2,-10 0,-16 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"-14\" x2=\"0\" y2=\"15\" stroke=\"#1a1a1a\" stroke-width=\"1\"/></g><g transform=\"rotate(30)\"><path d=\"M0,-16 C6,-10 6,6 0,16 C-2,6 -2,-10 0,-16 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"-14\" x2=\"0\" y2=\"15\" stroke=\"#1a1a1a\" stroke-width=\"1\"/></g>", "cles": "<g transform=\"rotate(-25)\"><circle cx=\"0\" cy=\"-11\" r=\"5\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"-6\" x2=\"0\" y2=\"15\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/><line x1=\"0\" y1=\"10\" x2=\"5\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"15\" x2=\"4\" y2=\"15\" stroke=\"#1a1a1a\" stroke-width=\"2\"/></g><g transform=\"rotate(25)\"><circle cx=\"0\" cy=\"-11\" r=\"5\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"-6\" x2=\"0\" y2=\"15\" stroke=\"#1a1a1a\" stroke-width=\"2.2\"/><line x1=\"0\" y1=\"10\" x2=\"-5\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0\" y1=\"15\" x2=\"-4\" y2=\"15\" stroke=\"#1a1a1a\" stroke-width=\"2\"/></g>", "regle_oeil": "<rect x=\"-16\" y=\"6\" width=\"32\" height=\"8\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-10\" y1=\"6\" x2=\"-10\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"1.3\"/><line x1=\"-2\" y1=\"6\" x2=\"-2\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"1.3\"/><line x1=\"6\" y1=\"6\" x2=\"6\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"1.3\"/><ellipse cx=\"0\" cy=\"-8\" rx=\"10\" ry=\"6\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><circle cx=\"0\" cy=\"-8\" r=\"2.5\" fill=\"#1a1a1a\"/>", "batons": "<g transform=\"rotate(-35)\"><line x1=\"0\" y1=\"-16\" x2=\"0\" y2=\"16\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"-16\" r=\"2.5\" fill=\"#1a1a1a\"/></g><g transform=\"rotate(35)\"><line x1=\"0\" y1=\"-16\" x2=\"0\" y2=\"16\" stroke=\"#1a1a1a\" stroke-width=\"2.5\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"-16\" r=\"2.5\" fill=\"#1a1a1a\"/></g>", "glaives": "<g transform=\"rotate(-35)\"><line x1=\"0\" y1=\"-16\" x2=\"0\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"-5\" y1=\"8\" x2=\"5\" y2=\"8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><path d=\"M-3,10 L3,10 L0,17 Z\" fill=\"#1a1a1a\"/></g><g transform=\"rotate(35)\"><line x1=\"0\" y1=\"-16\" x2=\"0\" y2=\"10\" stroke=\"#1a1a1a\" stroke-width=\"2\" stroke-linecap=\"round\"/><line x1=\"-5\" y1=\"8\" x2=\"5\" y2=\"8\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><path d=\"M-3,10 L3,10 L0,17 Z\" fill=\"#1a1a1a\"/></g>", "bourse": "<path d=\"M-11,-2 C-11,-10 11,-10 11,-2 L13,14 C13,17 -13,17 -13,14 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><path d=\"M-6,-2 C-6,-6 6,-6 6,-2\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><path d=\"M0,4 L-4,9 L-1.3,9 L-1.3,14 L1.3,14 L1.3,9 L4,9 Z\" fill=\"#1a1a1a\"/>"};
+
+let ogSolved = new Set();
+let ogDrag = null; // {fromEl, fromSide, fromId, line}
+
+function shuffleArr(a) {
+    const arr = [...a];
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+}
+
+function openOfficiersGame() {
+    switchScreen(['hiver-screen'], 'officiers-screen');
+    setTimeout(resetOfficiersGame, 260);
+}
+function quitOfficiersGame() {
+    switchScreen(['officiers-screen'], 'hiver-screen');
+}
+
+function resetOfficiersGame() {
+    ogSolved = new Set();
+    ogDrag = null;
+    ogSelected = null;
+    document.getElementById('og-score').textContent = '0';
+    document.getElementById('og-win').classList.add('hidden');
+    const colIcons = document.getElementById('og-col-icons');
+    const colNames = document.getElementById('og-col-names');
+    colIcons.innerHTML = '';
+    colNames.innerHTML = '';
+    const iconOrder = shuffleArr(OG_OFFICIERS);
+    const nameOrder = shuffleArr(OG_OFFICIERS);
+    iconOrder.forEach(o => {
+        const el = document.createElement('div');
+        el.className = 'og-item';
+        el.dataset.id = o.id;
+        el.dataset.side = 'icon';
+        el.style.cssText = 'display:flex;align-items:center;justify-content:flex-start;gap:6px;background:#fff;border:1.5px solid #d8cfb8;border-radius:8px;padding:6px;cursor:pointer;position:relative;height:46px;box-sizing:border-box;';
+        el.innerHTML = `<svg viewBox="-20 -20 40 40" style="width:34px;height:34px;flex-shrink:0;">${OG_ICONS[o.icon]}</svg><span class="og-dot" style="position:absolute;right:-5px;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#8a6d3b;"></span>`;
+        colIcons.appendChild(el);
+    });
+    nameOrder.forEach(o => {
+        const el = document.createElement('div');
+        el.className = 'og-item';
+        el.dataset.id = o.id;
+        el.dataset.side = 'name';
+        el.style.cssText = 'display:flex;align-items:center;gap:6px;background:#fff;border:1.5px solid #d8cfb8;border-radius:8px;padding:6px 10px;cursor:pointer;position:relative;font-size:13px;font-weight:600;color:#3a3428;height:46px;box-sizing:border-box;line-height:1.2;';
+        el.innerHTML = `<span class="og-dot" style="position:absolute;left:-5px;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;background:#8a6d3b;"></span><span>${o.nom}</span>`;
+        colNames.appendChild(el);
+    });
+    document.querySelectorAll('.og-item').forEach(el => {
+        el.addEventListener('click', ogItemClick);
+    });
+    const svg = document.getElementById('og-lines');
+    svg.innerHTML = '';
+}
+
+function ogDotCenter(itemEl) {
+    const board = document.getElementById('og-board');
+    const boardRect = board.getBoundingClientRect();
+    const dot = itemEl.querySelector('.og-dot');
+    const r = dot.getBoundingClientRect();
+    return { x: r.left + r.width / 2 - boardRect.left, y: r.top + r.height / 2 - boardRect.top };
+}
+
+let ogSelected = null;
+
+function ogItemClick(e) {
+    const el = e.currentTarget;
+    if (ogSolved.has(el.dataset.id + '_' + el.dataset.side)) return;
+    if (ogSelected && ogSelected !== el) {
+        if (ogSelected.dataset.side !== el.dataset.side) {
+            ogAttemptMatch(ogSelected, el, null);
+            ogClearSelection();
+        } else {
+            ogSelectItem(el);
+        }
+    } else {
+        ogSelectItem(el);
+    }
+}
+
+function ogSelectItem(el) {
+    ogClearSelection();
+    ogSelected = el;
+    el.style.outline = '3px solid #a3813f';
+    el.style.boxShadow = '0 0 0 3px rgba(163,129,63,0.2)';
+}
+function ogClearSelection() {
+    if (ogSelected) { ogSelected.style.outline = ''; ogSelected.style.boxShadow = ''; }
+    ogSelected = null;
+}
+
+function ogAttemptMatch(elA, elB, existingLine) {
+    if (elA.dataset.id === elB.dataset.id) {
+        const line = existingLine || document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        if (!existingLine) document.getElementById('og-lines').appendChild(line);
+        const p1 = ogDotCenter(elA), p2 = ogDotCenter(elB);
+        line.setAttribute('x1', p1.x); line.setAttribute('y1', p1.y);
+        line.setAttribute('x2', p2.x); line.setAttribute('y2', p2.y);
+        line.setAttribute('stroke', '#2f7d4f'); line.setAttribute('stroke-width', '4'); line.setAttribute('stroke-linecap', 'round');
+        ogSolved.add(elA.dataset.id + '_' + elA.dataset.side);
+        ogSolved.add(elB.dataset.id + '_' + elB.dataset.side);
+        elA.style.opacity = '0.55'; elA.style.cursor = 'default'; elA.style.outline = ''; elA.style.boxShadow = '';
+        elB.style.opacity = '0.55'; elB.style.cursor = 'default';
+        document.getElementById('og-score').textContent = (ogSolved.size / 2).toString();
+        const officier = OG_OFFICIERS.find(o => o.id === elA.dataset.id);
+        ogShowToast(officier.nom + ' — ' + officier.desc);
+        if (ogSolved.size === OG_OFFICIERS.length * 2) {
+            setTimeout(() => document.getElementById('og-win').classList.remove('hidden'), 400);
+        }
+    } else if (existingLine) {
+        existingLine.remove();
+    }
+}
+
+function ogShowToast(msg) {
+    let toast = document.getElementById('og-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'og-toast';
+        toast.style.cssText = 'position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;max-width:85vw;z-index:60;box-shadow:0 6px 20px rgba(0,0,0,0.3);text-align:center;';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.style.opacity = '1';
+    clearTimeout(ogShowToast._t);
+    ogShowToast._t = setTimeout(() => { toast.style.transition = 'opacity 0.5s'; toast.style.opacity = '0'; }, 2200);
+}
+
+const MEM_CARDS = [{"id": "lune", "icon": "lune", "sens": "L'intuition et la lumière réfléchie"}, {"id": "soleil", "icon": "soleil", "sens": "La lumière directe et la raison active"}, {"id": "delta", "icon": "delta", "sens": "La conscience vigilante et le Grand Architecte"}, {"id": "pierre_brute", "icon": "pierre_brute", "sens": "L'homme à l'état de nature et le travail sur soi"}, {"id": "pierre_cubique", "icon": "pierre_cubique", "sens": "L'œuvre accomplie et la perfection du métier"}, {"id": "equerre", "icon": "equerre", "sens": "La rectitude morale et la matière"}, {"id": "compas", "icon": "compas", "sens": "La juste mesure et le domaine de l'esprit"}, {"id": "pave_mosaique", "icon": "pave_mosaique", "sens": "La dualité et la complémentarité des contraires"}];
+const MEM_ICONS = {"lune": "<path d=\"M0,-22 A22,22 0 1,0 0,22 A15,22 0 1,1 0,-22 Z\" fill=\"#1a1a1a\"/>", "delta": "<g stroke=\"#1a1a1a\" stroke-width=\"1.5\"><line x1=\"0\" y1=\"-46\" x2=\"0\" y2=\"-54\"/><line x1=\"16\" y1=\"-40\" x2=\"22\" y2=\"-46\"/><line x1=\"-16\" y1=\"-40\" x2=\"-22\" y2=\"-46\"/><line x1=\"26\" y1=\"-26\" x2=\"34\" y2=\"-30\"/><line x1=\"-26\" y1=\"-26\" x2=\"-34\" y2=\"-30\"/></g><path d=\"M0,-26 L23,18 L-23,18 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/><ellipse cx=\"0\" cy=\"-4\" rx=\"9\" ry=\"5\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><circle cx=\"0\" cy=\"-4\" r=\"2.5\" fill=\"#1a1a1a\"/>", "soleil": "<circle r=\"14\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"16.0\" y1=\"0.0\" x2=\"26.0\" y2=\"0.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"13.9\" y1=\"8.0\" x2=\"22.5\" y2=\"13.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"8.0\" y1=\"13.9\" x2=\"13.0\" y2=\"22.5\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"0.0\" y1=\"16.0\" x2=\"0.0\" y2=\"26.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-8.0\" y1=\"13.9\" x2=\"-13.0\" y2=\"22.5\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-13.9\" y1=\"8.0\" x2=\"-22.5\" y2=\"13.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-16.0\" y1=\"0.0\" x2=\"-26.0\" y2=\"0.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-13.9\" y1=\"-8.0\" x2=\"-22.5\" y2=\"-13.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-8.0\" y1=\"-13.9\" x2=\"-13.0\" y2=\"-22.5\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"-0.0\" y1=\"-16.0\" x2=\"-0.0\" y2=\"-26.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"8.0\" y1=\"-13.9\" x2=\"13.0\" y2=\"-22.5\" stroke=\"#1a1a1a\" stroke-width=\"2\"/><line x1=\"13.9\" y1=\"-8.0\" x2=\"22.5\" y2=\"-13.0\" stroke=\"#1a1a1a\" stroke-width=\"2\"/>", "pierre_brute": "<path d=\"M-24,10 L-18,-14 L-4,-22 L14,-18 L24,-2 L18,16 L2,20 L-14,18 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/><line x1=\"-8\" y1=\"-6\" x2=\"4\" y2=\"8\" stroke=\"#1a1a1a\" stroke-width=\"1\"/><line x1=\"6\" y1=\"-10\" x2=\"10\" y2=\"4\" stroke=\"#1a1a1a\" stroke-width=\"1\"/>", "pierre_cubique": "<path d=\"M0,-22 L20,-11 L20,11 L0,22 L-20,11 L-20,-11 Z\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"2.5\"/><path d=\"M0,-22 L0,0 L20,11 M0,0 L-20,11\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/>", "equerre": "<path d=\"M-14,14 L-14,-10 L10,-10\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"3.5\" stroke-linejoin=\"miter\"/>", "compas": "<path d=\"M0,-22 L-16,20 M0,-22 L16,20\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"3\" stroke-linecap=\"round\"/><circle cx=\"0\" cy=\"-22\" r=\"2.5\" fill=\"#1a1a1a\"/>", "pave_mosaique": "<rect x=\"-18\" y=\"-8\" width=\"9\" height=\"9\" fill=\"#1a1a1a\"/><rect x=\"0\" y=\"-8\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><rect x=\"-9\" y=\"1\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><rect x=\"9\" y=\"1\" width=\"9\" height=\"9\" fill=\"#1a1a1a\"/><rect x=\"-18\" y=\"1\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"#1a1a1a\" stroke-width=\"1.5\"/><rect x=\"0\" y=\"1\" width=\"9\" height=\"9\" fill=\"#1a1a1a\"/>"};
+
+let memFlipped = [];
+let memSolvedIdx = new Set();
+let memMoves = 0;
+let memLock = false;
+
+function openMemoireGame() {
+    switchScreen(['hiver-screen'], 'memoire-screen');
+    setTimeout(resetMemoireGame, 260);
+}
+function quitMemoireGame() {
+    switchScreen(['memoire-screen'], 'hiver-screen');
+}
+
+function resetMemoireGame() {
+    memFlipped = [];
+    memSolvedIdx = new Set();
+    memMoves = 0;
+    memLock = false;
+    document.getElementById('mem-pairs').textContent = '0';
+    document.getElementById('mem-moves').textContent = '0';
+    document.getElementById('mem-win').classList.add('hidden');
+
+    let deck = [];
+    MEM_CARDS.forEach(c => {
+        deck.push({ pairId: c.id, kind: 'icon', icon: c.icon });
+        deck.push({ pairId: c.id, kind: 'sens', sens: c.sens });
+    });
+    deck = shuffleArr(deck);
+
+    const grid = document.getElementById('mem-grid');
+    grid.innerHTML = '';
+    deck.forEach((card, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'mem-card';
+        btn.dataset.idx = idx;
+        btn.dataset.pairId = card.pairId;
+        btn.style.cssText = 'aspect-ratio:1/1;border-radius:8px;border:1.5px solid #d8cfb8;background:#5a4632;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;position:relative;';
+        btn.addEventListener('click', () => memFlipCard(btn, card));
+        grid.appendChild(btn);
+    });
+}
+
+function memRenderFront(btn, card) {
+    btn.style.background = '#fff';
+    if (card.kind === 'icon') {
+        btn.innerHTML = `<svg viewBox="-24 -24 48 48" style="width:70%;height:70%;">${MEM_ICONS[card.icon]}</svg>`;
+    } else {
+        btn.innerHTML = `<span style="font-size:8.5px;font-weight:600;color:#3a3428;line-height:1.15;text-align:center;">${card.sens}</span>`;
+    }
+}
+function memRenderBack(btn) {
+    btn.style.background = '#5a4632';
+    btn.style.borderColor = '#d8cfb8';
+    btn.innerHTML = '';
+}
+
+function memFlipCard(btn, card) {
+    if (memLock) return;
+    if (memSolvedIdx.has(btn.dataset.idx)) return;
+    if (btn.classList.contains('mem-flipped')) return;
+    if (memFlipped.length >= 2) return;
+
+    btn.classList.add('mem-flipped');
+    memRenderFront(btn, card);
+    memFlipped.push({ btn, card });
+
+    if (memFlipped.length === 2) {
+        memMoves++;
+        document.getElementById('mem-moves').textContent = memMoves;
+        memLock = true;
+        const [a, b] = memFlipped;
+        if (a.card.pairId === b.card.pairId && a.card.kind !== b.card.kind) {
+            setTimeout(() => {
+                a.btn.style.background = '#dcefe0';
+                b.btn.style.background = '#dcefe0';
+                a.btn.style.borderColor = '#2f7d4f';
+                b.btn.style.borderColor = '#2f7d4f';
+                memSolvedIdx.add(a.btn.dataset.idx);
+                memSolvedIdx.add(b.btn.dataset.idx);
+                const pairsFound = memSolvedIdx.size / 2;
+                document.getElementById('mem-pairs').textContent = pairsFound;
+                memFlipped = [];
+                memLock = false;
+                if (pairsFound === MEM_CARDS.length) {
+                    document.getElementById('mem-win-moves').textContent = 'En ' + memMoves + ' coups.';
+                    setTimeout(() => document.getElementById('mem-win').classList.remove('hidden'), 300);
+                }
+            }, 500);
+        } else {
+            setTimeout(() => {
+                a.btn.classList.remove('mem-flipped');
+                b.btn.classList.remove('mem-flipped');
+                memRenderBack(a.btn);
+                memRenderBack(b.btn);
+                memFlipped = [];
+                memLock = false;
+            }, 900);
+        }
+    }
+}
+
+        function openTableau() {
+            switchScreen(['hiver-screen'], 'tableau-screen');
+            setTimeout(tbInit, 260);
+        }
+        function quitTableau() { switchScreen(['tableau-screen'], 'hiver-screen'); }
+
+        let tbViewport, tbCanvas, tbScale = 1, tbX = 0, tbY = 0, tbMinScale = 1;
+        let tbPanStart = null, tbLastDist = null, tbMouseDown = false, tbMouseStart = null;
+
+        function tbApplyTransform() {
+            tbCanvas.style.transform = `translate(${tbX}px, ${tbY}px) scale(${tbScale})`;
+        }
+        function tbClamp() {
+            const vpRect = tbViewport.getBoundingClientRect();
+            const canvasW = 500 * tbScale, canvasH = 719 * tbScale;
+            // Si le canevas est plus petit que la fenêtre dans une dimension, on le centre sur cet axe.
+            const minX = canvasW <= vpRect.width ? (vpRect.width - canvasW) / 2 : vpRect.width - canvasW;
+            const maxX = canvasW <= vpRect.width ? (vpRect.width - canvasW) / 2 : 0;
+            const minY = canvasH <= vpRect.height ? (vpRect.height - canvasH) / 2 : vpRect.height - canvasH;
+            const maxY = canvasH <= vpRect.height ? (vpRect.height - canvasH) / 2 : 0;
+            tbX = Math.max(minX, Math.min(maxX, tbX));
+            tbY = Math.max(minY, Math.min(maxY, tbY));
+        }
+        function tbZoom(factor) {
+            const newScale = Math.min(4, Math.max(tbMinScale, tbScale * factor));
+            const vpRect = tbViewport.getBoundingClientRect();
+            const cx = vpRect.width / 2, cy = vpRect.height / 2;
+            const ratio = newScale / tbScale;
+            tbX = cx - (cx - tbX) * ratio;
+            tbY = cy - (cy - tbY) * ratio;
+            tbScale = newScale;
+            tbClamp();
+            tbApplyTransform();
+        }
+        function tbZoomReset() {
+            if (tbViewport && tbCanvas) {
+                const vpRect = tbViewport.getBoundingClientRect();
+                if (vpRect.width < 10 || vpRect.height < 10) {
+                    // L'écran n'est pas encore mesurable (transition en cours) : on réessaie un peu plus tard.
+                    setTimeout(tbZoomReset, 100);
+                    return;
+                }
+                // Calcule le zoom minimum pour que le tableau (500x700) tienne entièrement dans la fenêtre.
+                tbMinScale = Math.min(vpRect.width / 500, vpRect.height / 719);
+                tbScale = tbMinScale;
+                tbX = (vpRect.width - 500 * tbScale) / 2;
+                tbY = (vpRect.height - 719 * tbScale) / 2;
+                tbApplyTransform();
+            }
+        }
+        function tbTouchDist(t) { const dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY; return Math.sqrt(dx*dx + dy*dy); }
+        function tbTouchStart(e) {
+            if (e.target.closest('.tb-hotspot-btn')) { tbPanStart = null; tbLastDist = null; return; }
+            if (e.touches.length === 1) {
+                tbPanStart = { x: e.touches[0].clientX - tbX, y: e.touches[0].clientY - tbY };
+            } else if (e.touches.length === 2) {
+                tbLastDist = tbTouchDist(e.touches);
+            }
+        }
+        function tbTouchMove(e) {
+            if (!tbPanStart && e.touches.length === 1) return; // touche demarree sur un cercle : on laisse le clic natif se produire
+            if (e.touches.length >= 1) e.preventDefault();
+            if (e.touches.length === 1 && tbPanStart) {
+                tbX = e.touches[0].clientX - tbPanStart.x;
+                tbY = e.touches[0].clientY - tbPanStart.y;
+                tbClamp();
+                tbApplyTransform();
+            } else if (e.touches.length === 2) {
+                const dist = tbTouchDist(e.touches);
+                const vpRect = tbViewport.getBoundingClientRect();
+                const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2 - vpRect.left;
+                const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2 - vpRect.top;
+                if (tbLastDist) {
+                    const ratio = dist / tbLastDist;
+                    const newScale = Math.min(4, Math.max(tbMinScale, tbScale * ratio));
+                    const factor = newScale / tbScale;
+                    tbX = midX - (midX - tbX) * factor;
+                    tbY = midY - (midY - tbY) * factor;
+                    tbScale = newScale;
+                    tbClamp();
+                    tbApplyTransform();
+                }
+                tbLastDist = dist;
+            }
+        }
+        function tbTouchEnd(e) {
+            if (e.touches.length === 0) { tbPanStart = null; tbLastDist = null; }
+            else if (e.touches.length === 1) { tbPanStart = { x: e.touches[0].clientX - tbX, y: e.touches[0].clientY - tbY }; tbLastDist = null; }
+        }
+        function tbWheel(e) {
+            e.preventDefault();
+            tbZoom(e.deltaY < 0 ? 1.15 : 0.87);
+        }
+        function tbMouseDownHandler(e) { tbMouseDown = true; tbMouseStart = { x: e.clientX - tbX, y: e.clientY - tbY }; }
+        function tbMouseMoveHandler(e) { if (tbMouseDown) { tbX = e.clientX - tbMouseStart.x; tbY = e.clientY - tbMouseStart.y; tbClamp(); tbApplyTransform(); } }
+        function tbMouseUpHandler() { tbMouseDown = false; }
+
+        function tbInit() {
+            tbViewport = document.getElementById('tb-viewport');
+            tbCanvas = document.getElementById('tb-canvas');
+            if (!tbViewport.dataset.tbInit) {
+                tbViewport.dataset.tbInit = '1';
+                tbViewport.addEventListener('touchstart', tbTouchStart, { passive: false });
+                tbViewport.addEventListener('touchmove', tbTouchMove, { passive: false });
+                tbViewport.addEventListener('touchend', tbTouchEnd);
+                tbViewport.addEventListener('wheel', tbWheel, { passive: false });
+                tbViewport.addEventListener('mousedown', tbMouseDownHandler);
+                window.addEventListener('mousemove', tbMouseMoveHandler);
+                window.addEventListener('mouseup', tbMouseUpHandler);
+                document.querySelectorAll('.tb-hotspot-btn').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const cluster = TB_CLUSTERS[el.dataset.sym];
+                        if (cluster) {
+                            openSubMenu(cluster.titre, cluster.items);
+                        } else {
+                            openSymbolModal(el.dataset.sym);
+                        }
+                    });
+                });
+            }
+            tbZoomReset();
+        }
+
+        const TB_CLUSTERS = {
+            trois_lumieres: { titre: 'Trois Grandes Lumières', items: [
+                { key: 'equerre', icone: '📐', label: "L'Équerre" },
+                { key: 'compas', icone: '🧭', label: 'Le Compas' },
+                { key: 'bible', icone: '📖', label: 'Le Volume de la Loi Sacrée' }
+            ]},
+            maillet_ciseau: { titre: 'Le Maillet et le Ciseau', items: [
+                { key: 'maillet', icone: '🔨', label: 'Le Maillet' },
+                { key: 'ciseau', icone: '🗡️', label: 'Le Ciseau' }
+            ]}
+        };
+
+        function openSubMenu(titre, items) {
+            document.getElementById('tb-submenu-title').textContent = titre;
+            const container = document.getElementById('tb-submenu-buttons');
+            container.innerHTML = '';
+            items.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = 'stone-btn p-3 rounded-lg text-left';
+                btn.textContent = item.icone + ' ' + item.label;
+                btn.onclick = () => openSymbolFromSubMenu(item.key);
+                container.appendChild(btn);
+            });
+            document.getElementById('tb-submenu').classList.remove('hidden');
+        }
+        function closeSubMenu() {
+            document.getElementById('tb-submenu').classList.add('hidden');
+        }
+        function openSymbolFromSubMenu(key) {
+            closeSubMenu();
+            openSymbolModal(key);
+        }
+
+        function openSymbolModal(key) {
+            const data = TABLEAU_SYMBOLS[key];
+            if (!data) return;
+            document.getElementById('tb-modal-title').textContent = data.nom;
+            document.getElementById('tb-modal-text').textContent = data.explication;
+            const link = document.getElementById('tb-modal-link');
+            link.href = data.url;
+            link.textContent = 'En savoir plus — ' + data.source;
+            document.getElementById('tb-modal').classList.remove('hidden');
+        }
+        function closeSymbolModal() {
+            document.getElementById('tb-modal').classList.add('hidden');
         }
 
         // Affiche la date du jour au calendrier de la Vraie Lumière (règle des loges bleues REAA :
