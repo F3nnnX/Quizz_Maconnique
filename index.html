@@ -297,10 +297,10 @@
 <button class="tb-hotspot-btn" data-sym="regle_24" style="left:56px;top:390px;width:56px;height:56px;"></button>
 <button class="tb-hotspot-btn" data-sym="fenetre_1" style="left:314px;top:148px;width:56px;height:56px;"></button>
 <button class="tb-hotspot-btn" data-sym="fenetre_2" style="left:400px;top:300px;width:56px;height:56px;"></button>
-<button class="tb-hotspot-btn" data-sym="fenetre_3" style="left:385px;top:540px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="fenetre_3" style="left:367px;top:513px;width:56px;height:56px;"></button>
 <button class="tb-hotspot-btn" data-sym="fil_a_plomb" style="left:400px;top:378px;width:52px;height:52px;"></button>
 <button class="tb-hotspot-btn" data-sym="lacs_damour" style="left:440px;top:8px;width:46px;height:46px;"></button>
-<button class="tb-hotspot-btn" data-sym="niveau" style="left:10px;top:600px;width:56px;height:56px;"></button>
+<button class="tb-hotspot-btn" data-sym="niveau" style="left:56px;top:503px;width:56px;height:56px;"></button>
 <button class="tb-hotspot-btn" data-sym="houppes" style="left:5px;top:648px;width:60px;height:60px;"></button>
 <button class="tb-hotspot-btn" data-sym="temple" style="left:210px;top:326px;width:80px;height:80px;"></button>
 <button class="tb-hotspot-btn" data-sym="porte" style="left:222px;top:495px;width:56px;height:56px;"></button>
@@ -466,10 +466,8 @@
                 <span class="text-xs font-semibold text-amber-700 uppercase">En cours</span>
             </div>
             <div class="masonic-font text-center text-lg font-bold text-slate-800 mb-1">Rituel du 1er Degré</div>
-            <p class="text-center text-xs italic text-slate-500 mb-6">Contenu à venir — remplace ce texte d'exemple par le tien directement dans le fichier (voir instructions fournies séparément).</p>
             <div id="rituel-lecture-content" class="prose-rituel text-sm leading-relaxed text-[#3a3428] space-y-4 px-1 pb-8">
-                <p><em>Ceci est un texte d'exemple montrant la mise en forme prévue pour le rituel : paragraphes espacés, lecture au fil du défilement, sans découpage en fiches cliquables.</em></p>
-                <p><em>Remplace ce contenu par le texte réel du rituel une fois qu'il sera prêt.</em></p>
+                <p class="text-center italic text-slate-500">Contenu à venir</p>
             </div>
         </div>
 
@@ -1516,7 +1514,7 @@ function memFlipCard(btn, card) {
         const TB_CLUSTERS = {
             trois_lumieres: { titre: 'Trois Grandes Lumières', items: [
                 { key: 'equerre', icone: '📐', label: "L'Équerre" },
-                { key: 'compas', icone: '🧭', label: 'Le Compas' },
+                { key: 'compas', icone: '<svg width="16" height="16" viewBox="-12 -12 24 24" style="display:inline-block;vertical-align:-3px;"><path d="M0,-10 L-7,9 M0,-10 L7,9" fill="none" stroke="#3a3428" stroke-width="1.6" stroke-linecap="round"/><circle cx="0" cy="-10" r="1.6" fill="#3a3428"/></svg>', label: 'Le Compas' },
                 { key: 'bible', icone: '📖', label: 'Le Volume de la Loi Sacrée' }
             ]},
             maillet_ciseau: { titre: 'Le Maillet et le Ciseau', items: [
@@ -1532,7 +1530,7 @@ function memFlipCard(btn, card) {
             items.forEach(item => {
                 const btn = document.createElement('button');
                 btn.className = 'stone-btn p-3 rounded-lg text-left';
-                btn.textContent = item.icone + ' ' + item.label;
+                btn.innerHTML = item.icone + ' ' + item.label;
                 btn.onclick = () => openSymbolFromSubMenu(item.key);
                 container.appendChild(btn);
             });
