@@ -2093,6 +2093,12 @@ function memFlipCard(btn, card) {
             container.style.pointerEvents = 'auto';
             container.removeAttribute('data-selected-correct');
             const q = currentQuestions[currentQuestionIndex];
+            if (!q) {
+                // Filet de sécurité : pool de questions vide ou index invalide.
+                // Evite un plantage (accès à une propriété de undefined) et ramène l'utilisateur au parvis.
+                retourAccueil();
+                return;
+            }
             const labels = ['A', 'B', 'C', 'D'];
 
             document.getElementById('question-text').textContent = q.question;
@@ -2251,7 +2257,7 @@ function memFlipCard(btn, card) {
 
             const replayBtn = document.getElementById('replay-theme-btn');
             const reviewBtn = document.getElementById('review-wrong-btn');
-            replayBtn.classList.toggle('hidden', currentTheme === 'Révision ciblée');
+            replayBtn.classList.toggle('hidden', currentTheme === 'Révision ciblée' || currentTheme === 'Révision des erreurs');
             reviewBtn.classList.toggle('hidden', wrongAnswers.length === 0);
 
             const reviewContainer = document.getElementById('review-container');
