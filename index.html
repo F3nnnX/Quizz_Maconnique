@@ -17,8 +17,6 @@
       - Dédoublonnage (dupGroup) désormais appliqué à tous les thèmes, pas seulement au
         mode combiné ; 2 quasi-doublons non tagués identifiés et corrigés (drt_029/voc_031,
         voc_017/rit_051).
-      - 13 questions "a_verifier" (droit et règlement / vocabulaire) toujours en attente
-        de validation contre le Règlement Général GLDF.
 -->
 <!DOCTYPE html>
 <html lang="fr">
@@ -1068,6 +1066,12 @@ const lectureData = [{"question": "Quel est le lien qui nous unit?", "answer": "
         // (appels directs à l'URL sans passer par l'appli). Ce n'est PAS un vrai secret : il est
         // visible dans ce fichier par quiconque l'ouvre. Remplace-le par une chaîne aléatoire à
         // toi, et reporte la même valeur dans le Apps Script.
+        // ⚠️ Limite structurelle : dans une appli 100% côté client (pas de backend), aucun jeton
+        // ne peut être un vrai secret — il est toujours lisible dans le code source. Ce jeton ne
+        // protège donc que contre le bruit accidentel, pas contre un usage malveillant délibéré.
+        // Si un jour la volumétrie ou l'abus posent problème, la vraie protection se met côté
+        // serveur (dans le Apps Script), pas ici : ex. limiter le nombre d'écritures par IP/minute
+        // dans doPost, ou faire tourner ce jeton régulièrement.
         const ANALYTICS_TOKEN = 'xaFpfqtMKplG4Crvlp1N3IXnJK325zp7';
         // Mot de passe de tuilage pour le Grade Compagnon. À remplacer par le vrai mot avant diffusion.
         const COMPAGNON_PASSWORD = 'A_DEFINIR_PAR_F3N';
@@ -1523,15 +1527,6 @@ const OG_OFFICIERS = [{"id": "venerable", "nom": "Vénérable Maître", "icon": 
 let ogSolved = new Set();
 let ogDrag = null; // {fromEl, fromSide, fromId, line}
 
-function shuffleArr(a) {
-    const arr = [...a];
-    for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-}
-
 function openOfficiersGame() {
     switchScreen(['hiver-screen'], 'officiers-screen');
     setTimeout(resetOfficiersGame, 260);
@@ -1549,8 +1544,11 @@ function resetOfficiersGame() {
     document.getElementById('og-win').classList.add('hidden');
     const grid = document.getElementById('og-grid');
     grid.innerHTML = '';
-    const iconOrder = shuffleArr(OG_OFFICIERS);
-    const nameOrder = shuffleArr(OG_OFFICIERS);
+    // On clone OG_OFFICIERS avant de mélanger : shuffleArray() mélange en place,
+    // et OG_OFFICIERS est le tableau maître réutilisé ailleurs (fiche détaillée,
+    // écran "Les Officiers") — il ne doit jamais être réordonné lui-même.
+    const iconOrder = shuffleArray([...OG_OFFICIERS]);
+    const nameOrder = shuffleArray([...OG_OFFICIERS]);
     // Les deux colonnes sont posées dans une grille commune : chaque ligne de la
     // grille prend la hauteur de sa case la plus haute, et les deux cases s'étirent
     // à cette hauteur. Les rangées restent donc alignées même quand un nom long
@@ -1773,7 +1771,7 @@ function resetMemoireGame() {
         deck.push({ pairId: c.id, kind: 'icon', icon: c.icon });
         deck.push({ pairId: c.id, kind: 'sens', sens: c.sens });
     });
-    deck = shuffleArr(deck);
+    deck = shuffleArray(deck);
 
     const grid = document.getElementById('mem-grid');
     grid.innerHTML = '';
@@ -2087,6 +2085,10 @@ function memFlipCard(btn, card) {
             }, 180);
         }
 
+        // Mélange Fisher-Yates EN PLACE (mute `array` et retourne la même référence).
+        // Fonction de mélange unique de l'appli (fusion de shuffleArray/shuffleArr).
+        // ⚠️ Toujours passer une copie ([...tableau]) si le tableau d'origine doit
+        // rester intact (ex. tableaux maîtres réutilisés ailleurs comme OG_OFFICIERS).
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -2292,7 +2294,26 @@ function memFlipCard(btn, card) {
             });
         }
 
+        // Vérifie que jsPDF (chargée depuis un CDN externe) est bien disponible avant de
+        // lancer un export PDF. Une fois mise en cache par le service worker (dès l'install,
+        // ou automatiquement après une première visite en ligne), elle reste disponible hors
+        // connexion ensuite. Mais si l'appli est utilisée hors ligne AVANT d'avoir jamais pu
+        // charger cette ressource (ex. tout premier lancement sans réseau), window.jspdf
+        // reste undefined : on l'explique clairement plutôt que de laisser planter le try/catch
+        // générique avec un message qui laisse croire à une simple erreur ponctuelle.
+        function ensureJsPDFAvailable() {
+            if (window.jspdf && window.jspdf.jsPDF) return true;
+            alert(
+                "Export PDF indisponible pour le moment : la bibliothèque nécessaire (jsPDF) n'a pas pu être chargée.\n\n" +
+                (navigator.onLine
+                    ? "Réessaie dans quelques instants, ou recharge la page."
+                    : "Tu sembles hors connexion et cette fonction n'a encore jamais pu être mise en cache. Connecte-toi une fois à l'appli — l'export PDF fonctionnera ensuite aussi hors ligne.")
+            );
+            return false;
+        }
+
         function downloadMementoPDF() {
+            if (!ensureJsPDFAvailable()) return;
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -2338,7 +2359,7 @@ function memFlipCard(btn, card) {
 
                 doc.save('Memento_Apprenti_Tuilage.pdf');
             } catch (e) {
-                alert("Le téléchargement du PDF n'a pas pu aboutir. Vérifie ta connexion internet et réessaie.");
+                alert("La génération du PDF a échoué de façon inattendue. Réessaie, et si le problème persiste, recharge la page.");
             }
         }
 
@@ -2362,6 +2383,7 @@ function memFlipCard(btn, card) {
         }
 
         function downloadRituelPDF() {
+            if (!ensureJsPDFAvailable()) return;
             try {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF({ unit: 'mm', format: 'a4' });
@@ -2440,7 +2462,7 @@ function memFlipCard(btn, card) {
 
                 doc.save('Rituel_1er_Degre_REAA.pdf');
             } catch (e) {
-                alert("Le téléchargement du PDF n'a pas pu aboutir. Vérifie ta connexion internet et réessaie.");
+                alert("La génération du PDF a échoué de façon inattendue. Réessaie, et si le problème persiste, recharge la page.");
             }
         }
 
@@ -2823,21 +2845,41 @@ function memFlipCard(btn, card) {
 
         // Enregistrement du service worker (mise en cache + usage hors connexion).
         // Le service worker est généré à la volée (pas de fichier sw.js séparé à héberger) :
-        // il met en cache la page elle-même lors du premier chargement, et la ressert
-        // depuis le cache si le réseau est indisponible ensuite. Silencieux en cas d'échec
-        // (ex. ouverture locale du fichier sans hébergement, où les service workers ne marchent pas).
+        // il met en cache la page elle-même ET les ressources externes indispensables
+        // (jsPDF pour l'export du Mémento, la feuille de style des polices Google Fonts)
+        // dès l'installation, puis continue à mettre en cache au fil de l'eau tout ce qui
+        // est chargé en ligne (y compris les fichiers de police .woff2 récupérés par le
+        // navigateur derrière la feuille de style). Ainsi, dès la première installation,
+        // l'appli — export PDF compris — reste utilisable hors connexion.
+        // Chaque ressource est mise en cache indépendamment (Promise.allSettled) : l'échec
+        // d'une seule (ex. CDN injoignable à l'installation) ne bloque pas les autres.
+        // Silencieux en cas d'échec global (ex. ouverture locale du fichier sans
+        // hébergement, où les service workers ne marchent pas).
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'quizz-maconnique-v1';
+                    const CACHE_NAME = 'quizz-maconnique-v2';
+                    const ASSETS_TO_PRECACHE = [
+                        self.registration.scope,
+                        'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+                        'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Cinzel:wght@400;700&family=EB+Garamond:wght@400;600&display=swap'
+                    ];
                     self.addEventListener('install', (event) => {
                         event.waitUntil(
-                            caches.open(CACHE_NAME).then((cache) => cache.add(self.registration.scope))
+                            caches.open(CACHE_NAME).then((cache) =>
+                                Promise.allSettled(ASSETS_TO_PRECACHE.map((url) => cache.add(url)))
+                            )
                         );
                         self.skipWaiting();
                     });
                     self.addEventListener('activate', (event) => {
-                        event.waitUntil(self.clients.claim());
+                        event.waitUntil(
+                            caches.keys()
+                                .then((keys) => Promise.all(
+                                    keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+                                ))
+                                .then(() => self.clients.claim())
+                        );
                     });
                     self.addEventListener('fetch', (event) => {
                         if (event.request.method !== 'GET') return;
