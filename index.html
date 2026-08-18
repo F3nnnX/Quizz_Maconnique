@@ -80,6 +80,12 @@
         Les bonnes réponses n'ont jamais été modifiées ; seuls les distracteurs l'ont été,
         en conservant leur idée fausse d'origine et en l'étoffant.
 
+    ===== BONUS =====
+      - Section « Rituels humoristiques » ajoutée en bas de l'écran Rituel : quatre textes
+        de banquet (Ouverture du Bar, Voyous, Francs-Gloutons, Confinement) repliés dans
+        des <details>, avec avertissement et export PDF dédié. Le PDF du rituel classique
+        est inchangé : la section est un frère du bloc #rituel-lecture-content, pas un fils.
+
     Développé par Casellato Félix - Tous droits réservés
 -->
 <!DOCTYPE html>
@@ -321,6 +327,82 @@
         }
         .glossaire-tag-filter-btn.abbr-tag-btn { border-color: #d8c6a4; background: #efe4c8; color: #8a6f2f; }
         .glossaire-tag-filter-btn.active { background: #3a3428; border-color: #3a3428; color: #f8f6ef; }
+        /* ============================================================
+           Rituels humoristiques — bonus en bas de l'ecran Rituel
+           ============================================================ */
+        #rituel-humor-section {
+            max-width: 46rem;
+            margin: 2rem auto 0;
+        }
+        .rh-head {
+            font-family: 'Cinzel', 'Optima', 'Palatino Linotype', Palatino, Georgia, serif;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #8a6f2f;
+        }
+        .rh-note {
+            margin: 0.75rem 0 0.9rem;
+            padding: 0.6rem 0.85rem;
+            font-size: 0.76rem;
+            font-style: italic;
+            line-height: 1.55;
+            color: #7a5d1f;
+            background: #fdf6e3;
+            border: 1px solid #e6d6ae;
+            border-radius: 0.75rem;
+        }
+        .rh-card {
+            background: #fbf2e4;
+            border: 1px solid #d8c6a4;
+            border-radius: 1rem;
+            margin-bottom: 0.7rem;
+            overflow: hidden;
+        }
+        .rh-card > summary {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            min-height: 44px;
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            list-style: none;
+        }
+        .rh-card > summary::-webkit-details-marker { display: none; }
+        .rh-card > summary::marker { content: ''; }
+        .rh-card > summary:focus-visible { outline: 2px solid #8a6f2f; outline-offset: -3px; }
+        .rh-emoji { flex: 0 0 auto; font-size: 1.2rem; line-height: 1; }
+        .rh-titles { flex: 1 1 auto; min-width: 0; }
+        .rh-title {
+            display: block;
+            font-family: 'Cinzel', 'Optima', 'Palatino Linotype', Palatino, Georgia, serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: #3a3428;
+        }
+        .rh-sub { display: block; font-size: 0.7rem; font-style: italic; line-height: 1.4; color: #7a6a4a; }
+        .rh-chevron { flex: 0 0 auto; font-size: 0.7rem; color: #8a6f2f; transition: transform 0.2s ease; }
+        .rh-card[open] > summary .rh-chevron { transform: rotate(90deg); }
+        .rh-body { padding: 0.9rem 1.1rem 1.2rem; border-top: 1px solid #e6d6ae; }
+        .rh-body > * + * { margin-top: 0.55rem; }
+        .rh-body p { font-size: 0.82rem; line-height: 1.6; color: #3a3428; }
+        .rh-body .rh-h {
+            margin-top: 1.1rem;
+            font-family: 'Cinzel', 'Optima', 'Palatino Linotype', Palatino, Georgia, serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #8a6f2f;
+        }
+        .rh-body .rh-h:first-child { margin-top: 0; }
+        .rh-body .rh-d { font-style: italic; color: #6b5c3e; }
+        .rh-role { font-weight: 700; color: #5a4a28; }
+        @media (prefers-reduced-motion: reduce) {
+            .rh-chevron { transition: none; }
+        }
         #rituel-lecture-content {
             max-width: 46rem;
             margin: 0 auto;
@@ -825,6 +907,7 @@
             <div class="flex justify-end gap-2 mb-3">
                 <button id="download-rituel-btn" onclick="downloadRituelPDF()" class="flashcard-btn text-xs px-3 py-1.5 rounded-full">📄 Télécharger PDF</button>
                 <button id="rituel-compact-toggle-btn" onclick="toggleRituelCompact()" class="flashcard-btn text-xs px-3 py-1.5 rounded-full">Vue compacte</button>
+                <button id="rituel-humor-jump-btn" onclick="jumpToRituelHumor()" class="flashcard-btn text-xs px-3 py-1.5 rounded-full">😃 Rituels humoristiques</button>
             </div>
             <div id="rituel-lecture-content" class="prose-rituel text-sm leading-relaxed text-[#3a3428] space-y-4 px-1 pb-8">
                 <h2>RITUEL DU 1ER DEGRÉ REAA</h2>
@@ -1021,6 +1104,15 @@
                 <p>Lorsque les FF. ont juré de respecter la loi du silence, le M. des Cér. prend le chandelier allumé sur le plat. du V.M. et frappe le sol de sa Canne et dit : Mes Frères veuillez garder le silence pendant la sortie du Vénérable Maître, du Député et du Collège des Officiers.</p>
                 <p>Le M. des Cér., le chandelier en main gauche, Canne en main droite, précède le V.M. (sans marquer les angles). L’Exp. suit immédiatement le V.M. tenant la garde de l’Ép. en main droite, lame verticale (dans la saignée du bras) contre l’épaule.</p>
                 <p>Au passage du V.M. suivi de l’Exp., le 1er Surv. et le 2nd Surv. s’intercalent derrière l’Exp. Les Off. et le Dép. suivent ainsi que les autres FF. qui sont sur les Col. Si un représentant du Conseiller Fédéral participe à la fermeture des Trav., il sort immédiatement avec le V.M., précédé du M. des Cér. Ils sont suivis de l’Exp. La sortie se fera en utilisant une musique appropriée.</p>
+            </div>
+
+            <div id="rituel-humor-section">
+                <h3 class="rh-head">Rituels humoristiques</h3>
+                <p class="rh-note">Bonus au second degré : ces textes circulent de longue date entre agapes et banquets. Aucune valeur rituelle, aucune prétention historique — à lire pour rire, jamais en Tenue.</p>
+                <div class="flex justify-end gap-2 mb-3">
+                    <button id="download-rituel-humor-btn" onclick="downloadRituelHumorPDF()" class="flashcard-btn text-xs px-3 py-1.5 rounded-full">📄 Télécharger PDF</button>
+                </div>
+                <div id="rituel-humor-list"></div>
             </div>
         </div>
 
@@ -3010,10 +3102,356 @@ function memFlipCard(btn, card) {
             document.getElementById('app-body').className = 'theme-tous min-h-screen flex flex-col text-slate-800';
         }
         function openRituelLecture() {
+            renderRituelHumor();
             switchScreen(['hiver-screen'], 'rituel-lecture-screen');
         }
         function quitRituelLecture() {
             switchScreen(['rituel-lecture-screen'], 'hiver-screen');
+        }
+
+        // --- Rituels humoristiques (bonus, bas de l'ecran Rituel) -------------
+        // Textes de banquet, sans aucune valeur rituelle. Rendus dans un <details>
+        // par rituel : replies pliees par defaut, l'ecran Rituel reste lisible.
+        const rituelsHumorData = [
+        {
+          id: 'bar',
+          emoji: '\u{1F37A}',
+          titre: 'Rituel d’Ouverture du Bar',
+          soustitre: 'Ouverture des travaux, version comptoir',
+          blocs: [
+            { d: 'Les Trois Grandes Lumières sont ici le Vin, les Femmes et les Chansons. Le Vénérable Maître y répond au titre de Vénérable Grand Poivrot, les Surveillants à ceux de 1er et 2e Poivrots.' },
+            { h: 'Ouverture du Bar' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, quel est le premier devoir d’un Poivrot dans un Bar ?' },
+            { r: 'Le 1er Poivrot', t: 'C’est de s’assurer que le Bar est correctement approvisionné, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Veuillez vous en assurer, Frère 1er Poivrot.' },
+            { r: 'Le 1er Poivrot', t: 'Frère 2e Poivrot, voyez si le Bar est correctement approvisionné.' },
+            { r: 'Le 2e Poivrot', t: 'Frère Caviste, voyez si le Bar est correctement approvisionné.' },
+            { r: 'Le Couvreur', t: 'Frère 2e Poivrot, le Bar est correctement approvisionné et les tonneaux sont en perce.' },
+            { r: 'Le 2e Poivrot', t: 'Frère 1er Poivrot, le Bar est correctement approvisionné et les tonneaux sont en perce.' },
+            { r: 'Le 1er Poivrot', t: 'Vénérable Grand Poivrot, le Bar est correctement approvisionné et les tonneaux sont en perce.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, quel est le second devoir d’un Poivrot dans le Bar ?' },
+            { r: 'Le 1er Poivrot', t: 'C’est de s’assurer que tous les hommes ici réunis sont Apprentis Poivrots, correctement invités en ces lieux, et ainsi de s’assurer que les assoiffés peuvent être abreuvés, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frères 1er et 2e Poivrots, assurez-vous-en sur vos colonnes respectives et rendez-m’en compte. Frères Poivrots, levez-vous et tournez-vous vers l’Orient. Frères qui êtes sur les colonnes, mettez-vous au signe d’Apprenti Poivrot au passage des 1er et 2e Poivrots.' },
+            { r: 'Le 2e Poivrot', t: 'Frères de la colonne du Nord, levez vos verres. Frère 1er Poivrot, tous les Frères de la colonne du Nord sont debout au signe d’Apprenti Poivrot et correctement invités en ces lieux.' },
+            { r: 'Le 1er Poivrot', t: 'Frères de la colonne du Midi, levez vos verres. Vénérable Grand Poivrot, les Frères des deux colonnes se sont fait reconnaître comme Apprentis Poivrots et correctement invités en ces lieux.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frères de l’Orient, levez vos verres. Je me porte garant des Frères de l’Orient, qui sont Apprentis Poivrots, et ainsi j’assure que le Bar peut être ouvert de la manière accoutumée.' },
+            { h: 'Instruction du grade d’Apprenti Poivrot' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, êtes-vous un Poivrot ?' },
+            { r: 'Le 1er Poivrot', t: 'Mes Frères me reconnaissent pour tel, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 2e Poivrot, à quoi puis-je reconnaître que vous êtes Apprenti Poivrot ?' },
+            { r: 'Le 2e Poivrot', t: 'À mes b… b… bredouillages, mes titubations et mes radotages, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Qu’avez-vous vu lorsque vous avez été introduit dans le Bar ?' },
+            { r: 'Le 2e Poivrot', t: 'Rien, car ma casquette me tombait sur les yeux, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Qu’avez-vous vu lorsque la casquette vous a été enlevée, Frère 2e Poivrot ?' },
+            { r: 'Le 2e Poivrot', t: 'Trois grandes lumières au-dessus du Bar, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Quelles sont ces trois grandes lumières, Frère 2e Poivrot ?' },
+            { r: 'Le 2e Poivrot', t: 'Du Vin, des Femmes et des Chansons, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 2e Poivrot, quelle est votre place dans le Bar ?' },
+            { r: 'Le 2e Poivrot', t: 'Auprès du téléphone, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Pourquoi, Frère 2e Poivrot ?' },
+            { r: 'Le 2e Poivrot', t: 'De même que le soleil se couche à l’Ouest pour terminer sa journée, de même le 2e Poivrot se tient auprès du téléphone pour fermer le Bar, et appeler un taxi pour les Poivrots afin de les reconduire chez eux pleins et satisfaits.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, quelle est votre place dans le Bar ?' },
+            { r: 'Le 1er Poivrot', t: 'Au comptoir, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Pourquoi, Frère 1er Poivrot ?' },
+            { r: 'Le 1er Poivrot', t: 'Pour régler le débit du blond jus de houblon, fournir aux Poivrots des sièges convenables, les appeler de la pompe à leur pinte et de leur pinte à la pompe, pour que le Vénérable Grand Poivrot en tire gloire et honneur.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Où est la place du Vénérable Grand Poivrot, Frère Grand Poivrot Repenti ?' },
+            { r: 'Le Grand Poivrot Repenti', t: 'À l’extérieur du côté de l’Ouest, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Pourquoi, Grand Poivrot Repenti ?' },
+            { r: 'Le Grand Poivrot Repenti', t: 'Tout comme il siffle un tonneau pour bien commencer sa journée, de même le Vénérable Grand Poivrot se couche à l’extérieur du côté de l’Ouest, pour ouvrir le Bar, diriger la soûlographie, et montrer l’exemple.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 2e Poivrot, où se trouvent les Apprentis Poivrots ?' },
+            { r: 'Le 2e Poivrot', t: 'Près de la pompe à bière de table, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Pourquoi, Frère 2e Poivrot ?' },
+            { r: 'Le 2e Poivrot', t: 'Parce qu’ils ne sont capables de supporter qu’une bière légère, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, comment s’appelle votre Bar ?' },
+            { r: 'Le 1er Poivrot', t: 'La Fondation Zizi Coquin, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, à quelle heure s’ouvre le Bar ?' },
+            { r: 'Le 1er Poivrot', t: 'Au point du jour, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 2e Poivrot, quelle heure est-il ?' },
+            { r: 'Le 2e Poivrot', t: 'C’est le point du jour, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Frère 1er Poivrot, quel âge avez-vous ?' },
+            { r: 'Le 1er Poivrot', t: 'L’âge de boire, Vénérable Grand Poivrot.' },
+            { h: 'Libation' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Puisque c’est le point du jour et que nous avons tous l’âge exigé, voulez-vous annoncer sur vos colonnes, Frères 1er et 2e Poivrots, que je vais ouvrir ce Bar de la manière accoutumée.' },
+            { r: 'Le 1er Poivrot', t: 'Frère 2e Poivrot, Frères de ma colonne, le Vénérable Grand Poivrot annonce qu’il va ouvrir le Bar de la manière accoutumée.' },
+            { r: 'Le 2e Poivrot', t: 'Frères de ma colonne, le Vénérable Grand Poivrot annonce qu’il va ouvrir le Bar de la manière accoutumée. L’annonce est faite sur ma colonne, Frère 1er Poivrot.' },
+            { r: 'Le 1er Poivrot', t: 'L’annonce a circulé sur les deux colonnes, Vénérable Grand Poivrot.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Levez vos verres, Frères 1er et 2e Poivrots, et tenez-vous à mes côtés.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Santé.' },
+            { r: 'Le 1er Poivrot', t: 'Santé.' },
+            { r: 'Le 2e Poivrot', t: 'Santé.' },
+            { r: 'Le Vénérable Grand Poivrot', t: 'Avec cette libation, je déclare le Bar officiellement ouvert. Puisse la vraie bière couler à flots dans nos gosiers.' }
+          ]
+        },
+        {
+          id: 'voyous',
+          emoji: '\u{1F3A9}',
+          titre: 'Rituel des Voyous',
+          soustitre: 'Grande Loge des Voyous — 1er degré symbolique, ouverture et fermeture des travaux',
+          blocs: [
+            { d: 'Le Vénérable Maître y est le Taulier, les Surveillants les 1er et 2e Matons, le Couvreur le Bignoleur, le Secrétaire le Greffier et l’Orateur le Baratineur.' },
+            { h: 'Ouverture des travaux' },
+            { r: 'Le Taulier', t: 'Frangin deuxième maton, quel est le premier turbin d’un maton en carrée ?' },
+            { r: 'Le 2e Maton', t: 'Taulier, c’est de bigler si la carrée n’a pas de courants d’air et si la lourde est bien bouclée.' },
+            { r: 'Le Taulier', t: 'Veux-tu bien gaffer, frangibus ?' },
+            { r: 'Le 2e Maton', t: 'Frangin bignoleur, veux-tu bigler si la carrée est aux pommes et décambuter en loucedé pour arnaquer les loquedus ?' },
+            { r: 'Le Bignoleur (de retour)', t: 'Y’a que dalle, Chef !' },
+            { r: 'Le 2e Maton', t: 'Frangin Taulier, la cabane est réglo.' },
+            { r: 'Le Taulier', t: 'Quel est le boulot du premier maton ?' },
+            { r: 'Le 1er Maton', t: 'Frangin Taulier, c’est de se rencarder si tous les gonzes d’ici sont bien des potes et non des demi-sels.' },
+            { r: 'Le Taulier', t: 'Premier et deuxième maton, vos zigues, faites votre turbin. Biglez s’il n’y a pas de loquedus, les argougnez et me les bonnir aussi sec. Debout tas de fainéants face au bourguignon !' },
+            { d: '(Au passage des matons, les frangins leur font un superbe bras d’honneur !)' },
+            { r: 'Le 1er Maton', t: 'Boss, tous les fiasses qui sont sur leurs guibolles sont bien des affranchis.' },
+            { r: 'Le Taulier', t: 'Il en est de même au bourguignon. Tous ceux qui sont à côté de mézigues sont aussi de la cabane. Au nom du Mec des Mecs, la cabane est affranchie. Pour sa pomme, on va lui filer une sacrée batterie.' },
+            { d: '(Tous tapent dans leurs pognes.)' },
+            { h: 'Lecture de la planche tracée' },
+            { r: 'Le Taulier', t: 'Posez vos derches, les mecs. Frangin Greffier, veux-tu nous filer le rapport du dernier turbin ?' },
+            { r: 'Le Greffier (après avoir vainement essayé de lire ses papiers)', t: 'J’ai dit, Frangin Taulier !' },
+            { r: 'Le Taulier', t: 'Vous mes pommes et vous les matons, esgourdez s’il y a des niards qui réclament après le baratin du greffier.' },
+            { r: 'Le 1er Maton', t: 'Boss, les affranchis n’ont pas jaspiné.' },
+            { r: 'Le Taulier', t: 'Mes potes, avant de chiquer contre, on va demander au baratineur ce qu’il en pense.' },
+            { r: 'Le Baratineur', t: 'Tous les mecs ont bien entravé, c’est banco !' },
+            { r: 'Le Taulier', t: 'Le dernier turbin est donc affranchi. Et pour pas vous voir roupiller en écoutant le baratineur déboiser des conneries qui en foutent plein les esgourdes, je m’en vais lourder la taule.' },
+            { h: 'Propositions, tronc et fermeture des travaux' },
+            { r: 'Le Taulier', t: 'Frangins matons, demandez aux potes de vos milieux s’ils n’ont rien à baratiner. Je fais circuler l’sac aux baratins et celui de l’artiche pour aider les frangins qui sont tombés. Les boulots sont-ils contents ?' },
+            { r: 'Le 1er Maton', t: 'Ils le sont, frangin Taulier.' },
+            { r: 'Le Taulier', t: 'Second maton, quel est ton âge ?' },
+            { r: 'Le 2e Maton', t: 'Trois berges, vieux.' },
+            { r: 'Le Taulier', t: 'Quel est le temps du boulot ?' },
+            { r: 'Le 2e Maton', t: 'Du bourguignon au plumard, patron.' },
+            { r: 'Le Taulier', t: '1er Maton, quelle heure est-il ?' },
+            { r: 'Le 1er Maton', t: 'C’est l’heure du plumard, Boss. J’entends sonner douze plombes et on en a ras le bol !' },
+            { r: 'Le Taulier', t: 'Debout, mes niards ! Au nom du Mec des Mecs, et pour sa bonne pomme, on va lui en filer une toute neuve, puisque la taule est débouclée. Allez les gars, tapez dans vos pognes. Ne bonnissez rien au dehors sur le turbin de ce soir et allons filer au paddok avec nos nanas. Mais avant, allons en écluser un !' }
+          ]
+        },
+        {
+          id: 'gloutons',
+          emoji: '\u{1F37D}\u{FE0F}',
+          titre: 'Rituel des Francs-Gloutons',
+          soustitre: 'Instruction du grade',
+          blocs: [
+            { d: 'Le Franc-glouton arrive sur scène vêtu d’une toque blanche et d’un tablier blanc de cuistot ; il porte à la boutonnière un badge formé d’un triangle la pointe en bas dans lequel sont dessinées trois grosses molaires. Il a de l’embonpoint, une trogne de bon vivant.' },
+            { d: 'Le Tuileur s’assure de sa qualité sur le ton de la curiosité et de l’étonnement.' },
+            { h: 'Tuilage' },
+            { r: 'Q', t: 'Êtes-vous Franc-glouton ?' },
+            { r: 'R', t: 'Mes traits me font reconnaître comme tel !' },
+            { r: 'Q', t: 'Qu’est-ce qu’un Franc-glouton ?' },
+            { r: 'R', t: 'C’est un homme libre et de bonne humeur. Et à toutes ces choses qui donnent du goût à la vie — le foot, la télé — il préfère les épices et les marrons glacés. C’est un homme vraiment sans préjugé, qui bâfre avec les riches comme avec les pauvres.' },
+            { r: 'Q', t: 'Mais alors qu’est-ce que la Franc-gloutonnerie ?' },
+            { r: 'R', t: 'La Franc-gloutonnerie est une société gourmande qui veut rétablir la bonne cuisine dans l’humanité et qui veut faire régner à table la fraternité.' },
+            { r: 'Q', t: 'Quels en sont ses principes ?' },
+            { r: 'R', t: 'La tolérance de toute écuelle, le respect de sa bouffe et de celle d’autrui, la liberté absolue de bombance.' },
+            { r: 'Q', t: 'Quelle est sa devise ?' },
+            { r: 'R', t: 'Boire, manger, éructer.' },
+            { r: 'Q', t: 'Boire, manger, éructer… ne convient-il pas de corroborer cette devise par un quatrième terme ?' },
+            { r: 'R', t: 'Oui, chanter !' },
+            { r: 'Q', t: 'Quels sont les devoirs du Franc-glouton ?' },
+            { r: 'R', t: 'Indépendamment de son devoir de nourrir ses Frères de table, le Franc-glouton doit travailler sans relâche à améliorer les repas élaborés par ceux qui sont à la tête de l’Ordre. Pour ça, il goûte tous les plats qu’on lui soumet puis il propage autour de lui les recettes qu’il a acquises. Pour ça, il est prêt à tous les sacrifices.' },
+            { h: 'Signes, rots et attouchements' },
+            { r: 'Q', t: 'Comment peut-on reconnaître un Franc-glouton ?' },
+            { r: 'R', t: 'À des lignes, rots et attroupements.' },
+            { r: 'Q', t: 'Comment sont les lignes ?' },
+            { r: 'R', t: 'Arrondies, épaisses, voluptueuses.' },
+            { r: 'Q', t: 'Que signifient-elles ?' },
+            { r: 'R', t: 'Ne me le demandez pas ! J’aimerais mieux avoir la gorge tranchée que de révéler les secrets qui m’ont été confiés.' },
+            { r: 'Q', t: 'Voulez-vous montrer l’attroupement au Surveillant des renseignements généraux ?' },
+            { r: 'R', t: '(Il fait mine de chercher du regard puis désigne un groupe dans l’assistance.) Là ! Ils sont là !' },
+            { r: 'Q', t: 'Donnez-moi le rot de passe.' },
+            { r: 'R', t: '(Une tentative de rot.)' },
+            { r: 'Q', t: 'Que signifie ce rot ?' },
+            { r: 'R', t: 'C’est le cri du premier homme qui, selon la légende, s’est mis à table.' },
+            { r: 'Q', t: 'Pouvez-vous me donner le rot sacré au rite hoqueté, à l’ail et au hareng fumé ?' },
+            { r: 'R', t: '(Après quelques tentatives de rots avortés…) Je ne sais ni le sortir, ni le décrire… je ne sais que le mimer. Si vous parvenez à l’éructer en premier, je pourrai peut-être vous en éructer un second.' },
+            { r: 'Q', t: 'Que signifie ce rot ?' },
+            { r: 'R', t: 'Satiété, à votre santé ! C’est, d’après la légende adoptée, le grognement d’une des cochonnes de la tente de Salomon près de laquelle les apprentis gloutons reniflaient le sale air. (Il renifle.)' },
+            { r: 'Q', t: 'Les Francs-gloutons n’ont-ils pas d’autres rots de reconnaissance ?' },
+            { r: 'R', t: 'Il y a encore les rots de semestre. À l’époque de chaque solstice, le Grand-rotant adresse aux chefs de table, en flacons cachetés, deux rots destinés à constater la régularité des gloutons. Ces rots sont humés à table selon des règles établies ; ils ne doivent être reniflés qu’à respiration basse, et sans sortir des bocaux bacchiques.' },
+            { h: 'La réception' },
+            { r: 'Q', t: 'Pour quelle raison vous êtes-vous fait recevoir Franc-glouton ?' },
+            { r: 'R', t: 'Parce que — d’une façon symbolique — je mangeais dans les fast-food et que je désirais m’en mettre plein la lampe. (La société au milieu de laquelle nous vivons n’est qu’à demi civilisée ; les nourritures essentielles y sont encore entourées de graisse épaisse.)' },
+            { r: 'Q', t: 'Pourquoi vos yeux étaient-ils bandés lorsque vous avez été introduit à table, le jour de votre première invitation ?' },
+            { r: 'R', t: 'Pour marquer le sens de l’invitation, qui est le passage de la bouffe sans odeur ni saveur à la bouffe odorante des connaisseurs.' },
+            { r: 'Q', t: 'Que vous a-t-on fait faire à table pendant que vous aviez le bandeau sur les yeux ?' },
+            { r: 'R', t: 'On m’a interrogé à trois reprises et l’on m’a fait ingurgiter le contenu de trois grands verres.' },
+            { r: 'Q', t: 'Que contenaient ces trois verres ?' },
+            { r: 'R', t: 'Le premier contenait de l’eau ; le deuxième un excellent « Moulin à vent » ; le troisième un rosé de « Pierrefeu ». Auparavant on m’avait enfermé à la cave sur un sac de pommes de terre, devant un œuf, une tête de veau et une salière !' },
+            { h: 'Les symboles de la table' },
+            { r: 'Q', t: 'Quelle est la signification des fourchettes dont les pointes étaient tournées vers vous quand le bandeau vous a été enlevé ?' },
+            { r: 'R', t: '(Avec effroi.) Elles m’annonçaient que les Francs-gloutons n’hésiteraient pas à me dévorer si l’envie de manger venait à me passer.' },
+            { r: 'Q', t: 'Les fourchettes qu’ils emploient en diverses circonstances n’ont-elles pas d’une manière générale une signification symbolique ?' },
+            { r: 'R', t: 'Oui ! Elles en ont deux. Avant 1789 elles symbolisaient l’égalité : à cette époque, en effet, les roturiers mangeaient avec les doigts. Ainsi à table chaque glouton avait droit à une fourchette ; cette pratique servait à indiquer que tous les bâfreurs sont égaux.' },
+            { r: 'Q', t: 'Pourquoi le chef de table qui vous a reçu vous a-t-il fait remettre une rose destinée à la femme que vous estimez le plus ?' },
+            { r: 'R', t: 'Parce que les Francs-gloutons — du moins ceux de la G.·.O.·., la Gueule Ouverte — n’admettent pas les femmes à leur table, mais ils ne peuvent pas s’enivrer sans penser à elles !' },
+            { r: 'Q', t: 'Quel est l’emblème de la bavette que vous portez ?' },
+            { r: 'R', t: 'C’est l’emblème de la ripaille ; il rappelle au Franc-glouton qu’il peut s’empiffrer sans retenue. La bavette est le véritable insigne des Francs-gloutons, qui doivent toujours en être revêtus à table.' },
+            { r: 'Q', t: 'Pourquoi les apprentis gloutons se tiennent-ils au Nord de la table ?' },
+            { r: 'R', t: 'Le Nord étant le côté le moins chauffé, cette place rappelle aux apprentis qu’ils n’ont qu’à bien bâfrer s’ils veulent se réchauffer.' },
+            { r: 'Q', t: 'Que signifie la passoire placée au-dessus de la table, et le gros œil qui s’y trouve ?' },
+            { r: 'R', t: 'Cette passoire est l’emblème du ventre. Le gros œil ouvert figure la gourmandise. Il évoque cette maxime qui remonte à la plus haute antiquité : « Il faut toujours avoir les yeux plus gros que le ventre. »' },
+            { h: 'Les travaux de la table' },
+            { r: 'Q', t: 'À quelle heure les Francs-gloutons se mettent-ils à table ?' },
+            { r: 'R', t: 'À midi !' },
+            { r: 'Q', t: 'Pourquoi ?' },
+            { r: 'R', t: 'Midi, c’est l’heure gastronomique par excellence !' },
+            { r: 'Q', t: 'À quoi travaillent les apprentis Francs-gloutons ?' },
+            { r: 'R', t: 'À casser la croûte.' },
+            { r: 'Q', t: 'Que fait-on à table ?' },
+            { r: 'R', t: 'On y combat le régime et la minceur. On y glorifie l’ivresse et la gourmandise. C’est ce que les anciens formulaires bacchiques traduisent par ces mots : « On y fait venir l’appétit en mangeant. On y creuse sa tombe avec les dents. »' },
+            { r: 'Q', t: '(En désignant le revers de la veste de l’interrogé.) Quel badge avez-vous ?' },
+            { r: 'R', t: 'Trois dents !' },
+            { r: 'Q', t: 'Qu’ambitionnez-vous ?' },
+            { r: 'R', t: 'J’aspire à oublier l’horreur d’avoir été trop grassement nourri parmi les Francs-gloutons.' }
+          ]
+        },
+        {
+          id: 'confinement',
+          emoji: '\u{1F637}',
+          titre: 'Rituel du confinement au 1er degré',
+          soustitre: 'Respectable Loge Coronavirus — cru 2020',
+          blocs: [
+            { d: 'Décalque du rituel d’Apprenti écrit pendant la pandémie : l’ordre y devient l’ordre de confinement, la batterie une quinte de toux, et la chaîne d’union se forme par les pieds.' },
+            { h: 'Ouverture des travaux' },
+            { r: 'Le Vénérable', t: 'Frère 1er Surveillant, quel est le premier devoir d’un Surveillant en confinement ?' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, c’est de s’assurer que nous sommes à couvert.' },
+            { r: 'Le Vénérable', t: 'Frère 2nd Surveillant, veuillez vous en assurer.' },
+            { r: 'Le Couvreur', t: 'Frère 2nd Surveillant, le Covid-19 n’est plus sur le parvis et il est parti : nous sommes à couvert.' },
+            { r: 'Le 2nd Surveillant', t: 'Très Vénérable, nous sommes parfaitement confinés.' },
+            { r: 'Le Vénérable', t: 'Frère 1er Surveillant, quel est le second devoir d’un surveillant en confinement ?' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, c’est de s’assurer que tous les Frères et toutes les Sœurs sont masqués, gantés, aseptisés, non contagieux et à l’ordre de confinement.' },
+            { r: 'Le Vénérable', t: 'Frères 1er et 2nd Surveillants, chacun sur vos colonnes veuillez vous en assurer.' },
+            { r: 'Le 2nd Surveillant', t: 'Frère 1er Surveillant, les Sœurs et les Frères qui ornent la colonne du Nord sont tous masqués, gantés, aseptisés, non contagieux et à l’ordre de confinement, nez dans le coude.' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, les Sœurs et les Frères qui ornent les colonnes sont tous masqués, gantés, aseptisés, non contagieux et à l’ordre de confinement, nez dans le coude.' },
+            { r: 'Le Vénérable', t: 'Il en est de même à l’Orient.' },
+            { r: 'Le Vénérable', t: 'Frère 1er Surveillant, à quoi reconnaissez-vous un porteur sain ?' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, par ses signes, par son absence de température et de toux, et le non-attouchement.' },
+            { r: 'Le Vénérable', t: 'Frère 1er Surveillant, de quand à quand devons-nous ouvrir les travaux ?' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, selon les consignes du Préfet, entre le lever et le coucher du soleil.' },
+            { r: 'Le Vénérable', t: 'Frères 1er et 2nd Surveillants, invitez les Sœurs et les Frères de l’une et de l’autre colonne, comme j’invite ceux qui sont à l’Orient, à ouvrir en toussant 3 fois avec la main devant la bouche les travaux de la Respectable Loge Coronavirus, au grade d’Apprenti.' },
+            { r: 'Le 1er Surveillant', t: 'Frère 2nd Surveillant, Frères et Sœurs de la colonne du Midi, le Très Vénérable nous invite à nous joindre à lui pour ouvrir les travaux, en toussant 3 fois avec la main devant la bouche, de la Respectable Loge Coronavirus, au grade d’Apprenti.' },
+            { r: 'Le 2nd Surveillant', t: 'Frères et Sœurs de la colonne du Nord, le Très Vénérable nous invite à nous joindre à lui pour ouvrir les travaux, en toussant 3 fois avec la main devant la bouche, de la Respectable Loge Coronavirus, au grade d’Apprenti.' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, l’annonce est faite.' },
+            { d: 'Le Vénérable et les Frères 1er et 2nd Surveillants frappent par 3 fois. Toutes les Sœurs et tous les Frères, à l’ordre de confinement, suivent le Très Vénérable et s’exécutent en toussant par 3 fois.' },
+            { r: 'Le Vénérable', t: 'Mes Sœurs et mes Frères, quittez l’ordre de confinement, prenez place, les travaux sont ouverts.' },
+            { r: 'Le Vénérable', t: 'Frère Orateur, pendant les travaux vous êtes le gardien des règles de confinement des Sœurs et des Frères dans ce Temple ; veuillez nous faire lecture de son article premier.' },
+            { r: 'L’Orateur', t: 'La Loge Coronavirus est née d’une pandémie et de ce fait son objectif est de veiller, tant à l’intérieur comme à l’extérieur, que l’ensemble des Sœurs et des Frères qui la composent soit protégé de toute attaque du Covid-19, et ce par tous moyens adogmatiques qui n’affecteront pas leur liberté de conscience. Elle a pour devise : dépistage, traitement, guérison.' },
+            { h: 'Propositions et circulation des troncs' },
+            { d: 'Après que le Vénérable et les Frères 1er et 2nd Surveillants ont frappé par 3 fois.' },
+            { r: 'Le Vénérable', t: 'Frères 1er et 2nd Surveillants, demandez aux Frères et aux Sœurs de l’une et l’autre colonne s’ils n’ont rien à proposer pour la santé de l’Ordre en général et de cette Loge en particulier ?' },
+            { r: 'Le 1er Surveillant', t: 'Frère 2nd Surveillant, Frères et Sœurs qui décorez la colonne du Midi, n’avez-vous rien à proposer pour la santé de l’Ordre en général et de cette Loge en particulier ?' },
+            { r: 'Le 2nd Surveillant', t: 'Frères et Sœurs qui décorez la colonne du Nord, n’avez-vous rien à proposer pour la santé de l’Ordre en général et de cette Loge en particulier ?' },
+            { r: 'Le 2nd Surveillant', t: 'Frère 1er Surveillant, tout est fini sur ma colonne.' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, tout est fini sur les 2 colonnes.' },
+            { r: 'Le Vénérable', t: 'Puisque tout est fini sur les 2 colonnes et à l’Orient, Frère Orateur, veuillez résumer les travaux de santé de ce jour et donner vos conclusions.' },
+            { d: 'L’Orateur donne ses conclusions en insistant sur les efforts de protection et de confinement que toutes les Sœurs et tous les Frères doivent mettre en œuvre.' },
+            { r: 'Le Vénérable', t: 'Nous allons procéder à la clôture de nos travaux.' },
+            { h: 'Chaîne d’union' },
+            { r: 'Le Vénérable', t: 'Mes Sœurs et mes Frères, gardez vos gants et vos masques, formons la chaîne par les pieds.' },
+            { d: 'Toutes les Sœurs et tous les Frères se réunissent en cercle autour du tableau de loge en écartant les jambes de façon que le pied droit de l’un touche le pied gauche de l’autre, le nez dans le coude droit et le bras gauche pendant le long du corps. Puis quelques mots du Vénérable sur les Sœurs et Frères emportés par la pandémie.' },
+            { r: 'Le Vénérable', t: 'Rompons la chaîne. Prenez place.' },
+            { r: 'Le Vénérable', t: 'Le tronc de bienfaisance va circuler ; pensez à nos Sœurs et Frères nécessiteux qui ont besoin de masques et de gel hydroalcoolique. Frère Maître des Cérémonies, remplissez votre office.' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, le tronc de bienfaisance est à votre disposition entre les colonnes.' },
+            { r: 'Le Vénérable', t: 'Qu’il me soit apporté. Le tronc de bienfaisance sera décompté après l’assemblée par le Frère Hospitalier, et le triangle ira à l’achat de masques, de solution hydroalcoolique et d’aide aux familles lors du passage à l’Orient éternel des Sœurs et des Frères.' },
+            { h: 'Fermeture des travaux' },
+            { d: 'Après que le Vénérable et les Frères 1er et 2nd Surveillants ont frappé par 3 fois.' },
+            { r: 'Le Vénérable', t: 'Debout et à l’ordre de confinement, mes Sœurs et mes Frères.' },
+            { r: 'Le Vénérable', t: 'Frère 1er Surveillant, quel âge avez-vous ?' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, l’âge propice pour une attaque de la pandémie Covid-19.' },
+            { r: 'Le Vénérable', t: 'À quelle heure les Maçons sont-ils dans l’usage de fermer les travaux ?' },
+            { r: 'Le 1er Surveillant', t: 'Très Vénérable, à l’heure du couvre-feu donné par le Préfet.' },
+            { r: 'Le Vénérable', t: 'Puisqu’il est l’heure du couvre-feu, Frères 1er et 2nd Surveillants, invitez les Sœurs et les Frères qui sont sur votre colonne à se joindre à moi pour fermer les travaux d’Apprenti de la Respectable Loge Coronavirus.' },
+            { r: 'Le 1er Surveillant', t: 'Frère 2nd Surveillant, Sœurs et Frères de la colonne du Midi, le Très Vénérable nous invite à nous joindre à lui pour fermer les travaux d’Apprenti de la Respectable Loge Coronavirus.' },
+            { r: 'Le 2nd Surveillant', t: 'Sœurs et Frères de la colonne du Nord, le Très Vénérable nous invite à nous joindre à lui pour fermer les travaux d’Apprenti de la Respectable Loge Coronavirus.' },
+            { r: 'Le Vénérable', t: 'À la gloire du Saint Raphaël Grand Quinquina, je ferme cette Loge d’Apprenti. Mes Sœurs et mes Frères, debout et à l’ordre de confinement.' },
+            { d: 'Le Vénérable et les Frères 1er et 2nd Surveillants frappent par 3 fois.' },
+            { r: 'Le Vénérable', t: 'À moi mes Sœurs et mes Frères, par le triple signe en toussant 3 fois avec la main devant la bouche, et la triple acclamation : dépistage, traitement, guérison.' },
+            { r: 'Le Vénérable', t: 'Mes Sœurs et mes Frères qui décorez l’Orient, les travaux d’Apprenti sont fermés.' },
+            { r: 'Le 1er Surveillant', t: 'Mes Sœurs et mes Frères qui décorez la colonne du Midi, les travaux d’Apprenti sont fermés.' },
+            { r: 'Le 2nd Surveillant', t: 'Mes Sœurs et mes Frères qui décorez la colonne du Nord, les travaux d’Apprenti sont fermés.' },
+            { d: 'Les Sœurs et les Frères se séparent sans se déganter et sans mettre à bas les masques, en jurant de se protéger au maximum et en se confinant chez eux.' }
+          ]
+        }
+        ];
+
+        function renderRituelHumor() {
+            const list = document.getElementById('rituel-humor-list');
+            if (!list || list.dataset.rendered === '1') return;
+            list.innerHTML = rituelsHumorData.map(rit => {
+                const corps = rit.blocs.map(b => {
+                    if (b.h) return `<p class="rh-h">${b.h}</p>`;
+                    if (b.d) return `<p class="rh-d">${b.d}</p>`;
+                    return `<p><span class="rh-role">${b.r}</span> — ${b.t}</p>`;
+                }).join('');
+                return `<details class="rh-card" id="rh-card-${rit.id}">`
+                    + `<summary><span class="rh-emoji" aria-hidden="true">${rit.emoji}</span>`
+                    + `<span class="rh-titles"><span class="rh-title">${rit.titre}</span>`
+                    + `<span class="rh-sub">${rit.soustitre}</span></span>`
+                    + `<span class="rh-chevron" aria-hidden="true">\u25B6</span></summary>`
+                    + `<div class="rh-body">${corps}</div></details>`;
+            }).join('');
+            list.dataset.rendered = '1';
+        }
+
+        function jumpToRituelHumor() {
+            const section = document.getElementById('rituel-humor-section');
+            if (!section) return;
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const top = section.getBoundingClientRect().top + window.scrollY - 16;
+            window.scrollTo({ top, behavior: reduce ? 'auto' : 'smooth' });
+        }
+
+        function downloadRituelHumorPDF() {
+            if (!ensureJsPDFAvailable()) return;
+            try {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+                const pageWidth = doc.internal.pageSize.getWidth();
+                const pageHeight = doc.internal.pageSize.getHeight();
+                const margin = 18;
+                const maxWidth = pageWidth - margin * 2;
+                let y = 22;
+
+                const write = (rawText, font, size, lead, gap) => {
+                    // Les polices standard de jsPDF ignorent l'espace fine insecable : on la degrade.
+                    const text = String(rawText).replace(/\u202F/g, ' ');
+                    doc.setFont('times', font);
+                    doc.setFontSize(size);
+                    const lines = doc.splitTextToSize(text, maxWidth);
+                    if (y + lines.length * lead + gap > pageHeight - margin) {
+                        doc.addPage();
+                        y = 22;
+                    }
+                    doc.text(lines, margin, y);
+                    y += lines.length * lead + gap;
+                };
+
+                doc.setFont('times', 'bold');
+                doc.setFontSize(16);
+                doc.text('Rituels humoristiques', pageWidth / 2, y, { align: 'center' });
+                y += 10;
+                write("Textes de banquet, sans aucune valeur rituelle ni prétention historique.", 'italic', 10, 5, 6);
+
+                rituelsHumorData.forEach((rit, idx) => {
+                    if (idx > 0) { doc.addPage(); y = 22; }
+                    write(rit.titre, 'bold', 14, 6.5, 2);
+                    write(rit.soustitre, 'italic', 10.5, 5, 5);
+                    rit.blocs.forEach(b => {
+                        if (b.h) write(b.h, 'bold', 12, 5.5, 3);
+                        else if (b.d) write(b.d, 'italic', 10.5, 5, 3);
+                        else write(`${b.r} — ${b.t}`, 'normal', 11, 5, 3);
+                    });
+                });
+
+                const totalPages = doc.internal.getNumberOfPages();
+                for (let p = 1; p <= totalPages; p++) {
+                    doc.setPage(p);
+                    doc.setFont('times', 'normal');
+                    doc.setFontSize(9);
+                    doc.text(`Page ${p} / ${totalPages}`, pageWidth / 2, pageHeight - 10, { align: 'center' });
+                }
+
+                doc.save('Rituels_humoristiques.pdf');
+            } catch (e) {
+                alert("La génération du PDF a échoué de façon inattendue. Réessaie, et si le problème persiste, recharge la page.");
+            }
         }
 
         function downloadRituelPDF() {
