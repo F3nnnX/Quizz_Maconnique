@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#08080a">
+<meta name="description" content="Kata — La Descente : fiction interactive dans les catacombes interdites de Paris. Un seul chemin ramène au jour.">
+<title>Kata — La Descente</title>
+
+<!--
+  KATA — LA DESCENTE
+  Fiction interactive à choix multiples. Fichier unique, aucune dépendance, aucun build.
+
+  V0.1 — première descente jouable
+    • Moteur de graphe : 48 nœuds, 16 dénouements — 13 morts, 2 échecs, 1 sortie.
+    • Un seul chemin ramène au jour. Tout le reste tue, coûte cher, ou renvoie en arrière.
+    • Ressource unique : la frontale. Chaque choix la consomme. À zéro, le noir absolu,
+      et le noir absolu tue — c’est la mort la plus fréquente et la moins spectaculaire.
+    • Le sac choisi à la première scène conditionne trois morts bien plus loin :
+      « léger » ne peut pas changer ses piles, « chargé » ne passe pas la chatière.
+      Le joueur ne fait le lien qu’à la deuxième partie. C’est voulu.
+    • Collection d’épitaphes en localStorage : mourir n’est pas perdre, c’est graver.
+
+  Conventions d’écriture — identiques au Quiz Maçonnique :
+    apostrophes courbes ’, guillemets « », espace fine insécable U+202F avant ? ! ; :
+    et à l’intérieur des guillemets. Les commentaires disent pourquoi, pas quoi.
+
+  Le texte narratif vit entre les balises DÉBUT TEXTE / FIN TEXTE : c’est la zone que
+  le script de normalisation typographique traite, et lui seul. Ne rien mettre d’autre
+  dedans que des chaînes destinées à être lues.
+-->
+
+<style>
+/* ——— Fondations ——————————————————————————————————————————————————————— */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #08080a;
+  /* Le halo de la frontale : un cône de lumière posé en haut de l’écran, qui laisse
+     les bords de la page dans le noir. C’est tout le décor du jeu. */
+  background-image:
+    radial-gradient(120% 60% at 50% -10%, rgba(201,162,39,.13) 0%, rgba(201,162,39,.04) 38%, transparent 70%),
+    radial-gradient(90% 50% at 50% 110%, rgba(120,140,160,.05) 0%, transparent 70%);
+  background-attachment: fixed;
+  color: #cfc8b8;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+  padding-bottom: 4rem;
+}
+.cache { display: none !important; }
+
+h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: 600; line-height: 1.25; margin: 0; }
+h1 { font-size: 1.9rem; letter-spacing: .01em; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1.05rem; }
+h1:focus, h2:focus, h3:focus { outline: none; }
+p { margin: 0 0 1.05em; }
+
+.enveloppe { max-width: 44rem; margin: 0 auto; padding: 0 1.15rem; }
+
+/* ——— Barre d’état ————————————————————————————————————————————————————— */
+#barre {
+  position: sticky; top: 0; z-index: 20;
+  background: linear-gradient(#08080aee, #08080ad0 70%, #08080a00);
+  backdrop-filter: blur(6px);
+  padding: .55rem 0 .9rem;
+}
+.barre-ligne { display: flex; align-items: center; gap: .75rem; }
+.jauge-bloc { flex: 1 1 auto; min-width: 0; }
+.jauge-etiquette {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: .68rem; letter-spacing: .16em; text-transform: uppercase;
+  color: #8a8478; margin-bottom: .28rem;
+}
+.jauge { height: 5px; background: #1c1c1f; border-radius: 3px; overflow: hidden; }
+.jauge > i { display: block; height: 100%; background: #c9a227; transition: width .45s ease, background .45s ease; }
+.jauge.faible > i { background: #d08a2c; }
+.jauge.critique > i { background: #b4443a; animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .45; } }
+
+/* ——— Boutons ————————————————————————————————————————————————————————— */
+button { font: inherit; color: inherit; cursor: pointer; }
+.btn-icone {
+  background: transparent; border: 1px solid #2a2a2e; border-radius: 6px;
+  padding: .3rem .55rem; font-size: .72rem; letter-spacing: .1em;
+  text-transform: uppercase; color: #8a8478; white-space: nowrap;
+}
+.btn-icone:hover, .btn-icone:focus-visible { border-color: #c9a227; color: #d8cfae; }
+
+.btn-principal {
+  display: inline-block; background: transparent;
+  border: 1px solid #c9a227; border-radius: 3px;
+  color: #e0d3a4; padding: .7rem 1.6rem;
+  font-size: .82rem; letter-spacing: .19em; text-transform: uppercase;
+}
+.btn-principal:hover, .btn-principal:focus-visible { background: #c9a2271a; }
+
+.btn-second {
+  background: transparent; border: 1px solid #34343a; border-radius: 3px;
+  color: #9a9488; padding: .62rem 1.2rem;
+  font-size: .76rem; letter-spacing: .14em; text-transform: uppercase;
+}
+.btn-second:hover, .btn-second:focus-visible { border-color: #6a6458; color: #cfc8b8; }
+
+:focus-visible { outline: 2px solid #c9a227; outline-offset: 2px; }
+
+/* ——— Écran-titre ————————————————————————————————————————————————————— */
+#titre-screen { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 3rem 0; }
+.titre-marque { font-size: 3.1rem; letter-spacing: .06em; color: #e6dcc0; margin-bottom: .2rem; }
+.titre-sous { font-family: Georgia, serif; font-style: italic; color: #9a9488; font-size: 1.15rem; margin-bottom: 2.2rem; }
+.epigraphe {
+  border-left: 2px solid #3a3a40; padding-left: 1rem; margin: 0 0 2.4rem;
+  font-family: Georgia, serif; font-style: italic; color: #a39d90; font-size: .95rem;
+}
+.epigraphe cite { display: block; font-style: normal; font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; color: #6f6a5f; margin-top: .5rem; }
+.titre-actions { display: flex; flex-wrap: wrap; gap: .7rem; }
+
+/* ——— Narration ———————————————————————————————————————————————————————— */
+.lieu {
+  font-size: .68rem; letter-spacing: .22em; text-transform: uppercase;
+  color: #7d776b; margin-bottom: .45rem;
+}
+#noeud-titre { color: #e6dcc0; margin-bottom: 1.3rem; }
+.narration { font-family: Georgia, "Times New Roman", serif; font-size: 1.06rem; line-height: 1.78; color: #c6bfaf; }
+.narration em { color: #dcd2b6; }
+.narration .souffle { display: block; text-align: center; color: #6f6a5f; letter-spacing: .6em; margin: 1.6rem 0; }
+
+.choix-liste { list-style: none; margin: 2rem 0 0; padding: 0; display: flex; flex-direction: column; gap: .7rem; }
+.choix {
+  width: 100%; text-align: left; background: #0e0e11;
+  border: 1px solid #2a2a2e; border-left: 3px solid #3a3a40; border-radius: 3px;
+  padding: .9rem 1rem; color: #c2bbab; line-height: 1.5;
+  transition: border-color .18s ease, transform .18s ease, background .18s ease;
+}
+.choix:hover, .choix:focus-visible {
+  border-color: #4a4a52; border-left-color: #c9a227;
+  background: #131317; color: #e6dcc0; transform: translateX(3px);
+}
+.choix-num { color: #6f6a5f; font-size: .8rem; margin-right: .5rem; }
+
+/* ——— Dénouement ——————————————————————————————————————————————————————— */
+#fin-screen { padding-top: 3rem; }
+.fin-genre { font-size: .7rem; letter-spacing: .3em; text-transform: uppercase; margin-bottom: .6rem; }
+.fin-mort .fin-genre { color: #b4443a; }
+.fin-echec .fin-genre { color: #7d776b; }
+.fin-victoire .fin-genre { color: #c9a227; }
+#fin-titre { color: #e6dcc0; margin-bottom: 1.4rem; }
+
+/* La dalle : lettres creusées dans le calcaire. L’ombre portée vers le bas et la
+   lumière vers le haut donnent le relief en creux, sans la moindre image. */
+.dalle {
+  margin: 2.2rem 0; padding: 1.9rem 1.3rem; text-align: center;
+  background: linear-gradient(#151517, #101012);
+  border: 1px solid #2a2a2e; border-radius: 2px;
+}
+.dalle-mention { font-size: .62rem; letter-spacing: .3em; text-transform: uppercase; color: #5e594f; margin-bottom: 1rem; }
+.dalle-texte {
+  font-family: Georgia, serif; font-size: 1.02rem; line-height: 1.8;
+  letter-spacing: .07em; color: #6e6a60;
+  text-shadow: 0 1px 0 #000, 0 -1px 0 #34343a;
+}
+.releve { list-style: none; margin: 2rem 0 0; padding: 0; font-size: .84rem; color: #8a8478; }
+.releve li { display: flex; justify-content: space-between; gap: 1rem; padding: .42rem 0; border-bottom: 1px solid #1c1c1f; }
+.releve b { color: #c6bfaf; font-weight: 600; }
+.fin-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 2.2rem; }
+
+/* ——— Épitaphes ———————————————————————————————————————————————————————— */
+.epitaphe-grille { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; gap: .7rem; }
+@media (min-width: 620px) { .epitaphe-grille { grid-template-columns: 1fr 1fr; } }
+.epitaphe-carte { background: #0e0e11; border: 1px solid #2a2a2e; border-radius: 3px; padding: .95rem 1rem; }
+.epitaphe-carte.inconnue { border-style: dashed; border-color: #1e1e22; color: #4a463e; }
+.epitaphe-cause { font-size: .68rem; letter-spacing: .18em; text-transform: uppercase; color: #b4443a; margin-bottom: .5rem; }
+.epitaphe-carte.victoire .epitaphe-cause { color: #c9a227; }
+.epitaphe-carte.echec .epitaphe-cause { color: #7d776b; }
+.epitaphe-mot { font-family: Georgia, serif; font-size: .95rem; line-height: 1.6; color: #8f8a7e; }
+.epitaphe-carte.inconnue .epitaphe-mot { font-style: italic; }
+
+/* ——— Aide ————————————————————————————————————————————————————————————— */
+.bloc-aide { margin-top: 1.8rem; }
+.bloc-aide h3 { color: #c9a227; margin-bottom: .5rem; }
+.bloc-aide p, .bloc-aide li { color: #a8a295; font-size: .93rem; }
+.bloc-aide ul { padding-left: 1.1rem; }
+.bloc-aide li { margin-bottom: .4rem; }
+.avertissement {
+  border: 1px solid #4a2b28; background: #17100f; border-radius: 3px;
+  padding: 1rem 1.1rem; margin-top: 1.8rem;
+}
+.avertissement h3 { color: #b4443a; }
+.pied { margin-top: 3.5rem; padding-top: 1.4rem; border-top: 1px solid #1c1c1f; font-size: .76rem; color: #5e594f; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .choix:hover, .choix:focus-visible { transform: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ————— Écran-titre ————— -->
+<div id="titre-screen">
+  <div class="enveloppe">
+    <h1 class="titre-marque">Kata</h1>
+    <p class="titre-sous">La Descente</p>
+
+    <blockquote class="epigraphe">
+      Visite l’intérieur de la terre, et en rectifiant tu trouveras la pierre cachée.
+      <cite>V.·.I.·.T.·.R.·.I.·.O.·.L.·.</cite>
+    </blockquote>
+
+    <p class="narration" id="titre-accroche"></p>
+
+    <div class="titre-actions">
+      <button class="btn-principal" id="btn-descendre">Descendre</button>
+      <button class="btn-second cache" id="btn-reprendre">Reprendre</button>
+      <button class="btn-second" id="btn-epitaphes-titre">Épitaphes</button>
+      <button class="btn-second" id="btn-aide-titre">Comment jouer</button>
+    </div>
+
+    <p class="pied" id="titre-stats"></p>
+  </div>
+</div>
+
+<!-- ————— Écran de jeu ————— -->
+<div id="jeu-screen" class="cache">
+  <div id="barre">
+    <div class="enveloppe barre-ligne">
+      <div class="jauge-bloc">
+        <div class="jauge-etiquette"><span>Frontale</span><span id="jauge-valeur">100 %</span></div>
+        <div class="jauge" id="jauge"><i id="jauge-barre" style="width:100%"></i></div>
+      </div>
+      <button class="btn-icone" id="btn-abandonner">Remonter</button>
+    </div>
+  </div>
+
+  <div class="enveloppe">
+    <p class="lieu" id="noeud-lieu"></p>
+    <h2 id="noeud-titre" tabindex="-1"></h2>
+    <div class="narration" id="noeud-texte"></div>
+    <ul class="choix-liste" id="choix-liste" aria-label="Choix possibles"></ul>
+  </div>
+</div>
+
+<!-- ————— Dénouement ————— -->
+<div id="fin-screen" class="cache">
+  <div class="enveloppe" id="fin-enveloppe">
+    <p class="fin-genre" id="fin-genre"></p>
+    <h2 id="fin-titre" tabindex="-1"></h2>
+    <div class="narration" id="fin-texte"></div>
+
+    <div class="dalle" id="fin-dalle">
+      <p class="dalle-mention" id="dalle-mention">Ci-gît</p>
+      <p class="dalle-texte" id="dalle-texte"></p>
+    </div>
+
+    <ul class="releve" id="fin-releve"></ul>
+
+    <div class="fin-actions">
+      <button class="btn-principal" id="btn-redescendre">Redescendre</button>
+      <button class="btn-second" id="btn-epitaphes-fin">Épitaphes</button>
+      <button class="btn-second" id="btn-titre-fin">Écran-titre</button>
+    </div>
+  </div>
+</div>
+
+<!-- ————— Épitaphes ————— -->
+<div id="epitaphes-screen" class="cache">
+  <div class="enveloppe" style="padding-top:2.5rem">
+    <h2 tabindex="-1">Le mur des épitaphes</h2>
+    <p class="narration" id="epitaphes-intro"></p>
+    <ul class="epitaphe-grille" id="epitaphe-grille"></ul>
+    <div class="fin-actions">
+      <button class="btn-second" id="btn-retour-epitaphes">Retour</button>
+    </div>
+  </div>
+</div>
+
+<!-- ————— Aide ————— -->
+<div id="aide-screen" class="cache">
+  <div class="enveloppe" style="padding-top:2.5rem">
+    <h2 tabindex="-1">Comment jouer</h2>
+    <div class="bloc-aide" id="aide-contenu"></div>
+    <div class="fin-actions">
+      <button class="btn-second" id="btn-retour-aide">Retour</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DÉBUT TEXTE
+   Tout ce qui est lu par le joueur vit ici, et rien d’autre. Le script de
+   normalisation typographique ne traite que les chaînes de cette zone.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+const UI = {
+  accroche: "Trois cents kilomètres de galeries sous Paris, fermées au public depuis 1955. Cette nuit, tu y descends. Une seule suite de choix te ramènera au jour ; toutes les autres se terminent sous terre.",
+  epitaphesIntro: "Chaque mort grave sa ligne. Les dalles vides attendent la tienne.",
+  statsFormat: "Descentes : {parties} — remontées : {victoires} — épitaphes gravées : {gravees} sur {total}.",
+  statsVierge: "Aucune descente. Le puits est ouvert.",
+  reprendreConfirme: "Abandonner la descente en cours et remonter au jour ?",
+  releveProfondeur: "Choix engagés",
+  releveFrontale: "Frontale restante",
+  releveChemin: "Chemin parcouru",
+  dalleGit: "Ci-gît",
+  dalleEchec: "Sans épitaphe",
+  dalleSortie: "Gravé sur la trappe",
+  genreMort: "Mort sous terre",
+  genreEchec: "Remonté sans avoir vu",
+  genreVictoire: "Retour au jour",
+  inconnue: "Dalle vierge",
+  inconnueMot: "Cette mort-là ne t’a pas encore trouvé.",
+  aide: [
+    ["Le principe", "À chaque scène, deux à quatre choix. Un seul enchaînement de bons choix ramène au jour. Les autres tuent, ou coûtent si cher qu’ils tuent plus loin. Il n’y a ni score, ni sauvegarde à mi-chemin : on redescend depuis le seuil."],
+    ["La frontale", "C’est ta seule ressource. Chaque choix la consomme, les détours la vident plus vite. À zéro, le noir est total, et le noir total tue — c’est la mort la plus banale des catacombes, et la plus fréquente dans ce jeu."],
+    ["Le sac", "Ce que tu emportes à la première scène ne se rattrape pas. Deux des trois sacs contiennent leur propre mort, très loin en aval. Tu ne comprendras pourquoi qu’en mourant."],
+    ["Les épitaphes", "Mourir n’est pas perdre : chaque fin grave sa dalle sur le mur des épitaphes, et le mur se garde d’une partie à l’autre. Il y a seize dénouements. Un seul te ramène.",],
+    ["Au clavier", "Les chiffres 1 à 4 choisissent, Tabulation circule, Entrée valide. Rien ne se joue à la vitesse : tu as tout le temps de lire."]
+  ],
+  avertissementTitre: "Ceci est une fiction",
+  avertissementTexte: "La descente dans les carrières souterraines de Paris est interdite par l’arrêté du 2 novembre 1955 et sanctionnée d’une amende. Les dangers décrits ici sont réels — fontis, galeries noyées, atmosphères viciées, désorientation — et le sont bien davantage que ne le raconte un texte. Ce jeu n’enseigne aucun itinéraire, ne donne aucune entrée, et n’invite personne à descendre."
+};
+
+/* Le graphe. Chaque nœud : un lieu, un titre, deux ou trois paragraphes, des choix.
+   Un nœud portant « fin » achève la partie. « cout » est la dépense de frontale,
+   « pose » un jalon mémorisé, « si » masque un choix, et « vers » peut être une
+   fonction quand la destination dépend du sac ou des jalons. */
+const HISTOIRE = {
+
+  /* ——— I. LE SEUIL ——————————————————————————————————————————————— */
+
+  preparation: {
+    lieu: "Quelques heures plus tôt",
+    titre: "Le sac",
+    texte: [
+      "Le rendez-vous est à minuit, dans un pavillon du quatorzième dont la cave ouvre sur un puits de carrier scellé en 1936. On t’a donné une clé et une phrase : « tu remontes avant six heures, ou tu ne remontes pas ».",
+      "Sur le lit, le sac attend, ouvert. On ne descend pas deux fois dans les mêmes conditions : ce que tu y mets ce soir, tu l’auras jusqu’au bout, et rien de plus."
+    ],
+    choix: [
+      { t: "Léger. Frontale, téléphone, une barre de céréales. On file vite, on remonte vite.", vers: "rendezvous", cout: 0, sac: "leger" },
+      { t: "Mesuré. Frontale et jeu de piles en rechange, deux litres d’eau, une craie, des bottes, une combinaison.", vers: "rendezvous", cout: 0, sac: "mesure" },
+      { t: "Chargé. Tout ce qui pourrait servir : cordes, casque lourd, réchaud, trépied, batterie, le grand sac de montagne.", vers: "rendezvous", cout: 0, sac: "lourd" }
+    ]
+  },
+
+  rendezvous: {
+    lieu: "Paris XIV, 00 h 40",
+    titre: "Trois façons d’entrer",
+    texte: [
+      "La ville respire au-dessus de toi comme un animal endormi. Sous tes pieds, à vingt-cinq mètres, il y a plus de rues qu’au-dessus, et personne pour les nommer.",
+      "Trois entrées, à dix minutes de marche l’une de l’autre. Tu n’en essaieras qu’une : au-delà, la nuit sera trop courte."
+    ],
+    choix: [
+      { t: "La plaque de fonte en pleine rue. Deux minutes de crochet, on est dessous.", vers: "rue_police", cout: 3 },
+      { t: "Le puits du pavillon, celui dont on t’a confié la clé.", vers: "puits", cout: 3 },
+      { t: "Le tunnel de l’ancienne ceinture ferroviaire, par le talus. Personne ne surveille ça.", vers: "ceinture", cout: 5 }
+    ]
+  },
+
+  rue_police: {
+    lieu: "Rue Dareau",
+    titre: "En pleine lumière",
+    texte: [
+      "Tu as la barre à mine sous la plaque quand le faisceau te prend de côté. Ils étaient garés vingt mètres plus haut, moteur coupé, et ils attendaient exactement ça : quelqu’un qui ouvre la chaussée à une heure du matin.",
+      "Le sac est fouillé sur le capot. On relève ton identité, on t’explique l’arrêté de 1955, on te remet un timbre-amende. Puis on te regarde partir à pied vers le métro fermé."
+    ],
+    fin: {
+      type: "echec",
+      cause: "Interpellé en surface",
+      epitaphe: "Il n’aura jamais vu le calcaire. La seule entrée qu’il ait forcée était éclairée par un réverbère."
+    }
+  },
+
+  ceinture: {
+    lieu: "Talus de la petite ceinture",
+    titre: "La voie oubliée",
+    texte: [
+      "Le grillage est ouvert depuis des années. Sous les platanes, la voie s’enfonce dans une tranchée et disparaît sous un pont. L’odeur est celle d’une cave, en plus vaste.",
+      "À cinquante mètres, le tunnel s’ouvre en gueule noire. Mais un rail luit d’un éclat trop propre pour être abandonné, et quelque part sur ta droite un transformateur ronronne."
+    ],
+    choix: [
+      { t: "Marcher entre les rails, c’est le plus plat. Le ronronnement, c’est l’éclairage public.", vers: "mort_rail", cout: 4 },
+      { t: "Longer le mur du tunnel, hors de la voie, jusqu’à trouver une porte de service.", vers: "ceinture_porte", cout: 6 },
+      { t: "Ce ronronnement ne me dit rien qui vaille. Demi-tour, je tente le puits du pavillon.", vers: "puits", cout: 9 }
+    ]
+  },
+
+  ceinture_porte: {
+    lieu: "Tunnel de la ceinture",
+    titre: "La porte de service",
+    texte: [
+      "La porte existe. Elle est en tôle, neuve, fermée d’un cadenas à combinaison et surmontée d’une caméra dont la diode clignote en rouge, lentement, comme un cœur au repos.",
+      "Derrière toi, le rail continue de luire. Devant toi, il n’y a rien. Tu as brûlé une heure et un quart de pile pour apprendre que cette entrée-là s’est refermée."
+    ],
+    choix: [
+      { t: "Repartir vers le pavillon pendant qu’il reste de la nuit.", vers: "puits", cout: 12 },
+      { t: "Rentrer chez moi. On ne force pas une porte sous une caméra.", vers: "echec_renonce", cout: 0 }
+    ]
+  },
+
+  echec_renonce: {
+    lieu: "Boulevard extérieur, 02 h 10",
+    titre: "Le demi-tour",
+    texte: [
+      "Tu remontes le talus, tu remets le grillage en place derrière toi par une politesse dont personne ne saura rien. Le boulevard est vide, les feux passent au vert pour des voitures qui n’existent pas.",
+      "C’était la décision raisonnable. Elle a le goût qu’ont toujours les décisions raisonnables prises à deux heures du matin devant une porte fermée."
+    ],
+    fin: {
+      type: "echec",
+      cause: "Renoncement",
+      epitaphe: "Il est rentré entier. Il y a des façons de survivre qui ne se racontent pas."
+    }
+  },
+
+  /* ——— II. LA DESCENTE ————————————————————————————————————————————— */
+
+  puits: {
+    lieu: "Cave du pavillon",
+    titre: "Vingt-sept mètres",
+    texte: [
+      "La dalle glisse sur ses gonds et le puits s’ouvre : un cylindre de calcaire taillé à la main, et des échelons de fer scellés dans la paroi, un tous les trente centimètres, sur vingt-sept mètres.",
+      "Ton faisceau tombe dedans et ne touche pas le fond. Le premier échelon rend un son sourd sous ta paume. Le troisième rend un son creux."
+    ],
+    choix: [
+      { t: "Tester chaque échelon de la main avant d’y mettre le poids. Trois points d’appui, toujours.", vers: "galerie_plaque", cout: 5, pose: "prudent" },
+      { t: "Descendre vite. Plus on reste dans le puits, plus on risque d’être vu depuis la cave.", vers: "mort_chute", cout: 3 },
+      { t: "Se laisser glisser le long des montants, comme dans un mât de pompier.", vers: "mort_chute", cout: 2 }
+    ]
+  },
+
+  galerie_plaque: {
+    lieu: "− 27 m",
+    titre: "La première plaque",
+    texte: [
+      "Le fond du puits est un tas de gravats tassés par un siècle de pas. La galerie part à angle droit, deux mètres sous plafond, et l’air y est immobile à seize degrés — la température qu’il fait ici toute l’année, depuis toujours.",
+      "Sur la paroi, gravée en creux par un ouvrier mort avant ton arrière-grand-père : R. DE LA TOMBE-ISSOIRE. Sous tes pieds, la vraie rue du même nom passe vingt-sept mètres plus haut, avec ses feux rouges et ses boulangeries.",
+      "Trois départs. Un fil électrique gainé de noir court au plafond du premier. Le deuxième est tapissé de bombages jusqu’à la voûte. Du troisième vient un souffle, très faible, qui fait trembler la flamme de ton briquet."
+    ],
+    choix: [
+      { t: "Suivre le fil électrique. Un fil, ça vient de quelque part et ça va quelque part.", vers: "fil_edf", cout: 7 },
+      { t: "Suivre les tags. Là où les gens passent, le chemin est bon.", vers: "tags", cout: 7 },
+      { t: "Suivre le courant d’air. L’air qui bouge vient de la surface.", vers: "carrefour_air", cout: 5, pose: "airsuivi" }
+    ]
+  },
+
+  fil_edf: {
+    lieu: "Galerie du fil",
+    titre: "Le fil ne mène nulle part",
+    texte: [
+      "Tu le suis quarante minutes. Il descend, remonte, se dédouble, longe une salle basse où des chaises de jardin pourrissent autour d’une table, puis plonge dans un forage de trente centimètres et disparaît.",
+      "C’était un câble de chantier de l’Inspection des Carrières, posé pour alimenter une pompe qu’on a retirée en 1998. Il ne va nulle part depuis vingt-huit ans. Tu reviens sur tes pas avec le goût de métal qu’a la fatigue."
+    ],
+    choix: [
+      { t: "Revenir à la plaque et repartir sur le souffle d’air.", vers: "carrefour_air", cout: 14, pose: "airsuivi" }
+    ]
+  },
+
+  tags: {
+    lieu: "Galerie des bombages",
+    titre: "Là où les gens passent",
+    texte: [
+      "Les lettres se chevauchent sur trois épaisseurs, certaines datées de 2003, d’autres d’avant-hier. La galerie s’élargit, le sol devient sableux, et tu marches dix minutes en te félicitant d’avoir choisi la voie fréquentée.",
+      "Puis le plafond descend, les tags s’arrêtent net, et devant toi il y a un remblai : des tonnes de pierraille déversées jusqu’à la voûte pour boucher la galerie. En haut, quelqu’un a creusé un passage à la main, juste assez large pour un corps.",
+      "Le trou est frais. Les cailloux du bord n’ont pas encore pris la poussière."
+    ],
+    choix: [
+      { t: "S’engager dans le passage. Quelqu’un l’a creusé, donc quelqu’un est passé.", vers: "mort_remblai", cout: 5 },
+      { t: "Un remblai fraîchement percé, c’est un plafond qui n’est plus tenu. Demi-tour.", vers: "carrefour_air", cout: 15, pose: "airsuivi" }
+    ]
+  },
+
+  carrefour_air: {
+    lieu: "Le carrefour du souffle",
+    titre: "Ce qui respire",
+    texte: [
+      "Le souffle se renforce. Il n’est pas régulier : il pousse, s’arrête, repousse, au rythme de quelque chose de très grand qui dormirait mal. C’est la ville qui se vide et se remplit d’air au-dessus de toi.",
+      "Tu poses une flèche à la craie sur la paroi, pointe vers d’où tu viens. Si tu n’en as pas, tu poses une pierre debout, et tu sais déjà que ça ne suffira pas.",
+      "Et puis, devant, il y a un bruit."
+    ],
+    choix: [
+      { t: "Continuer vers le bruit.", vers: "le_bruit", cout: 3 }
+    ]
+  },
+
+  /* ——— III. LE BRUIT ———————————————————————————————————————————— */
+
+  le_bruit: {
+    lieu: "− 29 m",
+    titre: "J’entends du bruit",
+    texte: [
+      "Ça vient de devant, ou de la droite : sous terre, le son ricoche et ment sur son origine. Ce pourrait être de l’eau qui tombe. Ce pourrait être des voix. Ce pourrait être un pan de voûte qui travaille.",
+      "Ton faisceau ne porte qu’à huit mètres et éclaire surtout la poussière que tu soulèves. Tu es exactement aussi visible qu’un phare."
+    ],
+    choix: [
+      { t: "Aller voir. Marcher droit dessus, franchement, sans se cacher.", vers: "approche_franche", cout: 5 },
+      { t: "M’éloigner. Ce qui fait du bruit là-dessous ne me concerne pas.", vers: "fuite", cout: 6 },
+      { t: "Éteindre la frontale et écouter, immobile, le temps qu’il faudra.", vers: "ecoute", cout: 2, pose: "ecoute" }
+    ]
+  },
+
+  ecoute: {
+    lieu: "Dans le noir complet",
+    titre: "Quatre-vingt-dix secondes",
+    texte: [
+      "Le noir des carrières n’est pas une couleur, c’est une absence : tes yeux ne s’y habituent pas, ils cherchent, inventent des taches, renoncent. Il ne reste que l’oreille.",
+      "Alors le bruit se démonte tout seul. Des voix — trois, peut-être quatre. Un rire de gorge. Le tintement d’une bouteille contre la pierre. Et sous tout ça, très loin, un goutte-à-goutte régulier.",
+      "Ce ne sont pas des flics : les flics ne rient pas et n’apportent pas de bouteilles. Ce sont des gens comme toi, et ils sont chez eux plus que toi."
+    ],
+    choix: [
+      { t: "Rallumer, s’annoncer à voix haute et avancer vers eux à découvert.", vers: "cataphiles", cout: 3, pose: "annonce" },
+      { t: "Rallumer et approcher en silence, pour voir à qui j’ai affaire avant de me montrer.", vers: "mort_bagarre", cout: 4 },
+      { t: "Les contourner par la galerie basse, sur la gauche. Pas envie de compagnie.", vers: "galerie_basse", cout: 8 }
+    ]
+  },
+
+  approche_franche: {
+    lieu: "Salle du puits romain",
+    titre: "Trois lampes se lèvent",
+    texte: [
+      "Tu débouches dans une salle éclairée à la bougie, ton faisceau en avant, en plein dans les yeux de quatre personnes assises par terre. L’un d’eux se lève d’un bloc, la main en visière.",
+      "Une frontale braquée dans le noir, ça ne dit pas bonjour : ça dit police, ou ça dit voleur. Et personne ici n’a envie de vérifier lequel des deux tu es."
+    ],
+    choix: [
+      { t: "Baisser tout de suite la lampe et parler. Dire mon prénom, dire que je descends pour la première fois.", vers: "cataphiles", cout: 3, pose: "annonce" },
+      { t: "Rester planté, lampe haute, et attendre de voir ce qu’ils font.", vers: "mort_bagarre", cout: 3 }
+    ]
+  },
+
+  fuite: {
+    lieu: "Galerie sans nom",
+    titre: "S’éloigner",
+    texte: [
+      "Tu tournes le dos au bruit et tu marches vite. Trop vite : le plafond descend sans prévenir, tu le prends du casque, tu jures, tu accélères encore parce que ta propre voix t’a fait peur.",
+      "Au bout de six minutes, tu ne sais plus de quel côté tu es venu. Le bruit, lui, s’est tu — et le silence est bien pire, parce qu’il peut être n’importe où."
+    ],
+    choix: [
+      { t: "Courir. N’importe où, mais loin.", vers: "mort_panique", cout: 8 },
+      { t: "S’arrêter net. S’asseoir, souffler, compter jusqu’à cent, et reprendre le chemin à l’envers.", vers: "carrefour_air", cout: 13 }
+    ]
+  },
+
+  galerie_basse: {
+    lieu: "La galerie basse",
+    titre: "Le contournement",
+    texte: [
+      "Un mètre dix sous plafond sur trente mètres. Tu avances plié en deux, la nuque contre le calcaire, et le sac frotte le ciel de la galerie à chaque pas.",
+      "À mi-chemin, ta lampe accroche quelque chose au-dessus de toi : la voûte s’ouvre en cloche, un cône de vide de deux mètres de haut, tapissé de blocs qui ne tiennent plus qu’entre eux. Un fontis. Le sol sous tes pieds en est déjà plein.",
+      "Tu ne connais pas ce mot ce soir. Tu l’apprendras si tu remontes."
+    ],
+    choix: [
+      { t: "Passer vite dessous et ne plus jamais y penser.", vers: "mort_fontis", cout: 4 },
+      { t: "Reculer très lentement, en posant les pieds dans mes propres traces, et rejoindre les voix.", vers: "cataphiles", cout: 10, pose: "annonce" }
+    ]
+  },
+
+  /* ——— IV. LES AUTRES ——————————————————————————————————————————— */
+
+  cataphiles: {
+    lieu: "Salle du puits romain",
+    titre: "Ceux d’en bas",
+    texte: [
+      "Ils sont quatre autour de trois bougies plantées dans leur propre cire. Un plan photocopié, corné, annoté au crayon, traîne sur une pierre plate. Personne ne te demande ce que tu fais là : ici, la question ne se pose pas.",
+      "« Première fois ? » demande une femme d’une cinquantaine d’années, en te tendant un gobelet. « Ça se voit à la lampe. On garde toujours la main devant, en bas. » Et elle rit, sans méchanceté.",
+      "Le plan est là, à trente centimètres de ta main. Ils ont l’air de rester encore longtemps."
+    ],
+    choix: [
+      { t: "Accepter le gobelet, s’asseoir, rester avec eux. La nuit est longue et ils connaissent le coin.", vers: "fete", cout: 6 },
+      { t: "Demander la route vers une sortie, remercier, et repartir tout de suite.", vers: "conseils", cout: 4, pose: "conseils" },
+      { t: "Prendre le plan quand ils regardent ailleurs. Sans plan, je ne remonte pas.", vers: "mort_bagarre", cout: 3 }
+    ]
+  },
+
+  conseils: {
+    lieu: "Salle du puits romain",
+    titre: "Ce qu’ils te disent",
+    texte: [
+      "La femme retourne le plan et trace au crayon, sur le dos, quatre traits et une croix. « Tu suis toujours l’air. Toujours. Ça ne se discute pas. »",
+      "« Après la salle des Quatre-Vents, il y a une chatière qui plonge. Tu t’y engages pieds devant, jamais la tête la première : si ça bouche, tête devant tu ne peux plus reculer, et personne ne viendra te chercher. »",
+      "« Et à la galerie basse, il y a une cloche de fontis. Tu ne passes pas dessous. Tu prends la contre-galerie, celle qui a l’air moins bonne. Les galeries qui ont l’air moins bonnes sont celles qui tiennent encore. » Elle te rend ton gobelet vide. « Allez. Avant six heures. »"
+    ],
+    choix: [
+      { t: "Partir vers la salle des Quatre-Vents.", vers: "chatiere", cout: 5 }
+    ]
+  },
+
+  fete: {
+    lieu: "Salle du puits romain, plus tard",
+    titre: "La nuit passe",
+    texte: [
+      "Le gobelet se remplit trois fois. Quelqu’un sort une enceinte, quelqu’un d’autre raconte la fois où ils ont fait remonter un piano par le puits d’Alésia. Tu ris beaucoup. Il fait seize degrés et tu n’as plus froid du tout.",
+      "Tu t’endors adossé au calcaire, sans t’en rendre compte, comme on s’endort à seize degrés quand on a bu.",
+      "Quand tu rouvres les yeux, les bougies sont éteintes, la salle est vide, et ta frontale n’est plus sur ton front. Ils ne l’ont pas volée : ils sont partis à quatre heures en te croyant parti avant eux, et ta lampe a roulé quelque part sur ce sol que tu ne vois pas."
+    ],
+    choix: [
+      { t: "Chercher la lampe à quatre pattes, mètre carré par mètre carré.", vers: "mort_lampe_perdue", cout: 9 },
+      { t: "Le téléphone. Il reste sûrement du téléphone.", vers: "telephone", cout: 7 }
+    ]
+  },
+
+  telephone: {
+    lieu: "Salle du puits romain",
+    titre: "Onze pour cent",
+    texte: [
+      "L’écran s’allume et t’éblouit. Onze pour cent, aucun réseau, et une lampe torche qui éclaire à deux mètres en consommant tout le reste.",
+      "Tu marches quatorze minutes dans un couloir que tu crois reconnaître. À la neuvième, l’écran passe au rouge. À la quatorzième, il s’éteint."
+    ],
+    choix: [
+      { t: "Continuer à tâtons, une main sur la paroi de droite.", vers: "mort_lampe_perdue", cout: 8 },
+      { t: "S’asseoir, ne plus bouger, et attendre que quelqu’un passe.", vers: "mort_lampe_perdue", cout: 6 }
+    ]
+  },
+
+  /* ——— V. LES PASSAGES ——————————————————————————————————————————— */
+
+  chatiere: {
+    lieu: "Salle des Quatre-Vents",
+    titre: "La chatière",
+    texte: [
+      "La salle mérite son nom : l’air y arrive de partout et repart par un trou, en bas d’une paroi, à hauteur de genou. Cinquante centimètres de haut, sept ou huit mètres de long, et ça descend.",
+      "Le souffle sort de là. C’est-à-dire que la sortie est de l’autre côté."
+    ],
+    choix: [
+      { t: "S’engager pieds devant, sur le dos, en poussant le sac devant moi.", vers: (e) => e.sac === "lourd" ? "mort_coince" : "salle_fumigene", cout: 6 },
+      { t: "S’engager tête la première, pour voir où je mets les mains.", vers: "mort_coince", cout: 6 },
+      { t: "Chercher un autre passage. Une chatière qui plonge, c’est non.", vers: "detour_chatiere", cout: 12 }
+    ]
+  },
+
+  detour_chatiere: {
+    lieu: "Autour des Quatre-Vents",
+    titre: "Il n’y a pas d’autre passage",
+    texte: [
+      "Tu tournes quarante minutes. Trois galeries partent de la salle : la première bute sur un mur de moellons monté par l’Inspection, la deuxième descend vers une flaque qui n’en est pas une, la troisième revient aux Quatre-Vents par l’autre bout.",
+      "Il n’y a que la chatière. Il n’y a jamais eu que la chatière. Tu as payé quarante minutes de pile pour l’apprendre."
+    ],
+    choix: [
+      { t: "Pieds devant, sur le dos, sac poussé devant moi.", vers: (e) => e.sac === "lourd" ? "mort_coince" : "salle_fumigene", cout: 6 },
+      { t: "Tête la première, et tant pis.", vers: "mort_coince", cout: 6 }
+    ]
+  },
+
+  salle_fumigene: {
+    lieu: "De l’autre côté",
+    titre: "La salle rouge",
+    texte: [
+      "Tu sors de la chatière dans une salle haute, et tu comprends avant d’avoir fini de te relever : c’est rouge. Un fumigène brûle au centre, posé sur une pierre, et trois silhouettes se photographient dedans en riant, bras levés.",
+      "La fumée ne monte pas — il n’y a pas de ciel. Elle s’étale sous la voûte, descend le long des parois, remplit la salle par le haut comme on remplit un verre à l’envers. Elle a déjà mangé le premier mètre au-dessus de ta tête.",
+      "Ta gorge se ferme d’un coup. L’air propre arrive de la chatière, dans ton dos, et repart vers le fond de la salle en emportant la fumée avec lui."
+    ],
+    choix: [
+      { t: "Traverser vers le fond de la salle, là où la fumée s’en va. La sortie est de ce côté.", vers: "mort_fumigene", cout: 6 },
+      { t: "Rester baissé et attendre que ça se dissipe, en respirant près du sol.", vers: "mort_fumigene", cout: 10 },
+      { t: "Remonter le courant d’air. Se replier vers la chatière et repasser dedans, dans l’air propre.", vers: "apres_fumigene", cout: 7, pose: "sagesse" },
+      { t: "Leur crier d’éteindre ça et de sortir tout de suite avec moi.", vers: "apres_fumigene", cout: 9, pose: "sagesse" }
+    ]
+  },
+
+  apres_fumigene: {
+    lieu: "Retour aux Quatre-Vents",
+    titre: "Ce qui reste dans la gorge",
+    texte: [
+      "Tu ressors par où tu es entré, à reculons dans la chatière, la bouche pleine de goût de soufre. Les trois autres sortent derrière toi en toussant, brusquement moins bavards. L’un d’eux te dit merci sans te regarder.",
+      "Une salle enfumée sous terre, c’est un tuyau dont on a bouché le bout : la fumée n’a nulle part où aller, et l’oxygène s’en va avec elle. Tu ne l’avais lu nulle part. Tu viens de le sentir.",
+      "Ils repartent vers l’ouest. Toi, tu suis l’air — qui contourne la salle rouge par une galerie que tu n’avais pas vue."
+    ],
+    choix: [
+      { t: "Suivre l’air.", vers: "galerie_noyee", cout: 4 }
+    ]
+  },
+
+  galerie_noyee: {
+    lieu: "− 31 m",
+    titre: "La galerie noyée",
+    texte: [
+      "L’eau commence sans prévenir : le sol descend de quelques degrés et devient un miroir noir, parfaitement immobile, qui te renvoie ta propre lampe. Impossible de dire s’il y a dix centimètres ou dix mètres.",
+      "Sur ta droite, une banquette de calcaire court le long de la paroi, large comme un pied, à cinquante centimètres au-dessus du plan d’eau. Les carriers l’avaient taillée pour ça.",
+      "L’air, lui, passe au-dessus de l’eau et continue tout droit."
+    ],
+    choix: [
+      { t: "Traverser à pied. Ça ne fait sûrement pas plus de vingt centimètres.", vers: "mort_noyade", cout: 6 },
+      { t: "Longer la banquette, dos à la paroi, en assurant chaque pied.", vers: "craie", cout: 7, pose: "banquette" },
+      { t: "Traverser à gué en m’accrochant à la paroi, dans l’eau mais en gardant une main.", vers: "trempe", cout: 8 }
+    ]
+  },
+
+  trempe: {
+    lieu: "Après l’eau",
+    titre: "Trempé jusqu’aux hanches",
+    texte: [
+      "Tu es passé. L’eau montait aux cuisses, et par deux fois le fond s’est dérobé sous un pied — deux puits d’extraction noyés que tu as manqués de vingt centimètres, sans jamais les voir.",
+      "De l’autre côté, tu grelottes déjà. Seize degrés, ce n’est pas froid tant qu’on est sec. Trempé, c’est une autre affaire : ton corps perd sa chaleur vingt-cinq fois plus vite dans l’eau que dans l’air, et il n’y a pas de soleil pour te sécher, ici, jamais."
+    ],
+    choix: [
+      { t: "S’arrêter, se déshabiller, essorer, se reposer le temps de sécher un peu.", vers: "mort_hypothermie", cout: 14 },
+      { t: "Ne pas s’arrêter. Marcher, vite, et produire de la chaleur en marchant.", vers: "craie", cout: 12 }
+    ]
+  },
+
+  craie: {
+    lieu: "Carrefour de la croix",
+    titre: "Ta propre marque",
+    texte: [
+      "Tu reconnais le carrefour avant de comprendre pourquoi. Puis tu vois : sur la paroi, ta flèche à la craie, celle que tu as tracée en entrant.",
+      "Sauf qu’elle pointe dans l’autre sens.",
+      "Tu restes une longue minute devant ce trait de craie. Soit quelqu’un l’a retourné pour s’amuser. Soit tu as tourné sur toi-même sans t’en apercevoir, et tu marches depuis vers l’intérieur. Sous terre, les deux hypothèses ont exactement le même goût.",
+      "Le souffle d’air, lui, n’a pas changé de sens."
+    ],
+    choix: [
+      { t: "Croire la craie. C’est moi qui l’ai tracée.", vers: "boucle_craie", cout: 10 },
+      { t: "Croire l’air. La craie ment, l’air ne peut pas.", vers: "lampe_faiblit", cout: 4, pose: "confiance_air" }
+    ]
+  },
+
+  boucle_craie: {
+    lieu: "Trois quarts d’heure plus tard",
+    titre: "Le même carrefour",
+    texte: [
+      "Tu marches quarante-cinq minutes dans le sens de la flèche et tu débouches sur le carrefour de la croix. Le même. Avec la même flèche, qui pointe toujours dans l’autre sens.",
+      "Les carrières sont pleines de boucles : les carriers taillaient en réseau, pas en ligne, et un homme qui suit une marque tourne en rond jusqu’à ce que sa lampe s’éteigne. C’est écrit dans les rapports d’accident, toujours dans les mêmes termes.",
+      "L’air, lui, souffle exactement comme avant. Dans l’autre sens que ta flèche."
+    ],
+    choix: [
+      { t: "Suivre l’air, cette fois.", vers: "lampe_faiblit", cout: 4, pose: "confiance_air" },
+      { t: "Refaire un tour. J’ai dû mal lire quelque chose.", vers: "mort_obscurite", cout: 100 }
+    ]
+  },
+
+  lampe_faiblit: {
+    lieu: "Galerie de liaison",
+    titre: "Le faisceau jaunit",
+    texte: [
+      "Ça ne s’éteint pas d’un coup, une frontale. Ça jaunit. Le blanc devient crème, le crème devient ambre, le cercle de lumière se resserre de huit mètres à cinq, puis à trois, et tu t’en rends compte seulement quand tu butes sur une pierre que tu aurais vue une heure plus tôt.",
+      "Tu as peut-être vingt minutes. Peut-être quarante. Personne n’a jamais su."
+    ],
+    choix: [
+      { t: "Changer les piles maintenant, assis, en tenant les anciennes dans la main pour ne rien perdre.", vers: "mur_igc", cout: 3, recharge: 100, si: (e) => e.sac !== "leger", pose: "piles" },
+      { t: "Continuer et espérer. La sortie ne doit plus être loin.", vers: "mort_obscurite", cout: 100 },
+      { t: "Éteindre pour économiser et avancer à la main sur la paroi.", vers: "mort_obscurite", cout: 100 }
+    ]
+  },
+
+  /* ——— VI. LA REMONTÉE ————————————————————————————————————————— */
+
+  mur_igc: {
+    lieu: "Ouvrage de consolidation",
+    titre: "Le mur des inspecteurs",
+    texte: [
+      "Frontale neuve, le monde revient. Et le monde, ici, c’est un mur monté à la main en pierres appareillées, avec une plaque de calcaire gravée : 1 G 1874 — 1 R 1911 — 3 A 1954.",
+      "Ce sont les visites de l’Inspection Générale des Carrières. Depuis cent cinquante ans, des hommes descendent ici avec un crayon, regardent les voûtes, et écrivent. Là où ils ont écrit, la pierre tient. Là où ils n’ont rien écrit depuis 1874, elle attend.",
+      "Trois galeries repartent. La première est large et propre. De la deuxième vient une odeur douce, écœurante, de vase et de rouille. La troisième, la plus étroite, porte au linteau une croix de carrier gravée en creux — et l’air y entre."
+    ],
+    choix: [
+      { t: "La large et propre. On y passe facilement, donc on y passe souvent.", vers: "mort_obscurite", cout: 100 },
+      { t: "Celle d’où vient l’odeur. Une odeur, ça vient bien de quelque part.", vers: "mort_noyade", cout: 8 },
+      { t: "L’étroite, sous la croix, là où l’air entre.", vers: "fontis", cout: 7, pose: "croix" }
+    ]
+  },
+
+  fontis: {
+    lieu: "Sous la croix",
+    titre: "La cloche",
+    texte: [
+      "Vingt mètres après le linteau, ta lampe monte et ne trouve plus de plafond. Au-dessus de toi, la voûte s’est ouverte en cône sur trois mètres de haut, et le cône est tapissé de blocs déchaussés qui se tiennent les uns les autres par une politesse que rien ne garantit.",
+      "Un fontis. Il monte vers la surface d’un mètre par décennie, en silence, et le jour où il débouche, un immeuble descend.",
+      "Sur ta gauche, une contre-galerie part en biais. Elle est basse, boueuse, et elle a l’air en mauvais état."
+    ],
+    choix: [
+      { t: "Passer vite dessous. Trois secondes, et c’est derrière moi.", vers: "mort_fontis", cout: 4 },
+      { t: "Étayer avec ce que j’ai avant de passer.", vers: "mort_fontis", cout: 9 },
+      { t: "Prendre la contre-galerie basse, celle qui a l’air moins bonne.", vers: "crue", cout: 9, pose: "contregalerie" }
+    ]
+  },
+
+  crue: {
+    lieu: "Contre-galerie, 04 h 50",
+    titre: "L’orage de six heures",
+    texte: [
+      "Tu entends d’abord un bruit d’averse, ce qui n’a aucun sens à trente mètres sous terre. Puis l’eau arrive par le sol : un centimètre, cinq, quinze, tiède et brune, chargée de tout ce que le réseau pluvial de Paris avale quand il pleut trop vite.",
+      "Il pleut là-haut. Ici, l’eau entre par les fissures, et elle sortira quand elle voudra.",
+      "Devant toi, la galerie descend. Derrière toi, elle remonte vers le fontis. Sur ta droite, un tas de remblai ancien, tassé, monte jusqu’à un mètre du plafond."
+    ],
+    choix: [
+      { t: "Courir en avant, la galerie descend, ça va plus vite dans la descente.", vers: "mort_crue", cout: 8 },
+      { t: "Remonter vers le fontis, c’est plus haut.", vers: "mort_fontis", cout: 8 },
+      { t: "Grimper sur le remblai et attendre là, au sec, que ça redescende.", vers: "escalier", cout: 12, pose: "remblai" }
+    ]
+  },
+
+  escalier: {
+    lieu: "05 h 40",
+    titre: "L’escalier",
+    texte: [
+      "L’eau redescend aussi vite qu’elle est montée. Quarante minutes accroupi sur des gravats, à regarder un courant brun emporter une bouteille en plastique vieille de trente ans, et puis plus rien qu’un sol luisant.",
+      "Cent mètres plus loin, l’air que tu suis depuis le début s’engouffre dans une cage : un escalier de pierre, droit, taillé dans la masse, qui monte. Au-dessus, à sept mètres, il y a une trappe métallique.",
+      "Elle est fermée. Elle ne porte ni cadenas ni chaîne du côté où tu es."
+    ],
+    choix: [
+      { t: "La forcer à l’épaule. Sept heures que je suis là-dessous.", vers: "mort_obscurite", cout: 100 },
+      { t: "Frapper, longtemps, jusqu’à ce que quelqu’un entende.", vers: "trappe_frapper", cout: 10 },
+      { t: "Chercher le loquet. Ces trappes-là s’ouvrent de l’intérieur, sinon les inspecteurs resteraient dedans.", vers: "victoire", cout: 5, pose: "loquet" }
+    ]
+  },
+
+  trappe_frapper: {
+    lieu: "Sous la trappe",
+    titre: "Personne, à cette heure",
+    texte: [
+      "Tu frappes vingt minutes. Le métal sonne, la cage d’escalier renvoie chaque coup en écho, et au-dessus il n’y a qu’un trottoir vide dans une rue où le premier bus passe à six heures dix.",
+      "Ta lampe jaunit de nouveau. Tu poses la main à plat sur la trappe, à bout d’arguments — et tes doigts trouvent, dans l’angle, une tige de fer coudée que la rouille a soudée à moitié.",
+      "Un loquet. Il y a toujours eu un loquet."
+    ],
+    choix: [
+      { t: "Le débloquer.", vers: "victoire", cout: 6, pose: "loquet" }
+    ]
+  },
+
+  victoire: {
+    lieu: "06 h 04",
+    titre: "Le jour",
+    texte: [
+      "La tige cède d’un coup sec, la trappe bascule, et ce qui entre n’est pas de la lumière : c’est du bruit. Une mobylette, un rideau de fer qu’on lève, deux personnes qui parlent de leur journée à venir.",
+      "Tu sors dans une rue du quatorzième par une trappe qui ressemble à toutes les trappes. Le ciel est gris pâle. Tes yeux, qui n’ont vu que du calcaire ambre pendant sept heures, ne supportent pas ce gris-là et pleurent tout seuls.",
+      "Une femme passe avec son chien, te regarde sortir du trottoir, et ne dit rien. Ici, on a l’habitude.",
+      "Tu es descendu par un puits, tu as suivi l’air quand la craie mentait, tu es ressorti par une porte qui s’ouvrait de l’intérieur depuis le début. Tu n’as rien rapporté. Tu ne rapportes jamais rien de là-dessous — c’est en cela que c’est une épreuve, et non une visite."
+    ],
+    fin: {
+      type: "victoire",
+      cause: "Retour au jour",
+      epitaphe: "Il a suivi le souffle plutôt que sa propre marque, et la trappe s’est ouverte de l’intérieur."
+    }
+  },
+
+  /* ——— LES MORTS ————————————————————————————————————————————————— */
+
+  mort_chute: {
+    lieu: "Fond du puits",
+    titre: "Le troisième échelon",
+    texte: [
+      "Le scellement du troisième échelon a lâché en 1978 et personne ne l’a jamais su, parce que tous ceux qui sont passés depuis l’ont testé de la main avant d’y mettre le poids.",
+      "Tu tombes vingt-quatre mètres dans un cylindre de deux mètres de diamètre. Ta lampe, elle, continue de fonctionner au fond du puits pendant onze heures."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Chute dans le puits",
+      epitaphe: "Il était pressé dans un endroit qui existe depuis huit cents ans."
+    }
+  },
+
+  mort_rail: {
+    lieu: "Tunnel de la ceinture",
+    titre: "Sept cent cinquante volts",
+    texte: [
+      "Le tronçon n’est pas abandonné : il sert de voie de garage, il est alimenté la nuit pour les trains de travaux, et le troisième rail court à quinze centimètres du sol sous une semelle de bois qui s’arrête là où tu poses le pied.",
+      "Il n’y a pas de douleur, pas de bruit, pas de dernière pensée. Le ronronnement du transformateur ne change même pas de note."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Électrocution",
+      epitaphe: "Il a pris le ronronnement pour de l’éclairage public. C’était sept cent cinquante volts continus."
+    }
+  },
+
+  mort_remblai: {
+    lieu: "Dans le passage",
+    titre: "Le trou frais",
+    texte: [
+      "Tu es à mi-longueur, à plat ventre, coudes serrés, quand le remblai bouge. Un remblai fraîchement percé ne tient plus rien : celui qui a creusé ce trou l’a fait avant-hier, il est passé, et c’est tout ce que ça prouve.",
+      "Ce qui te recouvre pèse quatre tonnes et n’a pas besoin de tomber vite. La poche d’air sous ton visage dure onze minutes. Personne ne connaît ce boyau, personne ne t’y cherchera, et le trou s’est refermé exactement comme il s’était ouvert."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Enseveli sous un remblai",
+      epitaphe: "Il a suivi les traces de quelqu’un qui avait eu de la chance."
+    }
+  },
+
+  mort_bagarre: {
+    lieu: "Salle du puits romain",
+    titre: "Une lampe qui approche en silence",
+    texte: [
+      "Ils descendent ici depuis vingt ans, ils se sont fait descendre le plan des mains deux fois, et l’un d’eux a passé une nuit menotté à un banc pour avoir été trouvé au mauvais endroit. Une lampe qui approche sans parler, pour eux, ne peut être qu’une seule chose.",
+      "Le premier coup part avant les mots. Il est porté par un homme qui a peur, avec ce qu’il avait dans la main — une torche à main de neuf cents grammes — et il t’atteint à la tempe.",
+      "Ils ne voulaient pas ça. Ils te laissent en position latérale, ils remontent chercher du secours, et il leur faut une heure quarante pour trouver du réseau. C’est une heure de trop."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Rixe sous terre",
+      epitaphe: "Sous terre, on s’annonce à voix haute. Le silence n’est poli qu’à la surface."
+    }
+  },
+
+  mort_panique: {
+    lieu: "Quelque part",
+    titre: "Courir",
+    texte: [
+      "Courir dans une carrière, c’est courir dans un couloir dont on ne connaît ni les angles, ni les puits, ni la hauteur. Tu fais quarante mètres.",
+      "Le puits d’extraction n’a pas de margelle : les carriers ne construisaient pas de margelle, ils savaient où étaient leurs puits. Celui-ci descend de neuf mètres sur un sol de moellons.",
+      "La panique tue plus que la pierre, ici. Elle a juste besoin de la pierre pour finir le travail."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Chute en courant",
+      epitaphe: "Il a couru pour échapper à quelque chose qui n’était pas là."
+    }
+  },
+
+  mort_coince: {
+    lieu: "Dans la chatière",
+    titre: "Cinquante centimètres",
+    texte: [
+      "Le passage se rétrécit là où on ne le voit pas : au sixième mètre, il perd huit centimètres et prend de la pente. Tête devant, ou avec un sac trop gros, on y entre encore. On n’en ressort pas : les bras sont devant, les coudes ne peuvent plus revenir, et chaque tentative pour reculer coince un peu plus la cage thoracique.",
+      "Ce n’est pas la pierre qui tue. C’est ta propre poitrine, qui n’a plus la place de se remplir : à chaque expiration tu descends d’un demi-centimètre, et l’inspiration suivante trouve un peu moins d’espace que la précédente.",
+      "On appelle ça l’asphyxie posturale. Elle prend entre vingt minutes et six heures selon les gens, et tu es conscient presque jusqu’au bout."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Coincé dans la chatière",
+      epitaphe: "Il est entré dans un trou où il ne pouvait pas faire demi-tour. La pierre n’a rien eu à faire."
+    }
+  },
+
+  mort_fumigene: {
+    lieu: "La salle rouge",
+    titre: "Ce que respire une salle fermée",
+    texte: [
+      "Un fumigène consomme de l’oxygène et rend du monoxyde de carbone. En plein air, c’est une couleur. Dans une salle de deux cents mètres cubes sans issue haute, c’est une atmosphère.",
+      "Le monoxyde ne pique pas, ne sent rien, n’étouffe pas. Il se fixe sur ton sang deux cent trente fois plus vite que l’oxygène et prend simplement sa place. La première chose que tu perds, c’est le jugement — et tu le perds avant de savoir que tu l’as perdu.",
+      "Tu t’assieds parce que tu es fatigué. Tu trouves même que ça va mieux, assis. Deux des trois autres ne ressortiront pas non plus."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Intoxication au monoxyde",
+      epitaphe: "Le gaz qui l’a tué n’avait ni odeur, ni couleur, ni goût. Il a cru que c’était de la fumée."
+    }
+  },
+
+  mort_noyade: {
+    lieu: "La galerie noyée",
+    titre: "Ce qu’il y a sous le miroir",
+    texte: [
+      "L’eau te monte aux chevilles sur douze mètres, et tu te félicites d’avoir eu raison. Au treizième, le sol disparaît : c’est un puits d’extraction que les carriers ont creusé sous le niveau de la nappe, et il fait onze mètres de fond.",
+      "L’eau est à treize degrés. Le réflexe d’inspiration au choc thermique vide tes poumons de tout ce qu’ils contenaient et les remplit d’autre chose. Tes vêtements, ton sac et tes bottes font le reste.",
+      "En surface, l’eau redevient un miroir parfaitement immobile en moins d’une minute."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Noyade",
+      epitaphe: "Il a pris pour une flaque un puits de onze mètres. L’eau claire ne dit jamais sa profondeur."
+    }
+  },
+
+  mort_hypothermie: {
+    lieu: "Après l’eau",
+    titre: "Seize degrés",
+    texte: [
+      "Tu t’assieds pour sécher. Mais rien ne sèche à cent pour cent d’humidité : l’air des carrières est saturé, il ne prend pas ton eau, il te prend seulement ta chaleur, calmement, sans un souffle de vent.",
+      "Le grelottement s’arrête au bout de quarante minutes — et tu prends ça pour une bonne nouvelle. C’en est la pire : le corps a renoncé à se réchauffer. Vient ensuite l’engourdissement, puis cette euphorie tranquille qu’on décrit dans tous les rapports, et l’impression tenace qu’il fait presque bon.",
+      "Seize degrés ne tuent personne. Seize degrés pendant six heures, sur un corps trempé et immobile, tuent tout le monde."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Hypothermie",
+      epitaphe: "Il s’est assis pour se reposer, à seize degrés, et il a trouvé qu’il faisait bon."
+    }
+  },
+
+  mort_fontis: {
+    lieu: "Sous la cloche",
+    titre: "Ce qui attendait depuis 1874",
+    texte: [
+      "Une cloche de fontis, c’est un plafond qui s’est déjà effondré et qui recommence. Les blocs du haut ne tiennent plus que par frottement, et le frottement ne demande pas grand-chose pour lâcher : une vibration, un souffle, un pas, un métro qui passe à deux cents mètres.",
+      "Ce qui descend fait entre deux et quinze tonnes et parcourt trois mètres. Le bruit dure une seconde et demie, et il n’y a personne pour l’entendre.",
+      "L’Inspection Générale des Carrières relèvera l’effondrement lors de la visite de contrôle. Elle notera la date, la profondeur, le volume. Elle ne notera rien d’autre."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Éboulement",
+      epitaphe: "La galerie qui avait l’air en bon état était celle qui n’était plus tenue."
+    }
+  },
+
+  mort_crue: {
+    lieu: "Dans la descente",
+    titre: "L’eau va plus vite que toi",
+    texte: [
+      "Tu cours vers le bas parce que c’est plus facile, et l’eau aussi. Elle t’arrive aux genoux au bout de trente mètres, aux hanches au bout de soixante, et à cette hauteur-là un courant de deux nœuds enlève les pieds de n’importe qui.",
+      "La galerie descend encore. Elle finit, quarante mètres plus loin, dans une salle basse qui se remplit en entier, jusqu’à la voûte, en quelques minutes.",
+      "Il pleuvait depuis un quart d’heure au-dessus. Ça a suffi."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Emporté par la crue",
+      epitaphe: "Il a fui l’eau en descendant. L’eau descend mieux que les hommes."
+    }
+  },
+
+  mort_lampe_perdue: {
+    lieu: "Salle du puits romain",
+    titre: "Sans lampe",
+    texte: [
+      "Une lampe posée sur un sol de carrière disparaît complètement. Il n’y a pas de reflet, pas de silhouette, pas de contour : il y a le noir, et ta main qui balaie de la poussière de calcaire sur trois mètres carrés que tu ne peux ni voir ni mémoriser.",
+      "Tu appelles. La salle renvoie ta voix quatre fois, puis plus rien. Ils sont à deux kilomètres de galeries de là, et ils sont persuadés que tu es rentré avant eux.",
+      "Ce qui te tue n’est pas la carrière : c’est d’avoir accepté le troisième gobelet à seize degrés, et de t’être endormi dans le seul endroit de Paris où personne ne passe."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Endormi, puis sans lumière",
+      epitaphe: "Il s’est assoupi chez des gens accueillants, à trente mètres sous terre, et s’est réveillé seul dans le noir."
+    }
+  },
+
+  mort_obscurite: {
+    lieu: "Nulle part",
+    titre: "Le noir absolu",
+    texte: [
+      "Le noir des carrières n’est pas l’obscurité d’une chambre : c’est zéro photon. Ta pupille s’ouvre en grand et ne reçoit rien, jamais, quel que soit le temps que tu attends. Au bout de quelques heures, ton cerveau, qui n’accepte pas ce vide, se met à fabriquer des images — et tu les crois.",
+      "Tu marches. Tu es certain de reconnaître ce carrefour. Tu tournes à droite, puis à droite encore, et encore, parce qu’un homme privé de repères tourne toujours du même côté, sans jamais s’en apercevoir. Les cercles font entre quarante et cent mètres.",
+      "On te retrouvera. On retrouve presque toujours. Le délai moyen, dans le Grand Réseau Sud, se compte en semaines."
+    ],
+    fin: {
+      type: "mort",
+      cause: "Perdu, sans lumière",
+      epitaphe: "Sa lampe s’est éteinte à trente mètres sous une ville de deux millions d’habitants."
+    }
+  }
+};
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIN TEXTE
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+
+/* ——— Moteur ——————————————————————————————————————————————————————————— */
+
+const CLE_EPITAPHES = "kata.epitaphes";
+const CLE_STATS = "kata.stats";
+const CLE_PARTIE = "kata.partie";
+
+const ECRANS = ["titre-screen", "jeu-screen", "fin-screen", "epitaphes-screen", "aide-screen"];
+
+let E = null;          // état de la descente en cours
+let ecranRetour = "titre-screen";   // d’où l’on vient, pour les écrans annexes
+
+function lire(cle, defaut) {
+  try { const v = localStorage.getItem(cle); return v ? JSON.parse(v) : defaut; }
+  catch (err) { return defaut; }
+}
+function ecrire(cle, valeur) {
+  try { localStorage.setItem(cle, JSON.stringify(valeur)); } catch (err) { /* navigation privée */ }
+}
+function effacer(cle) {
+  try { localStorage.removeItem(cle); } catch (err) { /* idem */ }
+}
+
+/* Même convention que le Quiz : on masque, on affiche, on remonte, et on pose le
+   focus sur le premier titre de l’écran affiché. Un écran sans h1-h3 casse le focus. */
+function switchScreen(showId) {
+  ECRANS.forEach(function (id) {
+    document.getElementById(id).classList.toggle("cache", id !== showId);
+  });
+  window.scrollTo(0, 0);
+  const titre = document.getElementById(showId).querySelector("h1, h2, h3");
+  if (titre) { titre.setAttribute("tabindex", "-1"); titre.focus(); }
+}
+
+function noeudsDeFin() {
+  return Object.keys(HISTOIRE).filter(function (id) { return HISTOIRE[id].fin; });
+}
+
+/* ——— Écran-titre —————————————————————————————————————————————————————— */
+
+function afficherTitre() {
+  const stats = lire(CLE_STATS, { parties: 0, victoires: 0 });
+  const vues = lire(CLE_EPITAPHES, []);
+  const total = noeudsDeFin().length;
+
+  document.getElementById("titre-accroche").textContent = UI.accroche;
+  document.getElementById("titre-stats").textContent = stats.parties
+    ? UI.statsFormat.replace("{parties}", stats.parties)
+                    .replace("{victoires}", stats.victoires)
+                    .replace("{gravees}", vues.length)
+                    .replace("{total}", total)
+    : UI.statsVierge;
+
+  const sauvegarde = lire(CLE_PARTIE, null);
+  document.getElementById("btn-reprendre").classList.toggle("cache", !sauvegarde);
+
+  switchScreen("titre-screen");
+}
+
+/* ——— Partie ——————————————————————————————————————————————————————————— */
+
+function nouvellePartie() {
+  E = { noeud: "preparation", pile: 100, pas: 0, sac: null, marques: [], journal: [] };
+  const stats = lire(CLE_STATS, { parties: 0, victoires: 0 });
+  stats.parties += 1;
+  ecrire(CLE_STATS, stats);
+  afficherNoeud("preparation");
+}
+
+function reprendrePartie() {
+  const sauvegarde = lire(CLE_PARTIE, null);
+  if (!sauvegarde || !HISTOIRE[sauvegarde.noeud]) { nouvellePartie(); return; }
+  E = sauvegarde;
+  afficherNoeud(E.noeud);
+}
+
+function majJauge() {
+  const pct = Math.max(0, Math.min(100, Math.round(E.pile)));
+  document.getElementById("jauge-barre").style.width = pct + "%";
+  document.getElementById("jauge-valeur").textContent = pct + " %";
+  const jauge = document.getElementById("jauge");
+  jauge.classList.toggle("faible", pct <= 50 && pct > 22);
+  jauge.classList.toggle("critique", pct <= 22);
+}
+
+function afficherNoeud(id) {
+  const n = HISTOIRE[id];
+  if (!n) { afficherTitre(); return; }
+
+  E.noeud = id;
+  if (E.journal[E.journal.length - 1] !== (n.lieu || n.titre)) {
+    E.journal.push(n.lieu || n.titre);
+  }
+
+  if (n.fin) { ecrire(CLE_PARTIE, null); effacer(CLE_PARTIE); afficherFin(n); return; }
+  ecrire(CLE_PARTIE, E);
+
+  document.getElementById("noeud-lieu").textContent = n.lieu || "";
+  document.getElementById("noeud-titre").textContent = n.titre;
+
+  const zone = document.getElementById("noeud-texte");
+  zone.textContent = "";
+  n.texte.forEach(function (para) {
+    const p = document.createElement("p");
+    p.textContent = para;
+    zone.appendChild(p);
+  });
+
+  const liste = document.getElementById("choix-liste");
+  liste.textContent = "";
+  const visibles = n.choix.filter(function (c) { return typeof c.si !== "function" || c.si(E); });
+
+  visibles.forEach(function (c, i) {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.className = "choix";
+    b.type = "button";
+    const num = document.createElement("span");
+    num.className = "choix-num";
+    num.textContent = (i + 1) + ".";
+    b.appendChild(num);
+    b.appendChild(document.createTextNode(c.t));
+    b.addEventListener("click", function () { jouerChoix(c); });
+    li.appendChild(b);
+    liste.appendChild(li);
+  });
+
+  E.choixCourants = visibles.length;
+  majJauge();
+  switchScreen("jeu-screen");
+}
+
+function jouerChoix(c) {
+  E.pas += 1;
+  if (c.sac) { E.sac = c.sac; }
+  if (c.pose && E.marques.indexOf(c.pose) === -1) { E.marques.push(c.pose); }
+
+  E.pile -= (typeof c.cout === "number" ? c.cout : 5);
+
+  /* Le rechargement s'applique APRES la depense : changer ses piles coute encore
+     quelques pour cent de l'ancien jeu, et c'est la seule remontee de jauge du jeu. */
+  if (typeof c.recharge === "number" && E.pile > 0) { E.pile = c.recharge; }
+
+  /* La pile épuisée l’emporte sur tout le reste : peu importe la destination prévue,
+     on ne va nulle part sans lumière. C’est ce qui rend les détours coûteux mortels. */
+  if (E.pile <= 0) { E.pile = 0; afficherNoeud("mort_obscurite"); return; }
+
+  const dest = (typeof c.vers === "function") ? c.vers(E) : c.vers;
+  afficherNoeud(dest);
+}
+
+/* ——— Dénouement ——————————————————————————————————————————————————————— */
+
+function afficherFin(n) {
+  const f = n.fin;
+
+  const vues = lire(CLE_EPITAPHES, []);
+  if (vues.indexOf(f.cause) === -1) { vues.push(f.cause); ecrire(CLE_EPITAPHES, vues); }
+  if (f.type === "victoire") {
+    const stats = lire(CLE_STATS, { parties: 0, victoires: 0 });
+    stats.victoires += 1;
+    ecrire(CLE_STATS, stats);
+  }
+
+  const env = document.getElementById("fin-enveloppe");
+  env.className = "enveloppe fin-" + f.type;
+
+  document.getElementById("fin-genre").textContent =
+    f.type === "victoire" ? UI.genreVictoire : (f.type === "echec" ? UI.genreEchec : UI.genreMort);
+  document.getElementById("fin-titre").textContent = n.titre;
+
+  const zone = document.getElementById("fin-texte");
+  zone.textContent = "";
+  n.texte.forEach(function (para) {
+    const p = document.createElement("p");
+    p.textContent = para;
+    zone.appendChild(p);
+  });
+
+  document.getElementById("dalle-mention").textContent =
+    f.type === "victoire" ? UI.dalleSortie : (f.type === "echec" ? UI.dalleEchec : UI.dalleGit);
+  document.getElementById("dalle-texte").textContent = f.epitaphe;
+
+  const releve = document.getElementById("fin-releve");
+  releve.textContent = "";
+  [[UI.releveProfondeur, String(E.pas)],
+   [UI.releveFrontale, Math.max(0, Math.round(E.pile)) + " %"],
+   [UI.releveChemin, E.journal.join(" · ")]].forEach(function (paire) {
+    const li = document.createElement("li");
+    const g = document.createElement("span"); g.textContent = paire[0];
+    const d = document.createElement("b"); d.textContent = paire[1];
+    li.appendChild(g); li.appendChild(d);
+    releve.appendChild(li);
+  });
+
+  switchScreen("fin-screen");
+}
+
+/* ——— Épitaphes ———————————————————————————————————————————————————————— */
+
+function afficherEpitaphes(retour) {
+  ecranRetour = retour;
+  const vues = lire(CLE_EPITAPHES, []);
+  document.getElementById("epitaphes-intro").textContent = UI.epitaphesIntro;
+
+  const grille = document.getElementById("epitaphe-grille");
+  grille.textContent = "";
+
+  noeudsDeFin().forEach(function (id) {
+    const f = HISTOIRE[id].fin;
+    const connue = vues.indexOf(f.cause) !== -1;
+    const li = document.createElement("li");
+    li.className = "epitaphe-carte " + (connue ? f.type : "inconnue");
+
+    const cause = document.createElement("p");
+    cause.className = "epitaphe-cause";
+    cause.textContent = connue ? f.cause : UI.inconnue;
+
+    const mot = document.createElement("p");
+    mot.className = "epitaphe-mot";
+    mot.textContent = connue ? f.epitaphe : UI.inconnueMot;
+
+    li.appendChild(cause); li.appendChild(mot);
+    grille.appendChild(li);
+  });
+
+  switchScreen("epitaphes-screen");
+}
+
+/* ——— Aide ————————————————————————————————————————————————————————————— */
+
+function afficherAide(retour) {
+  ecranRetour = retour;
+  const zone = document.getElementById("aide-contenu");
+  zone.textContent = "";
+
+  UI.aide.forEach(function (bloc) {
+    const d = document.createElement("div");
+    d.className = "bloc-aide";
+    const h = document.createElement("h3"); h.textContent = bloc[0];
+    const p = document.createElement("p"); p.textContent = bloc[1];
+    d.appendChild(h); d.appendChild(p);
+    zone.appendChild(d);
+  });
+
+  const av = document.createElement("div");
+  av.className = "avertissement";
+  const ah = document.createElement("h3"); ah.textContent = UI.avertissementTitre;
+  const ap = document.createElement("p"); ap.textContent = UI.avertissementTexte;
+  av.appendChild(ah); av.appendChild(ap);
+  zone.appendChild(av);
+
+  switchScreen("aide-screen");
+}
+
+/* ——— Câblage —————————————————————————————————————————————————————————— */
+
+document.getElementById("btn-descendre").addEventListener("click", nouvellePartie);
+document.getElementById("btn-reprendre").addEventListener("click", reprendrePartie);
+document.getElementById("btn-redescendre").addEventListener("click", nouvellePartie);
+document.getElementById("btn-titre-fin").addEventListener("click", afficherTitre);
+document.getElementById("btn-epitaphes-titre").addEventListener("click", function () { afficherEpitaphes("titre-screen"); });
+document.getElementById("btn-epitaphes-fin").addEventListener("click", function () { afficherEpitaphes("fin-screen"); });
+document.getElementById("btn-aide-titre").addEventListener("click", function () { afficherAide("titre-screen"); });
+document.getElementById("btn-retour-epitaphes").addEventListener("click", function () { switchScreen(ecranRetour); });
+document.getElementById("btn-retour-aide").addEventListener("click", function () { switchScreen(ecranRetour); });
+
+document.getElementById("btn-abandonner").addEventListener("click", function () {
+  if (window.confirm(UI.reprendreConfirme)) { effacer(CLE_PARTIE); afficherTitre(); }
+});
+
+/* Les chiffres 1 à 4 choisissent. On ne les capte que sur l’écran de jeu, et jamais
+   quand le focus est dans un champ — il n’y en a pas aujourd’hui, il y en aura. */
+document.addEventListener("keydown", function (ev) {
+  if (document.getElementById("jeu-screen").classList.contains("cache")) { return; }
+  if (ev.metaKey || ev.ctrlKey || ev.altKey) { return; }
+  const n = parseInt(ev.key, 10);
+  if (!n || n < 1 || n > 9) { return; }
+  const boutons = document.querySelectorAll("#choix-liste .choix");
+  if (boutons[n - 1]) { ev.preventDefault(); boutons[n - 1].click(); }
+});
+
+afficherTitre();
+</script>
+</body>
+</html>
