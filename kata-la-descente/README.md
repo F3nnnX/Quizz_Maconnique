@@ -12,8 +12,9 @@ simplement une pile morte à trente mètres sous une ville de deux millions d’
 
 ## Comment ça se joue
 
-À chaque scène, deux à quatre choix. Pas de score, pas de sauvegarde à mi-chemin : on
-redescend depuis le seuil. Les touches `1` à `4` choisissent, `Tab` circule, `Entrée` valide.
+Chaque scène s'ouvre sur une image, deux paragraphes, deux à quatre choix. Pas de score,
+pas de sauvegarde à mi-chemin : on redescend depuis le seuil. Les touches `1` à `4`
+choisissent, `Tab` circule, `Entrée` valide.
 
 Trois mécaniques portent tout le jeu :
 
@@ -41,6 +42,7 @@ paragraphes et des choix :
 
 ```js
 chatiere: {
+  image: "chatiere",
   lieu: "Salle des Quatre-Vents",
   titre: "La chatière",
   texte: [ "…", "…" ],
@@ -56,7 +58,15 @@ chatiere: {
 - `pose` — un jalon mémorisé ; `si` masque un choix selon l’état.
 - Un nœud portant `fin` achève la partie : `type` (`mort`, `echec`, `victoire`), `cause`, `epitaphe`.
 
-La progression est en `localStorage` : `kata.epitaphes`, `kata.stats`, `kata.partie`.
+- `image` — le décor procédural à dessiner.
+
+La progression est en `localStorage` : `kata.epitaphes`, `kata.stats`, `kata.partie`,
+`kata.son`.
+
+`outils/verifier.mjs` contrôle avant chaque poussée l'intégrité du graphe et des décors,
+rejoue le chemin gagnant et huit morts témoins, mesure les vibrations, instrumente le
+graphe audio et vérifie le rendu à 390 et 1100 px. `outils/typographie.py` pose l'espace
+fine insécable dans les seules chaînes narratives.
 
 ## Mettre en ligne
 
