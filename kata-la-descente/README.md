@@ -12,7 +12,7 @@ simplement une pile morte à trente mètres sous une ville de deux millions d’
 
 ## Comment ça se joue
 
-Chaque scène s'ouvre sur une image, deux paragraphes, deux à quatre choix. Pas de score,
+Chaque scène s’ouvre sur une image, deux paragraphes, deux à quatre choix. Pas de score,
 pas de sauvegarde à mi-chemin : on redescend depuis le seuil. Les touches `1` à `4`
 choisissent, `Tab` circule, `Entrée` valide.
 
@@ -32,13 +32,31 @@ C’est voulu — c’est même le cœur du jeu.
 à l’autre. Mourir n’est pas perdre : c’est compléter la collection. Il y a **16 dénouements**
 — 13 morts, 2 échecs sans gravité, 1 sortie.
 
+## Image, son, vibration
+
+**Une image par scène**, dessinée en SVG à l’exécution. Dix-sept décors — puits, galerie,
+carrefour, chatière, galerie noyée, fontis, crue, escalier, mur d’inspection, le jour —
+déclinés par une graine tirée de l’identifiant du nœud : deux galeries ne se ressemblent
+jamais tout à fait, mais la même scène redonne toujours le même dessin. Aucune photo,
+donc aucun octet à charger, rien à créditer, et le fichier reste seul au monde.
+
+**Une ambiance sonore** synthétisée à la volée par l’API Web Audio : un grondement de
+bruit brun filtré très bas, des gouttes espacées au hasard, un battement de cœur sous
+22 % de pile. Chaque décor a son acoustique — la galerie noyée s’éclaircit et se met à
+goutter, la surface siffle comme du trafic. Aucun fichier son. L’ambiance démarre au
+premier clic sur *Descendre* : un navigateur n’autorise pas le son avant un geste.
+
+**La vibration** suit la même échelle que la peur : 18 ms au choix, 440 ms à la sortie,
+1130 ms heurtées à la mort. `navigator.vibrate` n’existe ni sur iOS ni sur ordinateur —
+tout est gardé, rien n’échoue bruyamment.
+
 ## Ce qu’il y a dans le fichier
 
-`index.html`, environ 60 Ko, tout compris : CSS écrite à la main (pas de framework),
-moteur en JavaScript sans dépendance, texte narratif en données.
+`index.html`, environ 80 Ko, tout compris : CSS écrite à la main (pas de framework),
+moteur en JavaScript sans dépendance, décors procéduraux, texte narratif en données.
 
-Le moteur est un graphe de 48 nœuds. Un nœud, c’est un lieu, un titre, deux ou trois
-paragraphes et des choix :
+Le moteur est un graphe de 48 nœuds. Un nœud, c’est un décor, un lieu, un titre, deux
+paragraphes courts et des choix :
 
 ```js
 chatiere: {
@@ -53,19 +71,18 @@ chatiere: {
 }
 ```
 
+- `image` — le décor procédural dessiné derrière la scène.
 - `vers` — la destination, ou une fonction de l’état quand elle dépend du sac ou du chemin.
 - `cout` — la dépense de frontale. `recharge` la remet à niveau (une seule fois dans le jeu).
 - `pose` — un jalon mémorisé ; `si` masque un choix selon l’état.
 - Un nœud portant `fin` achève la partie : `type` (`mort`, `echec`, `victoire`), `cause`, `epitaphe`.
 
-- `image` — le décor procédural à dessiner.
-
 La progression est en `localStorage` : `kata.epitaphes`, `kata.stats`, `kata.partie`,
 `kata.son`.
 
-`outils/verifier.mjs` contrôle avant chaque poussée l'intégrité du graphe et des décors,
+`outils/verifier.mjs` contrôle avant chaque poussée l’intégrité du graphe et des décors,
 rejoue le chemin gagnant et huit morts témoins, mesure les vibrations, instrumente le
-graphe audio et vérifie le rendu à 390 et 1100 px. `outils/typographie.py` pose l'espace
+graphe audio et vérifie le rendu à 390 et 1100 px. `outils/typographie.py` pose l’espace
 fine insécable dans les seules chaînes narratives.
 
 ## Mettre en ligne

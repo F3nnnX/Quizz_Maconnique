@@ -192,6 +192,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .releve { list-style: none; margin: 1.6rem 0 0; padding: 0; font-size: .82rem; color: #8a8478; }
 .releve li { display: flex; justify-content: space-between; gap: 1rem; padding: .4rem 0; border-bottom: 1px solid #1c1c1f; }
 .releve b { color: #c6bfaf; font-weight: 600; text-align: right; }
+.releve li.chemin b { font-weight: 400; font-size: .76rem; color: #8a8478; }
 .fin-actions { display: flex; flex-wrap: wrap; gap: .7rem; margin-top: 1.9rem; }
 
 /* ——— Épitaphes ———————————————————————————————————————————————————————— */
@@ -202,6 +203,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .epitaphe-cause { font-size: .66rem; letter-spacing: .18em; text-transform: uppercase; color: #b4443a; margin-bottom: .45rem; }
 .epitaphe-carte.victoire .epitaphe-cause { color: #c9a227; }
 .epitaphe-carte.echec .epitaphe-cause { color: #7d776b; }
+.epitaphe-carte.inconnue .epitaphe-cause { color: #4a463e; }
 .epitaphe-mot { font-family: Georgia, serif; font-size: .93rem; line-height: 1.55; color: #8f8a7e; margin: 0; }
 .epitaphe-carte.inconnue .epitaphe-mot { font-style: italic; }
 
@@ -343,7 +345,12 @@ const UI = {
   genreEchec: "Remonté sans avoir vu",
   genreVictoire: "Retour au jour",
   inconnue: "Dalle vierge",
-  inconnueMot: "Cette mort-là ne t’a pas encore trouvé.",
+  inconnueMots: [
+    "Cette mort-là ne t’a pas encore trouvé.",
+    "La pierre attend.",
+    "Quelque chose, ici, n’a pas encore eu ta peau.",
+    "Rien de gravé. Pas encore."
+  ],
   sonActif: "Son",
   sonCoupe: "Muet",
   aide: [
@@ -1629,8 +1636,9 @@ function afficherFin(id, n) {
   releve.textContent = "";
   [[UI.releveProfondeur, String(E.pas)],
    [UI.releveFrontale, Math.max(0, Math.round(E.pile)) + " %"],
-   [UI.releveChemin, E.journal.join(" · ")]].forEach(function (paire) {
+   [UI.releveChemin, E.journal.join(" · "), "chemin"]].forEach(function (paire) {
     const li = document.createElement("li");
+    if (paire[2]) { li.className = paire[2]; }
     const g = document.createElement("span"); g.textContent = paire[0];
     const d = document.createElement("b"); d.textContent = paire[1];
     li.appendChild(g); li.appendChild(d);
@@ -1650,7 +1658,7 @@ function afficherEpitaphes(retour) {
   const grille = document.getElementById("epitaphe-grille");
   grille.textContent = "";
 
-  noeudsDeFin().forEach(function (id) {
+  noeudsDeFin().forEach(function (id, i) {
     const f = HISTOIRE[id].fin;
     const connue = vues.indexOf(f.cause) !== -1;
     const li = document.createElement("li");
@@ -1658,11 +1666,11 @@ function afficherEpitaphes(retour) {
 
     const cause = document.createElement("p");
     cause.className = "epitaphe-cause";
-    cause.textContent = connue ? f.cause : UI.inconnue;
+    cause.textContent = connue ? f.cause : UI.inconnue + " " + (i + 1);
 
     const mot = document.createElement("p");
     mot.className = "epitaphe-mot";
-    mot.textContent = connue ? f.epitaphe : UI.inconnueMot;
+    mot.textContent = connue ? f.epitaphe : UI.inconnueMots[i % UI.inconnueMots.length];
 
     li.appendChild(cause); li.appendChild(mot);
     grille.appendChild(li);
