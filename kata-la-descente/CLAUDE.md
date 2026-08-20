@@ -5,8 +5,9 @@ Fiche de reprise. À lire avant de toucher au code.
 ## Ce que c’est
 
 Fiction interactive à choix multiples dans les carrières souterraines de Paris. Auteur :
-Félix Casellato. Un seul fichier, `index.html`, environ 60 Ko : CSS écrite à la main,
-moteur JavaScript sans dépendance, texte narratif en données. Aucun build, aucun test
+Félix Casellato. Un seul fichier, `index.html`, environ 85 Ko : CSS écrite à la main,
+moteur JavaScript sans dépendance, décors SVG procéduraux, ambiance sonore synthétisée,
+texte narratif en données. Aucun build, aucun test
 automatisé, aucune CI. On ouvre le fichier, ça marche.
 
 Destiné à vivre dans son propre dépôt GitHub, servi par Pages depuis `main`. Il est né
@@ -47,7 +48,7 @@ teste la pile : **une pile à zéro l’emporte sur la destination prévue** et 
 
 ## Le graphe
 
-Un nœud : `lieu`, `titre`, `texte` (tableau de paragraphes), `choix`.
+Un nœud : `image` (le décor), `lieu`, `titre`, `texte` (tableau de paragraphes), `choix`.
 Un choix : `t` (le texte), `vers` (identifiant ou fonction de l’état), `cout` (dépense de
 frontale), et facultativement `recharge`, `pose` (jalon), `si` (condition d’affichage),
 `sac` (fixe le sac à la première scène).
