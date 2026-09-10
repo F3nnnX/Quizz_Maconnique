@@ -6,6 +6,48 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 10 septembre 2026 — V2.2 : application des points de la relecture
+
+**Demande.** Trancher et appliquer les points laissés en suspens par `RELECTURE-V2.1.md`.
+
+**57 corrections, toutes de contenu, aucune de code.** Le détail figure dans le changelog
+en tête d'`index.html`. Les plus lourdes de conséquence :
+
+1. **Sept contradictions internes** résolues. Deux questions se déclaraient mutuellement
+   fausses sur les Trois Petites Lumières ; trois autres donnaient la « Chambre de Justice »
+   pour une instance de la GLDF quand une quatrième rappelait, Constitution à l'appui, que
+   c'est le vocabulaire d'une autre obédience ; sym_085 servait la doctrine Émulation des
+   outils de l'Apprenti contre le REAA de tout le reste du corpus.
+2. **Jakin et Boaz étaient inversés** par rapport à 1 Rois 7,21 que les questions citaient
+   elles-mêmes. Corrigé dans sym_007, sym_008 et voc_038.
+3. **Deux questions se donnaient mutuellement la réponse** : fmc_013 nommait Jules Ferry,
+   réponse de fmc_008 ; l'explication de fmc_048 nommait Oscar Wilde à Oxford, réponse
+   de fmc_053.
+4. **Dix distracteurs** étaient aussi défendables que la bonne réponse, l'explication en
+   validant parfois un mot pour mot. Réécrits.
+5. **Neuf appartenances** de francs-maçons célèbres, données pour établies, ramenées à ce
+   que disent les sources. fmc_032 affirmait « Pinochet n'a jamais été franc-maçon » alors
+   que sa propre source s'intitule « Allende et Pinochet francs-maçons ».
+
+**Une convention typographique découverte au passage.** `CLAUDE.md` annonçait l'apostrophe
+courbe partout. C'est faux : les blocs de données JS (questions, glossaire, lexiques, fiches)
+n'emploient que l'apostrophe droite — 3 019 contre zéro dans le corpus — seule la prose HTML
+du rituel emploie la courbe. Mon texte neuf avait introduit 88 courbes dans le corpus, elles
+ont été ramenées en droites et `CLAUDE.md` est corrigé.
+
+**Non fait, volontairement.** Les deux fiches du Mémento en lecture signalées par la relecture
+ne sont pas retouchées : c'est un texte de référence pour le tuilage, on ne le corrige pas au
+jugé. La graphie « Franc-Maçonnerie » / « franc-maçonnerie » reste mêlée, l'harmoniser
+toucherait ce même Mémento. Les lacs d'amour « souvent douze » et mem_015 restent ouverts.
+
+**Vérifications.** Syntaxe JS, intégrité des 531 questions (quatre options, une seule bonne
+réponse, aucune option dupliquée), Playwright sur Chromium à 400 px : trois quiz complets
+menés jusqu'aux résultats sur les thèmes les plus touchés, les six écrans annexes ouverts et
+refermés, contrôles ponctuels sur le cordon, la Lune, la capitation, « Houzzé » et le bijou
+du Maître des Cérémonies. Zéro erreur console.
+
+---
+
 ### 10 septembre 2026 — V2.1 : relecture complète et choix du nombre de questions
 
 **Contexte.** Présentation du quiz en tenue le soir même. Travail mené dans une session Cowork
@@ -98,12 +140,13 @@ l'écran Rituel », elle est en ligne. Le déplacement dans un écran dédié es
 
 ## À faire
 
-### 1. Trancher les points de `RELECTURE-V2.1.md` — *important*
+### 1. Relire les trois arbitrages de la V2.2 — *à valider par Félix*
 
-Une trentaine de points de doctrine ou d'histoire relevés par la relecture de septembre, dont
-plusieurs contradictions internes du corpus (les deux versions des Trois Petites Lumières, la
-Chambre de Justice, les outils de l'Apprenti). À faire question par question, en corrigeant
-les distracteurs devenus trop proches de la bonne réponse.
+Les points de `RELECTURE-V2.1.md` ont été appliqués le 10 septembre. Trois d'entre eux
+relèvent d'un choix et méritent ton œil : **Jakin/Boaz** inversés pour suivre 1 Rois 7,21,
+**les outils de l'Apprenti** passés à maillet et ciseau, et **le sens du cordon** aligné sur
+le glossaire. Deux points restent ouverts faute de source vérifiable d'ici : les lacs d'amour
+« souvent douze au REAA », à confronter au tableau de la loge, et mem_015.
 
 ### 2. Le mode hors connexion ne marche pas — *important*
 

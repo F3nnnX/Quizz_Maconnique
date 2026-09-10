@@ -7,7 +7,23 @@ Relecture complète du 10 septembre 2026 : 531 questions, glossaire (269 entrée
 - **sym_051** — « Où siège le Premier Surveillant ? » La réponse marquée juste était « Au Midi ». Le mémento (mem_053), rit_033, his_050 et rit_049 disent tous « À l'Occident ». Corrigé.
 - **rit_036** — « À quelle heure les Apprentis commencent-ils leurs travaux ? » La réponse marquée juste était « À minuit ». Le mémento (mem_057) dit « Les travaux commencent à Midi et se terminent à Minuit ». Corrigé.
 
-Ce qui suit n'a **pas** été modifié : ce sont des choix de fond qui t'appartiennent.
+> **Traité en V2.2 (10 septembre 2026).** Tout ce qui suit a été appliqué, sauf les deux
+> points du Mémento en lecture (§4, dernier tiret) et la graphie « Franc-Maçonnerie » (§5),
+> laissés en l'état — le premier parce qu'on ne corrige pas un texte de référence au jugé,
+> le second parce que l'harmoniser toucherait ce même Mémento.
+>
+> Trois décisions méritent ta relecture, elles ne sont pas purement mécaniques :
+> **Jakin/Boaz** (§1) — les attributions ont été inversées pour suivre 1 Rois 7,21, que les
+> questions citaient déjà ; **outils de l'Apprenti** (§1) — sym_085 passe à maillet et ciseau,
+> la règle de 24 pouces devenant un distracteur étiqueté « Rite Émulation » ; **cordon** (§1) —
+> le lexique humoristique a été aligné sur le glossaire (épaule droite → hanche gauche),
+> à confirmer selon l'usage de la loge.
+>
+> Deux points restent ouverts faute de pouvoir les vérifier d'ici : les **lacs d'amour**
+> « souvent douze au REAA » (§2), à confronter au tableau de la loge, et **mem_015** (§3),
+> laissé tel quel car « À mes Signes, Mot et Attouchement » est bien la formule du Mémento.
+
+Ce qui suit était, avant la V2.2, laissé à ton arbitrage.
 
 ---
 

@@ -30,7 +30,7 @@ base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fich
 ## Architecture d'index.html
 
 **En-tête** — un long commentaire de changelog, une section par thème (BUGS CORRIGÉS,
-SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.1**,
+SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.2**,
 répétée dans le `<title>`. Ce changelog est la mémoire du projet côté code : **le tenir à jour
 à chaque changement**, dans le même style — le bug, sa cause technique, sa conséquence pour
 l'utilisateur.
@@ -70,9 +70,16 @@ nom du site déduit de l'URL par `nomDuSite()`. Ne pas le brancher tel quel dans
 
 ## Conventions
 
-**Typographie française.** Apostrophes courbes `’`, guillemets `« »`, et **espace fine
-insécable U+202F** avant `? ! ; :` et à l'intérieur des guillemets. Pas d'espace normale : elle
-laisse la ponctuation tomber orpheline en début de ligne sur mobile.
+**Typographie française.** Guillemets `« »` et **espace fine insécable U+202F** avant
+`? ! ; :` et à l'intérieur des guillemets. Pas d'espace normale : elle laisse la ponctuation
+tomber orpheline en début de ligne sur mobile.
+
+**L'apostrophe suit le bloc, pas une règle globale.** Les blocs de données JS — `allQuestions`,
+`glossaryData`, `humorLexiqueData`, `TABLEAU_SYMBOLS`, `OG_OFFICIERS` — n'emploient que
+l'apostrophe **droite** `'`, sans exception : 3 029 dans le seul corpus de questions, zéro
+courbe. La prose HTML (rituel, interface) emploie la **courbe** `’`. Écrire du texte neuf dans
+la mauvaise convention passe les tests sans rien casser et salit le fichier en silence :
+vérifier le voisinage avant d'écrire, et recompter après.
 
 **Commentaires en français**, et ils expliquent *pourquoi*, pas *quoi*. Les commentaires
 existants documentent des pièges réels — les lire avant de modifier le code qu'ils entourent.
@@ -131,7 +138,7 @@ Avant de pousser, vérifier au minimum : la syntaxe JS (extraire le dernier bloc
 
 ## Git
 
-Développement sur la branche `claude/mise-a-jour-en1lj2`, jamais directement sur `main`.
+Développement sur une branche `claude/...` dédiée, jamais directement sur `main`.
 Une pull request par lot de travail ; Félix relit et fusionne. Si la PR précédente est déjà
 fusionnée, repartir de `origin/main` en gardant le même nom de branche.
 
