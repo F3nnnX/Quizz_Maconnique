@@ -6,6 +6,32 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 10 septembre 2026 — V2.2.1 et V2.2.2 : deux correctifs d'ergonomie mobile
+
+**En-tête du Tableau de Loge écrasé (V2.2.1).** La barre alignait croix, titre et trois boutons
+de zoom sur une seule ligne flex. Les commandes occupent 184 px fixes : sur un écran de 320 px
+il ne restait que 56 px au titre, qui se pliait en huit lignes. Le titre passe sous les
+commandes, sur toute la largeur. Une ligne à partir de 360 px, deux à 320 px.
+
+**Sortir d'un écran de lecture obligeait à tout remonter (V2.2.2).** La croix reste en haut de
+page, et ces écrans sont longs : 41 000 px pour le Lexique, 20 000 pour le Rituel, 18 000 pour
+les Rituels Humoristiques, 15 000 pour le Mémento en lecture. Un bouton « Retour » flottant
+apparaît en bas à gauche dès que la croix a défilé hors de vue.
+
+Le choix de conception qui compte : le bouton **ne connaît aucun écran**. Il cherche la
+`.modal-close-btn` de l'écran affiché et lui délègue le clic. Six écrans en ont bénéficié sans
+une ligne de code par écran, et les prochains en hériteront de la même façon. Son seuil
+d'apparition n'est pas un nombre de pixels mais la position réelle de la croix : rien à
+re-régler si un en-tête change de hauteur.
+
+**Vérifications.** Playwright à 390 px sur les six écrans concernés : bouton masqué en haut de
+page, visible après défilement, retour effectif vers la Boîte à Outils dans les six cas. Écarté
+sur l'écran de quiz. Non atteignable au clavier tant qu'il est masqué. Absent de l'accueil, qui
+n'a pas de croix. Mesures de l'en-tête du tableau à 320, 360, 390, 430 et 1100 px, zoom et
+hotspots inchangés, zéro erreur console.
+
+---
+
 ### 10 septembre 2026 — V2.2 : application des points de la relecture
 
 **Demande.** Trancher et appliquer les points laissés en suspens par `RELECTURE-V2.1.md`.

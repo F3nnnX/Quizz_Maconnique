@@ -40,6 +40,14 @@ l'utilisateur.
 sur le premier `h1`/`h2`/`h3` de l'écran affiché. **Un écran sans titre de niveau h1-h3 casse
 ce focus** : toujours en mettre un.
 
+**Bouton de retour flottant (V2.2.2)** — `#retour-flottant` apparaît en bas à gauche dès que la
+croix de fermeture de l'écran affiché a quitté le haut de l'écran, et lui délègue le clic. Il ne
+connaît aucun écran en particulier : il cherche la première `.modal-close-btn` d'un
+`[id$="-screen"]` non masqué. **Un nouvel écran de lecture en hérite gratuitement, à la seule
+condition de porter une `.modal-close-btn`** — inutile de câbler quoi que ce soit. Pour l'en
+priver, ajouter son id à `RETOUR_ECRANS_EXCLUS` (l'écran de quiz y est, un clic malencontreux
+y perdrait la série).
+
 Le motif de couplage est constant : une paire `openXxx()` / `quitXxx()`, et un bouton dans la
 grille de `#hiver-screen` (la Boîte à Outils). Les variantes humoristiques sont rangées juste
 sous leur pendant sérieux : Lexique Humoristique sous Lexique Maçonnique, Rituels Humoristiques
