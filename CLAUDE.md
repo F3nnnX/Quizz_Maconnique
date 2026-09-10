@@ -16,7 +16,9 @@ build : le dépôt contient le produit fini.
 
 | Fichier | Rôle |
 |---|---|
-| `index.html` | **Toute l'application**, 2,3 Mo, un seul fichier | 
+| `index.html` | **Toute l'application**, 2,3 Mo, un seul fichier |
+| `README.md` | Présentation de l'outil pour un visiteur du dépôt |
+| `RELECTURE-V2.1.md` | Points de doctrine et d'histoire relevés par la relecture de septembre 2026, à trancher par Félix |
 | `index-4.html` | V1.4, ancienne version figée, plus maintenue (1,1 Mo) |
 | `IMG20260814110022.jpg` | 7,9 Mo, référencée par aucun des deux HTML |
 | `SUIVI.md` | Journal de développement et TODO priorisé |
@@ -28,7 +30,7 @@ base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fich
 ## Architecture d'index.html
 
 **En-tête** — un long commentaire de changelog, une section par thème (BUGS CORRIGÉS,
-SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V1.9**,
+SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.1**,
 répétée dans le `<title>`. Ce changelog est la mémoire du projet côté code : **le tenir à jour
 à chaque changement**, dans le même style — le bug, sa cause technique, sa conséquence pour
 l'utilisateur.
@@ -44,7 +46,8 @@ sous leur pendant sérieux : Lexique Humoristique sous Lexique Maçonnique, Ritu
 sous Rituel 1er Degré.
 
 **Données** — des constantes JS en tête de `<script>`, une par domaine :
-`allQuestions` (531 questions, 502 servies au 1er degré), `glossaryData`, `humorLexiqueData`,
+`allQuestions` (531 questions, 499 servies au 1er degré après dédoublonnage), `glossaryData`,
+`humorLexiqueData`, `lectureData`,
 `rituelsHumorData`, `OG_OFFICIERS`, `OG_JEWEL_IMAGES`, `MEM_ICON_IMAGES`.
 `DEGRE_ACTIF = 1` filtre les questions servies ; `questionsDuDegre(n)` est prête pour ouvrir
 un autre grade.
@@ -54,6 +57,16 @@ au heurtoir pour entrer. À connaître pour les tests automatisés (voir plus ba
 
 **Progression** — stockée en `localStorage` : répétition espacée (J+1, J+3, J+7, J+15),
 maîtrise acquise à deux succès consécutifs, banque d'erreurs, reprise de session.
+
+**Lancement d'un quiz (V2.1)** — les boutons du parvis appellent `startQuiz(theme)`, qui n'ouvre
+plus le quiz mais la modale `#nb-modal` (choix du nombre de questions, borné à `poolDuTheme(theme)`).
+Le choix est mémorisé dans `SETTINGS.nbQuestions` (`'all'` = tout le thème) et c'est
+`lancerQuiz(theme, nb)` qui lance réellement. Pour un test automatisé, appeler `lancerQuiz`
+directement.
+
+**Champ `source` des questions** — il contient des notes de travail (« valide par F3n »,
+« code 7006 », « reclassee »). Il n'est jamais affiché : le lien « En savoir plus » montre le
+nom du site déduit de l'URL par `nomDuSite()`. Ne pas le brancher tel quel dans l'interface.
 
 ## Conventions
 
