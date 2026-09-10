@@ -6,6 +6,22 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 10 septembre 2026 — Ménage : 9 Mo de fichiers morts supprimés
+
+`index-4.html` (V1.4 figée, 1,1 Mo) et `IMG20260814110022.jpg` (7,9 Mo) ne servaient plus.
+Vérifié avant de toucher à quoi que ce soit : aucun des deux n'était référencé, ni dans
+`index.html`, ni ailleurs dans le dépôt. Seuls les fichiers de documentation les mentionnaient,
+et ils sont mis à jour.
+
+Le dépôt passe de 11,4 à 2,4 Mo — un clone, et chaque déploiement Pages, transportaient 9 Mo
+pour rien. Les deux fichiers restent dans l'historique git si l'envie de les retrouver vient.
+
+**Le seul effet de bord** : `.../index-4.html` renvoie une 404. Aucune page du site n'y
+menait ; en revanche un lien partagé à la main dans une conversation ne se voit pas depuis le
+dépôt, et celui-là cassera. C'était le risque signalé dans le TODO, et il est assumé.
+
+---
+
 ### 10 septembre 2026 — V2.2.3 : le bouton Précédent d'Android fermait Chrome
 
 **Le symptôme.** Appuyer sur Précédent pour sortir d'un écran fermait l'onglet.
@@ -231,14 +247,14 @@ Correctif : héberger jsPDF dans le dépôt (`jspdf.umd.min.js`, environ 350 Ko)
 dans `index.html`. L'héberger à côté est préférable — cela évite de gonfler un fichier déjà
 à 2,3 Mo, et le navigateur peut le mettre en cache séparément.
 
-### 4. Ménage dans le dépôt — *facile*
+### 4. Ménage dans le dépôt — *fait le 10 septembre 2026*
 
-`index-4.html` (V1.4, 1,1 Mo) et `IMG20260814110022.jpg` (7,9 Mo, référencée nulle part)
-représentent 9 Mo inutiles, clonés et déployés sur Pages à chaque fois. Les supprimer ; git
-garde l'historique si on veut les retrouver.
+`index-4.html` et `IMG20260814110022.jpg` sont supprimés. Le dépôt passe de 11,4 à 2,4 Mo.
+Tous deux restent récupérables dans l'historique git.
 
-Attention avant de supprimer `index-4.html` : vérifier que personne n'a partagé de lien direct
-vers `.../index-4.html`.
+Une conséquence à connaître : `https://f3nnnx.github.io/Quizz_Maconnique/index-4.html` renvoie
+désormais une 404. Aucune page ne pointait dessus, mais un lien partagé à la main dans une
+conversation, lui, ne se voit pas depuis le dépôt.
 
 ### 5. Les titres du rituel n'ont pas de taille — *cosmétique*
 

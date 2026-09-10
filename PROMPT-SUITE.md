@@ -44,15 +44,17 @@ Contraintes :
 
 ---
 
-## Prompt de ménage — si on veut juste alléger le dépôt
+## Prompt de correction — quand un frère remonte un défaut
 
 ```
 Lis CLAUDE.md et SUIVI.md.
 
-Applique le point 4 de SUIVI.md : supprime index-4.html et IMG20260814110022.jpg,
-qui pèsent 9 Mo pour rien. Vérifie d'abord qu'aucun des deux n'est référencé nulle
-part dans index.html. Commit sur claude/mise-a-jour-en1lj2, et demande-moi avant
-de fusionner.
+Voici ce qu'on me remonte : <décris le symptôme, l'appareil et l'écran concerné>.
+
+Reproduis-le d'abord sous Playwright avant de corriger quoi que ce soit, et
+dis-moi la cause exacte. Développe sur une branche claude/... dédiée, tiens à
+jour le changelog en tête d'index.html et le journal de SUIVI.md, ouvre la PR
+et demande-moi avant de fusionner.
 ```
 
 ---

@@ -19,13 +19,15 @@ build : le dépôt contient le produit fini.
 | `index.html` | **Toute l'application**, 2,3 Mo, un seul fichier |
 | `README.md` | Présentation de l'outil pour un visiteur du dépôt |
 | `RELECTURE-V2.1.md` | Points de doctrine et d'histoire relevés par la relecture de septembre 2026, à trancher par Félix |
-| `index-4.html` | V1.4, ancienne version figée, plus maintenue (1,1 Mo) |
-| `IMG20260814110022.jpg` | 7,9 Mo, référencée par aucun des deux HTML |
 | `SUIVI.md` | Journal de développement et TODO priorisé |
 | `PROMPT-SUITE.md` | Prompt prêt à coller pour reprendre le travail |
 
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
+
+Le dépôt ne contient plus que ces cinq fichiers, pour 2,4 Mo. `index-4.html` (V1.4) et
+`IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
+le 10 septembre 2026 et restent récupérables dans l'historique git.
 
 ## Architecture d'index.html
 
