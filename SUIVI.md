@@ -6,6 +6,36 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 10 septembre 2026 — V2.2.3 : le bouton Précédent d'Android fermait Chrome
+
+**Le symptôme.** Appuyer sur Précédent pour sortir d'un écran fermait l'onglet.
+
+**La cause.** L'application est une page unique où toute la navigation passe par
+`switchScreen()`, qui ne touche pas à l'historique du navigateur. Il n'y avait donc qu'une
+seule entrée, celle du chargement. Précédent remontait avant elle, c'est-à-dire hors de
+l'application.
+
+**Le correctif.** Une entrée sentinelle par niveau ouvert, dépilée par l'application au lieu
+du navigateur. Trois points ont demandé de l'attention :
+
+1. **Fermer par la croix** laissait une entrée orpheline : le Précédent suivant aurait été
+   avalé sans rien fermer. `syncHistorique()` rend l'entrée devenue inutile.
+2. **Sept écrans n'ont pas de croix** mais un bouton « Retour au parvis » — Boîte à Outils,
+   écrans de grade, écran de résultats. Sans marquage, Précédent aurait continué à quitter la
+   page depuis eux. Leur bouton porte désormais `data-retour`.
+3. **Le quiz est inclus**, contrairement au bouton flottant : l'en écarter aurait laissé
+   Précédent fermer Chrome en pleine série. `quitQuiz()` demande confirmation, et si l'on
+   refuse la sentinelle est reposée.
+
+**Vérifications.** Playwright sur un vrai serveur HTTP — `pushState` est refusé sur `file://`,
+un test en local n'aurait rien prouvé. Descente sur trois niveaux puis remontée par Précédent
+jusqu'au parvis sans quitter la page ; modale fermée seule sans sortir de l'écran ; fermeture
+par la croix suivie d'un Précédent qui sort bien de la Boîte à Outils ; refus de la
+confirmation du quiz qui laisse la série intacte. Profondeur mesurée et historique alignés à
+chaque étape. Zéro erreur console.
+
+---
+
 ### 10 septembre 2026 — V2.2.1 et V2.2.2 : deux correctifs d'ergonomie mobile
 
 **En-tête du Tableau de Loge écrasé (V2.2.1).** La barre alignait croix, titre et trois boutons
