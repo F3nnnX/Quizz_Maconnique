@@ -40,6 +40,15 @@ l'utilisateur.
 sur le premier `h1`/`h2`/`h3` de l'écran affiché. **Un écran sans titre de niveau h1-h3 casse
 ce focus** : toujours en mettre un.
 
+**Bouton Précédent d'Android (V2.2.3)** — l'application empile une entrée d'historique par
+niveau ouvert et la dépile elle-même, sinon Précédent quitte l'onglet. `profondeurUI()` mesure
+la profondeur réelle (écran de second niveau + modale), `syncHistorique()` aligne l'historique
+dessus, et l'écouteur `popstate` ferme un niveau. Deux conséquences pour qui ajoute un écran :
+il lui faut **une sortie repérable** — une `.modal-close-btn` ou un bouton `data-retour` —
+sinon Précédent quittera la page depuis cet écran ; et **toute fermeture doit passer par cette
+sortie**, car c'est elle que le mécanisme actionne. `syncHistorique()` est appelée depuis
+`switchScreen()` et depuis l'observateur des modales : rien à câbler de plus.
+
 **Bouton de retour flottant (V2.2.2)** — `#retour-flottant` apparaît en bas à gauche dès que la
 croix de fermeture de l'écran affiché a quitté le haut de l'écran, et lui délègue le clic. Il ne
 connaît aucun écran en particulier : il cherche la première `.modal-close-btn` d'un
