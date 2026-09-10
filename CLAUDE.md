@@ -17,6 +17,8 @@ build : le dépôt contient le produit fini.
 | Fichier | Rôle |
 |---|---|
 | `index.html` | **Toute l'application**, 2,3 Mo, un seul fichier |
+| `sw.js` | Service worker : mode hors connexion (V2.3.0) |
+| `jspdf.umd.min.js` | jsPDF 2.5.1 (MIT), servie depuis le dépôt et non plus d'un CDN |
 | `README.md` | Présentation de l'outil pour un visiteur du dépôt |
 | `RELECTURE-V2.1.md` | Points de doctrine et d'histoire relevés par la relecture de septembre 2026, à trancher par Félix |
 | `SUIVI.md` | Journal de développement et TODO priorisé |
@@ -25,7 +27,7 @@ build : le dépôt contient le produit fini.
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
 
-Le dépôt ne contient plus que ces cinq fichiers, pour 2,4 Mo. `index-4.html` (V1.4) et
+Le dépôt ne contient plus que ces sept fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
 `IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
 le 10 septembre 2026 et restent récupérables dans l'historique git.
 
@@ -110,9 +112,9 @@ est unique (`s.count(ancre) == 1`) avant de remplacer.
 
 ## Pièges connus
 
-**jsPDF vient d'un CDN** (`cdnjs.cloudflare.com`, chargé en `defer`). Sans réseau, tous les
-exports PDF échouent — `ensureJsPDFAvailable()` affiche une alerte. C'est la seule dépendance
-externe de l'application, et elle contredit son ambition hors ligne (voir SUIVI.md).
+**L'application n'a plus aucune dépendance externe** depuis la V2.3.0 : jsPDF est servie
+depuis le dépôt en chemin relatif. Ne pas la remettre sur un CDN — cela recasserait les exports
+PDF hors connexion, et le service worker mettrait cette version en cache.
 
 **Les polices standard de jsPDF sont en WinAnsi** : elles ne connaissent pas l'espace fine
 insécable. Toute fonction d'export doit la repasser en espace normale
@@ -126,9 +128,15 @@ cet écran sans polluer l'export, le poser en frère du bloc, pas en fils.
 `h2`/`h3`/`h4` n'ont donc aucune taille propre : il faut les styler explicitement, sinon la
 hiérarchie est invisible.
 
-**Le service worker a été retiré en V1.9** (il était enregistré depuis une URL `blob:`, que la
-spécification interdit — l'enregistrement échouait toujours). Le manifeste PWA est resté :
-l'application se déclare installable mais ne fonctionne pas hors connexion.
+**Le service worker sert la page en RÉSEAU D'ABORD** (`sw.js`, V2.3.0), le cache ne servant
+que de filet. C'est délibéré : le dépôt est déployé plusieurs fois par jour, et une stratégie
+cache-first figerait l'application sur une vieille version. **Ne pas inverser ces priorités**
+sans mesurer ce que ça coûte en fraîcheur. Les ressources figées (jsPDF) passent, elles, par le
+cache d'abord.
+
+**Le nom du cache porte la version** (`quiz-maconnique-v2.3.0`) et l'ancien est supprimé à
+l'activation. Si un jour on ajoute une ressource à `ESSENTIELS`, **bumper ce nom**, sinon les
+navigateurs qui ont déjà le cache ne la précacheront jamais.
 
 ## Tester une modification
 
@@ -147,10 +155,13 @@ Deux points à connaître :
 
 - **`page.click()` échoue tant que `#door-screen` est là** : il recouvre toute la fenêtre.
   Le retirer, ou appeler `frapperPorte()` trois fois en laissant passer l'animation.
-- **Pour tester un export PDF**, injecter jsPDF localement : `npm install jspdf@2.5.1` puis
-  `await page.addScriptTag({ path: 'node_modules/jspdf/dist/jspdf.umd.min.js' })`. Le CDN est
-  bloqué par la politique réseau de l'environnement, et le site en ligne l'est aussi — on ne
-  peut pas vérifier le déploiement en le visitant, seulement via le workflow Pages.
+- **Les exports PDF se testent directement** depuis la V2.3.0 : jsPDF est dans le dépôt, plus
+  rien à injecter.
+- **Le service worker exige un vrai serveur HTTP.** Il ne s'enregistre pas en `file://`, et
+  `pushState` y est refusé aussi — donc le mode hors connexion ET le bouton Précédent se
+  testent avec `python3 -m http.server` puis `ctx.setOffline(true)`, jamais en local.
+- **On ne peut pas vérifier le déploiement en visitant le site** : `github.io` est bloqué par
+  la politique réseau de l'environnement. Seul le workflow Pages fait foi.
 
 Avant de pousser, vérifier au minimum : la syntaxe JS (extraire le dernier bloc `<script>` et
 `node --check`), l'absence d'erreur console, et le rendu à 390 px et 1100 px de large.

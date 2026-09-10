@@ -6,6 +6,49 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 10 septembre 2026 — V2.3.0 : le mode hors connexion, enfin réel
+
+**Le symptôme.** Le manifeste PWA proposait l'installation depuis la V1.9, mais l'application
+affichait une page blanche sans réseau.
+
+**Deux causes, traitées dans cet ordre** — l'inverse aurait figé dans le cache une version
+dépendant encore du réseau, ce qui était déjà noté dans le TODO :
+
+1. **jsPDF venait de cdnjs.** Seule dépendance externe de l'application, elle rendait les
+   trois exports PDF impossibles hors connexion. Elle est désormais dans le dépôt
+   (`jspdf.umd.min.js`, 2.5.1, MIT, 364 Ko), en chemin relatif — donc elle marche aussi en
+   `file://`, ce que le CDN ne permettait pas non plus.
+2. **Le service worker de la V1.9 était enregistré depuis une URL `blob:`**, ce que la
+   spécification interdit. L'enregistrement échouait systématiquement et un `.catch()` vide
+   masquait l'erreur. Un vrai `sw.js` le remplace.
+
+**Le choix de stratégie qui compte.** La page passe par le **réseau d'abord**, le cache ne
+servant que de filet. Un cache prioritaire aurait figé l'application sur une vieille version,
+et il aurait fallu vider le cache du navigateur à chaque déploiement — sur un dépôt qu'on
+déploie plusieurs fois par jour, c'était le remède pire que le mal. Les ressources figées
+(jsPDF) passent, elles, par le cache d'abord.
+
+`skipWaiting()` et `clients.claim()` : sans eux, un nouveau service worker attend la fermeture
+de tous les onglets pour prendre la main, ce qui n'arrive jamais sur une application ouverte en
+permanence sur un téléphone.
+
+L'échec d'enregistrement est journalisé au lieu d'être avalé. C'est le silence d'un `.catch()`
+vide qui avait laissé le bug de la V1.9 passer inaperçu pendant des mois.
+
+**Vérifications.** Playwright contre un vrai serveur HTTP, réseau coupé par
+`context.setOffline(true)` :
+
+| Étape | Résultat |
+|---|---|
+| Première visite en ligne | Service worker actif, cache contenant `/`, `/index.html`, `/jspdf.umd.min.js` |
+| Export PDF en ligne | `Rituels_humoristiques.pdf` |
+| Rechargement complet réseau coupé | Page chargée, 531 questions, jsPDF disponible |
+| **Export PDF hors connexion** | `Rituels_humoristiques.pdf` |
+
+C'était le but : réviser en tenue, dans un local où le réseau passe mal, exports compris.
+
+---
+
 ### 10 septembre 2026 — Ménage : 9 Mo de fichiers morts supprimés
 
 `index-4.html` (V1.4 figée, 1,1 Mo) et `IMG20260814110022.jpg` (7,9 Mo) ne servaient plus.
@@ -223,29 +266,12 @@ GitHub ne propose pas d'outil de suppression de branche : ça se fait depuis l'o
 **Ne pas toucher à `claude/kata-catacombes-game-t7cddr`** : elle n'est pas fusionnée et porte
 le projet Kata (fiction interactive), 2 173 lignes en attente.
 
-### 2. Le mode hors connexion ne marche pas — *important*
+### 2. Mode hors connexion et jsPDF — *faits le 10 septembre 2026 (V2.3.0)*
 
-Le service worker a été retiré en V1.9 : il était enregistré depuis une URL `blob:`, ce que la
-spécification interdit, donc il n'a jamais fonctionné. Mais le manifeste PWA est resté. Résultat :
-l'application se propose à l'installation sur l'écran d'accueil, puis affiche une page blanche
-sans réseau.
-
-C'est gênant pour l'usage visé — réviser en tenue, dans un local où le réseau passe mal.
-
-Correctif : un vrai fichier `sw.js` à la racine du dépôt, enregistré normalement
-(`navigator.serviceWorker.register('sw.js')`), qui met en cache `index.html` et jsPDF. Servi
-par Pages en HTTPS, donc éligible. À faire **après** le point 3, sinon le cache figera une
-version qui dépend encore du CDN.
-
-### 3. jsPDF vient d'un CDN — *important*
-
-`index.html` charge jsPDF depuis `cdnjs.cloudflare.com`. C'est la seule dépendance externe de
-l'application. Sans réseau, les trois exports PDF (Mémento, Rituel, Rituels humoristiques)
-échouent avec une alerte.
-
-Correctif : héberger jsPDF dans le dépôt (`jspdf.umd.min.js`, environ 350 Ko) ou l'inliner
-dans `index.html`. L'héberger à côté est préférable — cela évite de gonfler un fichier déjà
-à 2,3 Mo, et le navigateur peut le mettre en cache séparément.
+Les deux points sont réglés, dans l'ordre qui était prescrit ici. Une chose reste à vérifier
+sur un vrai téléphone, que Playwright ne sait pas simuler : **installer l'application sur
+l'écran d'accueil, couper les données, et l'ouvrir.** Le test automatisé couvre le rechargement
+hors connexion dans l'onglet, pas le lancement depuis l'icône.
 
 ### 4. Ménage dans le dépôt — *fait le 10 septembre 2026*
 
