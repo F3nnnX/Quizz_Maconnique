@@ -23,18 +23,19 @@ build : le dépôt contient le produit fini.
 | `RELECTURE-V2.1.md` | Points de doctrine et d'histoire relevés par la relecture de septembre 2026, à trancher par Félix |
 | `SUIVI.md` | Journal de développement et TODO priorisé |
 | `PROMPT-SUITE.md` | Prompt prêt à coller pour reprendre le travail |
+| `JEU-PISTES.md` | Carnet des pistes envisagées pour le jeu des carrières — **rien n'y est décidé, rien n'y est à coder** |
 
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
 
-Le dépôt ne contient plus que ces sept fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
+Le dépôt ne contient que ces huit fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
 `IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
 le 10 septembre 2026 et restent récupérables dans l'historique git.
 
 ## Architecture d'index.html
 
 **En-tête** — un long commentaire de changelog, une section par thème (BUGS CORRIGÉS,
-SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.2**,
+SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.3.1**,
 répétée dans le `<title>`. Ce changelog est la mémoire du projet côté code : **le tenir à jour
 à chaque changement**, dans le même style — le bug, sa cause technique, sa conséquence pour
 l'utilisateur.

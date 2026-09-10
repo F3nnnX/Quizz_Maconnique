@@ -392,21 +392,30 @@ Deux garde-fous : l'apostrophe **droite** est de rigueur dans ce bloc de donnée
 tous les autres (voir CLAUDE.md), et l'humour maçonnique se moque des travers, jamais du
 rituel lui-même — c'est ce qui sépare la plaisanterie entre frères de la moquerie.
 
-### C. Le Kata rejoint le rayon POUR JOUER
+### C. Le jeu des carrières — *en réflexion, voir `JEU-PISTES.md`*
+
+**Ce chantier n'est pas prêt à démarrer et ne doit pas l'être.** Félix prend le temps
+d'élaborer le jeu avant toute intégration. Toutes les pistes envisagées — les cinq voies
+possibles, les titres, la mécanique des questions, les combinaisons qui tiennent debout — sont
+rassemblées dans **`JEU-PISTES.md`**. Rien n'y est décidé, et rien n'y est à coder.
+
+Ce qui suit ne résume que l'état des lieux, pas un plan.
 
 La fiction interactive `kata-la-descente/`, sur la branche non fusionnée
-`claude/kata-catacombes-game-t7cddr`, a vocation à devenir le troisième bouton du rayon
-POUR JOUER — **au-dessus de Mémoire des Symboles**, qui reste le dernier.
+`claude/kata-catacombes-game-t7cddr`, a vocation à devenir un bouton du rayon POUR JOUER —
+**au-dessus de Mémoire des Symboles**, qui reste le dernier.
 
 État au 10 septembre 2026 : le jeu est fini et fiable. 48 nœuds, 16 dénouements tous
 atteignables, zéro erreur console, son propre vérificateur passe intégralement. Ce qui reste :
 
 - **Le renommer** autour du V.·.I.·.T.·.R.·.I.·.O.·.L.·. — l'épigraphe est déjà celle du jeu,
-  le titre doit la rejoindre. Propositions faites le 10 septembre, choix en attente.
-- **Refondre les choix et les dénouements** pour qu'ils parlent à un franc-maçon : la descente,
-  la rectification, la pierre cachée. Le décor des carrières reste, la lecture devient
-  initiatique. C'est ce travail-là qui justifiera sa présence dans un outil d'instruction —
-  sans lui, le jeu reste un corps étranger.
+  le titre doit la rejoindre. Six propositions dans `JEU-PISTES.md`, aucune retenue : le titre
+  se choisit **après** la mécanique, sinon il promet ce que le jeu ne tient pas.
+- **Refondre les choix et les dénouements** pour qu'ils parlent à un franc-maçon. Félix
+  envisage notamment de faire dépendre la progression de bonnes réponses — l'idée est
+  développée, avec ses trois branchements possibles et son piège principal, dans la section 5
+  de `JEU-PISTES.md`. C'est ce travail-là qui justifiera sa présence dans un outil
+  d'instruction — sans lui, le jeu reste un corps étranger.
 - **L'intégrer par `<iframe>`**, en `kata.html` à la racine, et non en fusionnant les deux
   fichiers : la CSS du Kata style `html`, `body`, `*`, `button`, `h1`-`h3` et `p`, elle
   repeindrait tout le Quiz ; et ses fonctions `switchScreen(showId)` et `vibrer(motif)` ont
