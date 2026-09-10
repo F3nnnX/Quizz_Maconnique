@@ -12,16 +12,22 @@ Relecture complète du 10 septembre 2026 : 531 questions, glossaire (269 entrée
 > laissés en l'état — le premier parce qu'on ne corrige pas un texte de référence au jugé,
 > le second parce que l'harmoniser toucherait ce même Mémento.
 >
-> Trois décisions méritent ta relecture, elles ne sont pas purement mécaniques :
-> **Jakin/Boaz** (§1) — les attributions ont été inversées pour suivre 1 Rois 7,21, que les
-> questions citaient déjà ; **outils de l'Apprenti** (§1) — sym_085 passe à maillet et ciseau,
-> la règle de 24 pouces devenant un distracteur étiqueté « Rite Émulation » ; **cordon** (§1) —
-> le lexique humoristique a été aligné sur le glossaire (épaule droite → hanche gauche),
-> à confirmer selon l'usage de la loge.
+> **Arbitrages validés par Félix le 10 septembre 2026.** Les quatre points qui n'étaient pas
+> purement mécaniques ont été soumis et confirmés en l'état, aucune retouche n'a suivi :
 >
-> Deux points restent ouverts faute de pouvoir les vérifier d'ici : les **lacs d'amour**
-> « souvent douze au REAA » (§2), à confronter au tableau de la loge, et **mem_015** (§3),
-> laissé tel quel car « À mes Signes, Mot et Attouchement » est bien la formule du Mémento.
+> - **Jakin/Boaz** (§1) — attributions inversées pour suivre 1 Rois 7,21 : Jakin « il établira »
+>   porte l'établissement et la stabilité, Boaz « en lui la force » porte la force. Validé.
+> - **Outils de l'Apprenti** (§1) — sym_085 passe à maillet et ciseau, conforme au REAA et au
+>   reste du corpus ; la règle de 24 pouces devient un distracteur étiqueté « Rite Émulation ».
+>   Validé.
+> - **Cordon** (§1) — épaule droite, barre la poitrine, rejoint la hanche gauche. C'est l'usage
+>   de la loge ; le lexique humoristique, qui disait l'inverse, est aligné. Validé.
+> - **Lacs d'amour** (§2) — la formulation prudente « souvent au nombre de douze au REAA » est
+>   conservée telle quelle. Validé.
+>
+> **Reste ouvert, et le restera sans décision de l'auteur** : **mem_015** (§3), laissé tel quel
+> car « À mes Signes, Mot et Attouchement » est bien la formule du Mémento, et les deux fiches
+> du Mémento en lecture (§4, dernier tiret) — un texte de référence ne se corrige pas au jugé.
 
 Ce qui suit était, avant la V2.2, laissé à ton arbitrage.
 
