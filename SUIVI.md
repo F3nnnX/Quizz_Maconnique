@@ -140,13 +140,16 @@ l'écran Rituel », elle est en ligne. Le déplacement dans un écran dédié es
 
 ## À faire
 
-### 1. Relire les trois arbitrages de la V2.2 — *à valider par Félix*
+### 1. Supprimer les branches fusionnées — *bloqué, à faire par Félix*
 
-Les points de `RELECTURE-V2.1.md` ont été appliqués le 10 septembre. Trois d'entre eux
-relèvent d'un choix et méritent ton œil : **Jakin/Boaz** inversés pour suivre 1 Rois 7,21,
-**les outils de l'Apprenti** passés à maillet et ciseau, et **le sens du cordon** aligné sur
-le glossaire. Deux points restent ouverts faute de source vérifiable d'ici : les lacs d'amour
-« souvent douze au REAA », à confronter au tableau de la loge, et mem_015.
+`claude/mise-a-jour-en1lj2`, `claude/v2.1-relecture-choix-questions` et
+`claude/v2.2-corrections-relecture` sont fusionnées dans `main` et bonnes à supprimer.
+La commande a été refusée par le contrôle de permissions de l'environnement, et le serveur
+GitHub ne propose pas d'outil de suppression de branche : ça se fait depuis l'onglet
+*Branches* du dépôt, ou en accordant `git push --delete`.
+
+**Ne pas toucher à `claude/kata-catacombes-game-t7cddr`** : elle n'est pas fusionnée et porte
+le projet Kata (fiction interactive), 2 173 lignes en attente.
 
 ### 2. Le mode hors connexion ne marche pas — *important*
 
