@@ -62,9 +62,17 @@ priver, ajouter son id à `RETOUR_ECRANS_EXCLUS` (l'écran de quiz y est, un cli
 y perdrait la série).
 
 Le motif de couplage est constant : une paire `openXxx()` / `quitXxx()`, et un bouton dans la
-grille de `#hiver-screen` (la Boîte à Outils). Les variantes humoristiques sont rangées juste
-sous leur pendant sérieux : Lexique Humoristique sous Lexique Maçonnique, Rituels Humoristiques
-sous Rituel 1er Degré.
+grille de `#hiver-screen` (la Boîte à Outils).
+
+**La Boîte à Outils est rangée en trois rayons** depuis la V2.3.1 — POUR ÉTUDIER, POUR SOURIRE,
+POUR JOUER — et le registre y descend du grave au léger. Un bouton neuf se range dans le rayon
+qui correspond à son intention, pas à côté de son cousin thématique : c'est cette ancienne
+convention (« l'humoristique sous son pendant sérieux ») qui plaçait les jeux avant le rituel.
+Les titres de rayon sont des `h3` **stylés en ligne** : la feuille Tailwind du fichier est
+compilée, elle ne contient que les classes déjà employées ailleurs, et une classe neuve n'y
+existerait pas. Ils viennent après le `h2` de l'écran, qui reste la cible du focus.
+Dans le rayon POUR JOUER, **Mémoire des Symboles reste le dernier bouton** : c'est une décision
+de Félix, pas un hasard d'ordre.
 
 **Données** — des constantes JS en tête de `<script>`, une par domaine :
 `allQuestions` (531 questions, 499 servies au 1er degré après dédoublonnage), `glossaryData`,
@@ -112,9 +120,16 @@ est unique (`s.count(ancre) == 1`) avant de remplacer.
 
 ## Pièges connus
 
-**L'application n'a plus aucune dépendance externe** depuis la V2.3.0 : jsPDF est servie
-depuis le dépôt en chemin relatif. Ne pas la remettre sur un CDN — cela recasserait les exports
-PDF hors connexion, et le service worker mettrait cette version en cache.
+**jsPDF est servie depuis le dépôt** en chemin relatif depuis la V2.3.0. Ne pas la remettre
+sur un CDN — cela recasserait les exports PDF hors connexion, et le service worker mettrait
+cette version en cache.
+
+Il reste **une dépendance externe**, contrairement à ce qu'affirmait le changelog de la
+V2.3.0 : un `<link>` vers `fonts.googleapis.com` en tête de page (Inter, Cinzel, EB Garamond).
+Elle se dégrade proprement — les polices de repli prennent le relais, rien ne casse — mais
+l'application n'est pas autonome au sens strict, et la politique réseau de l'environnement de
+développement bloque ce domaine : **une console qui signale `ERR_CONNECTION_RESET` sur
+fonts.googleapis.com n'est pas une régression**, c'est l'état normal ici.
 
 **Les polices standard de jsPDF sont en WinAnsi** : elles ne connaissent pas l'espace fine
 insécable. Toute fonction d'export doit la repasser en espace normale

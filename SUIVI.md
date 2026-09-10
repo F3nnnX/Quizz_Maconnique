@@ -6,6 +6,38 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 10 septembre 2026 — V2.3.1 : la Boîte à Outils rangée en trois rayons
+
+Neuf boutons en liste plate, sans titre ni séparation. La convention d'alors voulait que
+chaque variante humoristique soit rangée juste sous son pendant sérieux — Lexique
+Humoristique sous Lexique Maçonnique, Rituels Humoristiques sous Rituel 1er Degré. Bonne
+pour la découverte, elle avait un effet de bord : elle poussait **les deux jeux en 2e et 4e
+position**, avant même le rituel. Un frère qui ouvrait la boîte pour réviser tombait sur
+« Cordons & Officiers » avant le texte souche, et l'humour arrivait dispersé au milieu du
+sérieux.
+
+Trois rayons désormais, du grave au léger :
+
+| Rayon | Boutons |
+|---|---|
+| **Pour étudier** | Rituel 1er Degré, Mémento Tuilage, Tableau de Loge, Les Officiers, Lexique Maçonnique |
+| **Pour sourire** | Rituels Humoristiques, Lexique Maçonnique Humoristique |
+| **Pour jouer** | Cordons & Officiers, Mémoire des Symboles |
+
+L'ordre à l'intérieur du premier rayon suit l'usage : le rituel d'abord parce que c'est le
+texte souche, le mémento ensuite parce qu'il en découle, les deux supports visuels, et le
+lexique en dernier — un dictionnaire se consulte quand on bute, il ne se lit pas en premier.
+**Mémoire des Symboles ferme la marche**, décision de Félix.
+
+Deux détails d'exécution qui méritent d'être connus avant d'ajouter un rayon ou un bouton :
+les titres de rayon sont des `h3` **stylés en ligne**, parce que la feuille Tailwind du
+fichier est compilée et ne contient que les classes déjà utilisées ailleurs — une classe
+neuve n'y existerait pas ; et ils sont posés **après** le `h2` de l'écran, qui reste donc la
+cible du focus de `switchScreen()`.
+
+Vérifié sous Chromium à 390 et 1100 px : pas de débordement horizontal, focus toujours sur
+« Boîte à outils », aucune erreur console autre que celle décrite au point 8 ci-dessous.
+
 ### 10 septembre 2026 — V2.3.0 : le mode hors connexion, enfin réel
 
 **Le symptôme.** Le manifeste PWA proposait l'installation depuis la V1.9, mais l'application
@@ -255,13 +287,15 @@ l'écran Rituel », elle est en ligne. Le déplacement dans un écran dédié es
 
 ## À faire
 
-### 1. Supprimer les branches fusionnées — *bloqué, à faire par Félix*
+### 1. Supprimer les branches fusionnées — *fait par Félix le 10 septembre 2026*
 
 `claude/mise-a-jour-en1lj2`, `claude/v2.1-relecture-choix-questions` et
 `claude/v2.2-corrections-relecture` sont fusionnées dans `main` et bonnes à supprimer.
-La commande a été refusée par le contrôle de permissions de l'environnement, et le serveur
-GitHub ne propose pas d'outil de suppression de branche : ça se fait depuis l'onglet
-*Branches* du dépôt, ou en accordant `git push --delete`.
+La commande avait été refusée par le contrôle de permissions de l'environnement, puis le
+proxy git avait rejeté quatre tentatives de `push --delete` ; le serveur GitHub ne propose
+aucun outil de suppression de branche. Félix les a supprimées à la main depuis l'onglet
+*Branches* du dépôt. **À retenir pour la prochaine fois : ce ménage-là ne peut pas être fait
+depuis ici, il faut le demander.**
 
 **Ne pas toucher à `claude/kata-catacombes-game-t7cddr`** : elle n'est pas fusionnée et porte
 le projet Kata (fiction interactive), 2 173 lignes en attente.
@@ -304,3 +338,86 @@ un chantier, à ne lancer que si le temps de chargement gêne réellement à l'u
 ### 7. Numéro de version — *fait en V2.1*
 
 Le titre, l'écran Réglages et le changelog sont passés en V2.1 le 10 septembre 2026.
+
+### 8. Une dépendance externe subsiste — *à trancher*
+
+Le changelog de la V2.3.0 affirme que jsPDF était « la seule dépendance externe ». C'est
+inexact : un `<link>` vers `fonts.googleapis.com` reste en tête de page, pour Inter, Cinzel et
+EB Garamond. Rien ne casse sans lui — les polices de repli prennent le relais — mais
+l'application n'est pas autonome au sens strict, et le premier affichage attend le réseau.
+
+Deux issues possibles : intégrer les trois polices en base64 comme le reste des ressources,
+au prix d'environ 200 à 400 Ko de plus sur une page qui en fait déjà 2,3 (voir le point 6) ;
+ou assumer le CDN et retirer la promesse d'autonomie du changelog. La seconde est honnête et
+gratuite, la première est la seule qui tienne vraiment hors connexion.
+
+À noter pour les sessions futures : **`ERR_CONNECTION_RESET` sur `fonts.googleapis.com` dans
+la console de développement n'est pas une régression**, c'est la politique réseau de
+l'environnement qui bloque ce domaine.
+
+---
+
+## Feuille de route — les intentions de Félix
+
+Ce que Félix veut faire de l'application, noté ici pour ne pas se perdre entre deux sessions.
+Rien n'est engagé : ce sont des directions, pas des tâches prêtes.
+
+### A. Une base de données de tableaux de loge
+
+Aujourd'hui l'écran *Tableau de Loge* en présente un seul. Félix veut en rassembler
+**beaucoup**, récupérés sur internet et dans ses propres documents, et en faire une collection
+consultable.
+
+Trois questions à trancher avant d'écrire la moindre ligne :
+
+- **Le poids.** La page fait déjà 2,3 Mo à cause des images en base64. Une collection de
+  tableaux ne peut pas suivre le même chemin : c'est ce chantier qui rendra le point 6
+  obligatoire — un dossier `img/`, des fichiers séparés, un chargement à la demande.
+- **Les droits.** Un tableau trouvé sur internet appartient à quelqu'un. Il faudra tenir pour
+  chacun sa provenance et son statut, et écarter ce qui ne peut pas être republié. Le champ
+  `source` des questions existe déjà comme précédent, mais il n'est jamais affiché : ici il
+  devra l'être.
+- **Le rangement.** Par rite, par degré, par époque, par obédience ? C'est ce choix qui
+  décidera de la forme de l'écran, pas l'inverse.
+
+### B. Étoffer les Rituels Humoristiques
+
+Le rayon POUR SOURIRE ne contient que les quatre rituels récupérés en août. Félix veut
+l'agrandir, et **en écrire de nouveaux avec Claude**. Le format est déjà là : `rituelsHumorData`,
+des blocs `{h}` pour un titre, `{d}` pour une didascalie, `{r,t}` pour une réplique attribuée.
+Ajouter un rituel, c'est ajouter une entrée à cette constante — l'écran, l'export PDF et le
+bouton de retour flottant suivent tout seuls.
+
+Deux garde-fous : l'apostrophe **droite** est de rigueur dans ce bloc de données comme dans
+tous les autres (voir CLAUDE.md), et l'humour maçonnique se moque des travers, jamais du
+rituel lui-même — c'est ce qui sépare la plaisanterie entre frères de la moquerie.
+
+### C. Le Kata rejoint le rayon POUR JOUER
+
+La fiction interactive `kata-la-descente/`, sur la branche non fusionnée
+`claude/kata-catacombes-game-t7cddr`, a vocation à devenir le troisième bouton du rayon
+POUR JOUER — **au-dessus de Mémoire des Symboles**, qui reste le dernier.
+
+État au 10 septembre 2026 : le jeu est fini et fiable. 48 nœuds, 16 dénouements tous
+atteignables, zéro erreur console, son propre vérificateur passe intégralement. Ce qui reste :
+
+- **Le renommer** autour du V.·.I.·.T.·.R.·.I.·.O.·.L.·. — l'épigraphe est déjà celle du jeu,
+  le titre doit la rejoindre. Propositions faites le 10 septembre, choix en attente.
+- **Refondre les choix et les dénouements** pour qu'ils parlent à un franc-maçon : la descente,
+  la rectification, la pierre cachée. Le décor des carrières reste, la lecture devient
+  initiatique. C'est ce travail-là qui justifiera sa présence dans un outil d'instruction —
+  sans lui, le jeu reste un corps étranger.
+- **L'intégrer par `<iframe>`**, en `kata.html` à la racine, et non en fusionnant les deux
+  fichiers : la CSS du Kata style `html`, `body`, `*`, `button`, `h1`-`h3` et `p`, elle
+  repeindrait tout le Quiz ; et ses fonctions `switchScreen(showId)` et `vibrer(motif)` ont
+  des signatures incompatibles avec celles du Quiz. Un `<iframe>` est un document séparé :
+  les deux collisions disparaissent d'elles-mêmes.
+- Corriger au passage les défauts relevés dans son propre dépôt : le `README.md` nie une
+  reprise de partie qui existe, les contrastes du texte secondaire sont à mesurer, et
+  l'abandon de partie ouvre un `window.confirm()` natif au milieu du noir et or.
+
+### D. Ce que ces trois chantiers ont en commun
+
+Ils font tous grossir la page, et deux d'entre eux la font grossir beaucoup. **Le point 6 —
+sortir les images du fichier — cesse d'être un chantier de fond le jour où l'un d'eux
+démarre.** À traiter avant, pas après.
