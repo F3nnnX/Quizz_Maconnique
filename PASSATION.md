@@ -106,9 +106,9 @@ point qui fixe le calendrier de la commercialisation.
 | Sujet | Session | État |
 |---|---|---|
 | Choix du nom commercial | Desktop | **« Le Cherchant » arrêté** le 11 septembre, vérifications INPI et RNE faites |
-| Achat du nom de domaine | Desktop | **`lecherchant.fr`** chez OVH — création 3 ans, domaine seul, titulaire particulier. **Achat en cours** |
-| Sortie de GitHub Pages vers le VPS | **VS Code** | À démarrer |
-| Branchement du domaine sur le VPS | **VS Code** | Dépend du nom retenu |
+| Achat du nom de domaine | Desktop | **FAIT** — `lecherchant.fr`, OVH, 3 ans + 1 an offert, domaine seul, titulaire particulier. Aucun DNS configuré : le domaine attend le VPS |
+| Sortie de GitHub Pages vers le VPS | **VS Code** | **Prêt à démarrer** — le domaine est acheté et libre de toute configuration |
+| Branchement du domaine sur le VPS | **VS Code** | À faire : un `A` vers l'IPv4 du VPS, un `AAAA` vers l'IPv6, depuis l'espace client OVH |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
 
@@ -143,7 +143,7 @@ Décidé par Félix le 11 septembre 2026, **après vérification** :
 | Marque « cherchant » à l'INPI | **aucune** |
 | Société active du même nom | **aucune** — « Au Parvis du Cherchant », librairie du Var, radiée le 10/12/2018 |
 | Site concurrent | **aucun** — trois domaines testés, zéro résolution |
-| `lecherchant.fr` | libre selon le DNS, à confirmer chez OVH |
+| `lecherchant.fr` | **acheté chez OVH le 11 septembre 2026**, 3 ans + 1 an offert |
 
 Une société radiée ne détient plus rien : la protection d'une dénomination sociale suppose un
 usage effectif dans le commerce, et il a cessé il y a huit ans. Aucun des quatre obstacles qui
