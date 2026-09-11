@@ -68,20 +68,20 @@ la question du nom commercial (voir `PROTECTION.md`, section 3).
 
 | # | Officier | Format | Poids | Dimensions | Origine |
 |---|---|---|---|---|---|
-| 08 | Premier Surveillant | PNG | 15,0 Ko | 90×86 | *à renseigner* |
-| 09 | Second Surveillant | PNG | 10,7 Ko | 61×75 | *à renseigner* |
-| 10 | Orateur | PNG | 22,9 Ko | 112×100 | *à renseigner* |
-| 11 | Secrétaire | PNG | 17,2 Ko | 76×104 | *à renseigner* |
-| 12 | Trésorier | PNG | 13,9 Ko | 68×88 | *à renseigner* |
-| 13 | Expert | PNG | 12,8 Ko | 74×74 | *à renseigner* |
-| 14 | Maître des Cérémonies | PNG | 15,2 Ko | 85×78 | *à renseigner* |
-| 15 | Couvreur | PNG | 8,0 Ko | 46×101 | *à renseigner* |
-| 16 | Hospitalier | PNG | 11,7 Ko | 63×81 | *à renseigner* |
-| 17 | Maître d'Harmonie | PNG | 19,4 Ko | 79×100 | *à renseigner* |
-| 18 | Vénérable Maître | PNG | 13,4 Ko | 90×100 | *à renseigner* |
+| 08 | Premier Surveillant | PNG | 15,0 Ko | 90×86 | **INTERNET** |
+| 09 | Second Surveillant | PNG | 10,7 Ko | 61×75 | **INTERNET** |
+| 10 | Orateur | PNG | 22,9 Ko | 112×100 | **INTERNET** |
+| 11 | Secrétaire | PNG | 17,2 Ko | 76×104 | **INTERNET** |
+| 12 | Trésorier | PNG | 13,9 Ko | 68×88 | **INTERNET** |
+| 13 | Expert | PNG | 12,8 Ko | 74×74 | **INTERNET** |
+| 14 | Maître des Cérémonies | PNG | 15,2 Ko | 85×78 | **INTERNET** |
+| 15 | Couvreur | PNG | 8,0 Ko | 46×101 | **INTERNET** |
+| 16 | Hospitalier | PNG | 11,7 Ko | 63×81 | **INTERNET** |
+| 17 | Maître d'Harmonie | PNG | 19,4 Ko | 79×100 | **INTERNET** |
+| 18 | Vénérable Maître | PNG | 13,4 Ko | 90×100 | **INTERNET** |
 
-Ces onze-là se tiennent : même facture, même traitement. **Si elles viennent du même endroit,
-une seule réponse règle les onze.** C'est la question à se poser en premier.
+**Réponse de Félix, 11 septembre 2026 : elles viennent d'internet, et leur qualité est
+médiocre.** Les onze d'un coup, comme prévu.
 
 ## Les symboles du Tableau de Loge — 16 images
 
@@ -90,27 +90,25 @@ une seule réponse règle les onze.** C'est la question à se poser en premier.
 | # | Symbole | Format | Poids | Dimensions | Origine |
 |---|---|---|---|---|---|
 | 05 | Le tableau lui-même (fond) | JPEG | 12,8 Ko | 187×269 | **TROUVÉE SUR INTERNET** (11 sept. 2026) |
-| 20 | Planche à tracer | PNG | 90,8 Ko | 440×200 | *à renseigner* |
-| 21 | Fenêtres | JPEG | 21,3 Ko | 215×260 | *à renseigner* |
-| 22 | Lacs d'amour | PNG | 46,3 Ko | 167×200 | *à renseigner* |
-| 23 | Marches | PNG | 28,0 Ko | 195×140 | *à renseigner* |
-| 24 | Porte | JPEG | 13,3 Ko | 229×260 | *à renseigner* |
-| 25 | Houppe dentelée | JPEG | 16,9 Ko | 189×260 | *à renseigner* |
-| 26 | Niveau | JPEG | 12,7 Ko | 383×220 | *à renseigner* |
-| 27 | Ciseau | JPEG | 21,2 Ko | 329×220 | *à renseigner* |
-| 28 | Maillet | PNG | 30,9 Ko | 133×240 | *à renseigner* |
-| 29 | Lune | PNG | 23,4 Ko | 126×140 | *à renseigner* |
-| 30 | Soleil | PNG | 35,6 Ko | 136×140 | *à renseigner* |
-| 31 | Delta lumineux | PNG | 68,1 Ko | 160×140 | *à renseigner* |
-| 32 | Pierre brute | PNG | 31,4 Ko | 140×140 | *à renseigner* |
-| 33 | Pierre cubique | PNG | 36,2 Ko | 133×140 | *à renseigner* |
-| 34 | Équerre et compas | PNG | 29,7 Ko | 149×140 | *à renseigner* |
-| 35 | Pavé mosaïque | PNG | 17,6 Ko | 140×140 | *à renseigner* |
-| 36 | Règle de 24 pouces | PNG | 54,4 Ko | 461×90 | *à renseigner* |
+| 20 | Planche à tracer | PNG | 90,8 Ko | 440×200 | **INTERNET** |
+| 21 | Fenêtres | JPEG | 21,3 Ko | 215×260 | **INTERNET** |
+| 22 | Lacs d'amour | PNG | 46,3 Ko | 167×200 | **INTERNET** |
+| 23 | Marches | PNG | 28,0 Ko | 195×140 | **INTERNET** |
+| 24 | Porte | JPEG | 13,3 Ko | 229×260 | **INTERNET** |
+| 25 | Houppe dentelée | JPEG | 16,9 Ko | 189×260 | **INTERNET** |
+| 26 | Niveau | JPEG | 12,7 Ko | 383×220 | **INTERNET** |
+| 27 | Ciseau | JPEG | 21,2 Ko | 329×220 | **INTERNET** |
+| 28 | Maillet | PNG | 30,9 Ko | 133×240 | **INTERNET** |
+| 29 | Lune | PNG | 23,4 Ko | 126×140 | **INTERNET** |
+| 30 | Soleil | PNG | 35,6 Ko | 136×140 | **INTERNET** |
+| 31 | Delta lumineux | PNG | 68,1 Ko | 160×140 | **INTERNET** |
+| 32 | Pierre brute | PNG | 31,4 Ko | 140×140 | **INTERNET** |
+| 33 | Pierre cubique | PNG | 36,2 Ko | 133×140 | **INTERNET** |
+| 34 | Équerre et compas | PNG | 29,7 Ko | 149×140 | **INTERNET** |
+| 35 | Pavé mosaïque | PNG | 17,6 Ko | 140×140 | **INTERNET** |
+| 36 | Règle de 24 pouces | PNG | 54,4 Ko | 461×90 | **INTERNET** |
 
-Même remarque : elles forment une série cohérente. **Une seule provenance, probablement une
-seule réponse** — et c'est la question ouverte la plus importante de ce document, avec celle
-des onze bijoux ci-dessus.
+**Réponse de Félix, 11 septembre 2026 : internet également, qualité médiocre.**
 
 ### Image 05 — le tableau de loge : à vérifier avant de conclure
 
@@ -154,18 +152,51 @@ Trois réponses possibles, et elles n'ont pas les mêmes suites :
 Si le souvenir manque pour une image, écrire « origine inconnue » plutôt que de deviner. Une
 case honnêtement vide se traite ; une case remplie à tort ne se rattrape pas.
 
-## État au 11 septembre 2026
+## État au 11 septembre 2026 — l'inventaire est clos
 
 | Origine | Images | Ce qu'il faut faire |
 |---|---|---|
-| **Trouvée sur internet** | 04 (porte du Temple), 05 (tableau de loge) | Remplacer 04 sans attendre. Vérifier l'âge de 05, la remplacer si elle est moderne. |
+| **Trouvées sur internet** | 04, 05, et les 27 des deux séries — **29 images sur 33** | Toutes à remplacer avant commercialisation. Voir ci-dessous. |
 | **Sceau de la loge** | 02 | Rien tant que c'est gratuit. À retirer si le produit devient payant — question d'identité, pas de droit d'auteur. |
-| **À renseigner** | 01, 19, et les 27 images des deux séries | Trois questions restent : l'icône, le dos des cartes, et surtout **les 11 bijoux et les 16 symboles**. |
+| **À renseigner** | 01 (icône iOS), 19 (dos des cartes) | Deux questions mineures. L'icône est probablement le sceau redimensionné. |
 
-**Les deux séries sont désormais la question principale.** Si les deux images identifiées
-viennent d'internet, il est probable que les vingt-sept autres en viennent aussi — mais il
-serait aussi coûteux qu'injuste de le présumer sans demander. Tant que ces deux réponses
-manquent, l'inventaire ne permet pas de conclure.
+**Vingt-neuf images sur trente-trois viennent d'internet.** Ce n'est pas une surprise après les
+deux premières réponses, mais il fallait le demander plutôt que le présumer : c'est la
+différence entre un fait consigné et une supposition sur laquelle on bâtit.
+
+**Ce que ça veut dire, exactement** — et il faut être précis, parce qu'entre l'alarme et
+l'insouciance il y a la réalité :
+
+- **Rien n'est urgent tant que l'application est gratuite et confidentielle.** Personne ne
+  réclame contre un outil que trente frères utilisent pour réviser.
+- **Tout devient bloquant le jour de la commercialisation.** Vendre un produit dont 88 % des
+  illustrations appartiennent à d'autres, c'est le seul point de ce dossier qui puisse coûter
+  plus cher que ce qu'il rapporte.
+- **L'image 04 fait exception et doit partir avant.** C'est une photographie, sur le premier
+  écran, retrouvable en quelques secondes. Et l'écran qui la porte est de toute façon en
+  sursis.
+
+## La refonte — l'idée de Félix, et pourquoi elle est la bonne
+
+Félix propose de **redessiner ces logos**, en s'aidant de Claude Design. C'est la bonne
+réponse, et pour trois raisons qui vont au-delà du droit :
+
+1. **La qualité.** Félix l'a dit lui-même : ces images sont médiocres. Les bijoux font entre 46
+   et 112 pixels de large, les symboles guère plus. Sur un écran moderne à 390 px de large et
+   3× de densité, elles sont floues. On ne répare pas une image trouvée en petit.
+2. **Le poids.** Les 27 images des deux séries pèsent 774 Ko sur les 1,01 Mo du lot. Redessinées
+   en **SVG**, elles pèseraient quelques kilo-octets chacune, seraient nettes à tous les zooms —
+   ce qui compte sur le Tableau de Loge, qui a des boutons +/− — et se colorieraient par CSS.
+3. **La cohérence.** Vingt-sept images glanées à vingt-sept endroits n'ont ni le même trait, ni
+   la même épaisseur, ni la même logique de détail. Une série dessinée d'un seul geste donnerait
+   au produit ce qu'il n'a pas encore : une identité graphique.
+
+**Le jeu des carrières a déjà fait la démonstration** : ses dix-sept décors sont dessinés en SVG
+à l'exécution, sans un seul fichier image, et le jeu entier tient en 87 Ko.
+
+À faire dans l'ordre : le tableau de loge (dessin au trait, le plus simple), puis les seize
+symboles, puis les onze bijoux — ce sont les plus délicats, un cordon et un bijou ont des
+formes précises qu'on ne peut pas approximer.
 
 ## Ce que l'inventaire a appris au passage
 

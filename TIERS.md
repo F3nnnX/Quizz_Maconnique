@@ -113,14 +113,50 @@ Seul Félix peut le faire : l'origine ne se déduit pas du fichier.
   droit d'auteur mais **l'identité** : un sceau de loge sur un produit vendu laisse entendre
   que la loge est derrière. Félix l'a vu de lui-même et prévoit de le retirer le jour venu.
 
-**Les 27 images des deux séries restent à qualifier**, et c'est désormais la question ouverte
-la plus importante de ce document.
+**Les 27 images des deux séries viennent d'internet elles aussi** (réponse du 11 septembre
+2026), et leur qualité est médiocre. **Vingt-neuf images sur trente-trois sont donc à
+remplacer avant toute commercialisation.**
+
+Ce n'est pas un blocage immédiat : rien ne presse tant que l'outil est gratuit et
+confidentiel. Mais c'est le point qui, le jour de la vente, peut coûter plus cher que ce que
+la vente rapporte — et c'est donc lui qui fixe le calendrier, pas l'inverse.
+
+Félix propose de les redessiner avec l'aide de Claude Design. C'est la bonne réponse, et pas
+seulement pour le droit : ces images font 46 à 112 pixels de large et sont floues sur un écran
+moderne, elles pèsent 774 Ko à elles seules, et vingt-sept images glanées à vingt-sept endroits
+n'ont aucune unité de trait. Redessinées en SVG, elles seraient plus légères, nettes à tous les
+zooms, et donneraient au produit une identité graphique qu'il n'a pas encore.
 
 Le détail, image par image, est dans `IMAGES.md`.
 
 ---
 
-## 4. Ce que ce document ne couvre pas
+## 4. Un service tiers appelé à chaque visite
+
+Découvert le 11 septembre 2026 en instrumentant le navigateur : l'application **envoie une
+requête à `script.google.com` à chaque ouverture** et à chaque quiz terminé. C'est le Google
+Apps Script qui alimente le tableur « Stats Quizz Maçonnique » de Félix.
+
+C'est donc une **seconde dépendance externe**, après `fonts.googleapis.com` — et il vaut mieux
+l'avoir écrite ici que la redécouvrir le jour d'un audit.
+
+**La bonne nouvelle : la collecte est irréprochable telle qu'elle est.** Ce qui part, c'est
+`{ type: 'visite', date, token }` et le score par thème. Aucun identifiant de personne, aucun
+cookie, aucun traceur — le jeton est **le même pour tout le monde**, il ne distingue pas les
+visiteurs. Impossible de reconstituer qui a fait quoi. Pour un futur produit commercial, c'est
+une position de départ enviable : un comptage réellement anonyme, à conserver tel quel.
+
+**Le point à corriger un jour :** ce jeton partagé est écrit en clair dans un dépôt public, et
+l'adresse du script aussi. Il ne protège donc rien — n'importe qui peut lire le code et envoyer
+ce qu'il veut à l'adresse. Le risque n'est pas une fuite, puisqu'il n'y a rien de personnel à
+fuir : c'est la pollution des statistiques de Félix. À traiter quand le VPS existera, en
+faisant passer l'appel par lui.
+
+Un dernier détail à connaître : cet appel échoue silencieusement hors connexion
+(`mode: 'no-cors'`, `.catch(() => {})`). Rien ne casse, mais les visites hors connexion ne sont
+pas comptées.
+
+## 5. Ce que ce document ne couvre pas
 
 **Le concours d'un assistant d'intelligence artificielle.** Une part substantielle du code de
 cette application a été écrite par Claude (Anthropic), sur la direction de Félix Casellato :
