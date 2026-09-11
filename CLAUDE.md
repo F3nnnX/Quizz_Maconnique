@@ -24,11 +24,16 @@ build : le dépôt contient le produit fini.
 | `SUIVI.md` | Journal de développement et TODO priorisé |
 | `PROMPT-SUITE.md` | Prompt prêt à coller pour reprendre le travail |
 | `JEU-PISTES.md` | Carnet des pistes envisagées pour le jeu des carrières — **rien n'y est décidé, rien n'y est à coder** |
+| `LICENSE` | Réserve de droits — tous droits réservés, aucune licence libre |
+| `TIERS.md` | Inventaire des composants qui ne sont pas de Félix, et de ce que leurs licences exigent |
+| `PROTECTION.md` | Feuille de route : protéger l'œuvre, puis en faire un produit |
+| `EMPREINTE.txt` | Empreintes SHA-256 horodatées du dépôt, pour un dépôt probatoire |
+| `outils/empreinte.py` | Régénère `EMPREINTE.txt` |
 
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
 
-Le dépôt ne contient que ces huit fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
+Le dépôt contient treize fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
 `IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
 le 10 septembre 2026 et restent récupérables dans l'historique git.
 
@@ -181,6 +186,20 @@ Deux points à connaître :
 
 Avant de pousser, vérifier au minimum : la syntaxe JS (extraire le dernier bloc `<script>` et
 `node --check`), l'absence d'erreur console, et le rendu à 390 px et 1100 px de large.
+
+## Droits et contenus
+
+**Le dépôt réserve tous les droits** (`LICENSE`) depuis le 11 septembre 2026 : aucune licence
+libre, aucun usage commercial autorisé sans accord de Félix.
+
+**Toute ressource ajoutée à l'application doit entrer dans `TIERS.md`** — image, police,
+bibliothèque, texte repris d'ailleurs. Un contenu dont on ne sait plus d'où il vient est
+impossible à défendre le jour où l'application devient payante, et c'est le projet en cours
+(voir `PROTECTION.md`). Écrire d'où ça vient prend trente secondes sur le moment et devient
+impossible six mois plus tard.
+
+**Après une modification du dépôt, régénérer l'empreinte** : `python3 outils/empreinte.py >
+EMPREINTE.txt`. Elle n'a de valeur que si elle correspond à l'état déposé.
 
 ## Git
 

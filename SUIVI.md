@@ -6,6 +6,51 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Protéger l'oeuvre avant d'en faire un produit
+
+Félix a partagé le dépôt. Un frère l'a appelé pour l'alerter : il fallait protéger ce travail
+avant qu'on ne le lui prenne, le déposer à l'INPI, en faire une application payante protégée
+par mot de passe.
+
+Le conseil part d'une intention juste et repose sur trois idées reçues qu'il valait mieux
+lever tout de suite :
+
+- **Le code est déjà protégé.** En droit français le logiciel est une œuvre de l'esprit et la
+  protection naît de la création, sans formalité. Un dépôt n'apporte pas le droit, il apporte
+  la preuve — de contenu et de date.
+- **Un logiciel ne se brevette pas** en France ni en Europe.
+- **Un mot de passe sur une application web ne protège rien.** Tout s'exécute dans le
+  navigateur du visiteur : ce qu'il affiche, il l'a déjà téléchargé. Faire payer suppose un
+  serveur qui ne livre pas le contenu avant paiement — un autre projet, pas un réglage.
+
+Et un risque que personne n'avait signalé, au moins aussi probable que le vol dès qu'il y a de
+l'argent : **la réclamation d'un tiers dont l'application contient le travail**. Le rituel du
+1er degré (28 Ko), les quatre rituels humoristiques d'auteur inconnu, et surtout les 36 images
+encodées dans le fichier (1,34 Mo, origine non documentée). Tant que l'outil est gratuit ce
+risque dort ; le jour où il est vendu, il se réveille.
+
+Quatre livrables :
+
+| Fichier | Ce qu'il fait |
+|---|---|
+| `LICENSE` | Réserve tous les droits. Un dépôt public sans licence est ambigu — beaucoup lisent « public » comme « libre ». |
+| `TIERS.md` | Inventaire de ce qui n'est pas de Félix, et de ce que chaque licence exige. jsPDF et Tailwind (MIT) et les trois polices (OFL) sont clairs ; les contenus sont à vérifier. |
+| `PROTECTION.md` | La feuille de route, par ordre d'urgence réelle, jusqu'aux applications mobiles. |
+| `outils/empreinte.py` | Produit `EMPREINTE.txt` : commit, date, SHA-256 de chaque fichier, et une empreinte globale unique. C'est la pièce à joindre à un dépôt e-Soleau ou APP. |
+
+Constat utile au passage : le dépôt est public depuis le 27 juillet 2026, **0 fork et
+0 étoile**. Personne ne l'a copié sur GitHub à ce jour.
+
+Une chose a été écrite noir sur blanc dans `TIERS.md` parce que la taire fragiliserait tout :
+**une part substantielle du code a été écrite par Claude**, sur la direction de Félix. Ce n'est
+pas un problème de licence, c'en est un de qualification — le droit d'auteur suppose une
+personne humaine — et cela doit être signalé spontanément au conseil consulté et à l'organisme
+de dépôt.
+
+Deux décisions attendent Félix : **le dépôt reste-t-il public** (le passer en privé éteint le
+site GitHub Pages sur un compte gratuit), et **la question du rituel**, seul point qui peut
+obliger à modifier le produit.
+
 ### 10 septembre 2026 — V2.3.1 : la Boîte à Outils rangée en trois rayons
 
 Neuf boutons en liste plate, sans titre ni séparation. La convention d'alors voulait que
