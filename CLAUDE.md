@@ -28,12 +28,14 @@ build : le dépôt contient le produit fini.
 | `TIERS.md` | Inventaire des composants qui ne sont pas de Félix, et de ce que leurs licences exigent |
 | `PROTECTION.md` | Feuille de route : protéger l'œuvre, puis en faire un produit |
 | `EMPREINTE.txt` | Empreintes SHA-256 horodatées du dépôt, pour un dépôt probatoire |
+| `IMAGES.md` | Inventaire des 36 images de l'application, avec l'origine de chacune à renseigner |
+| `ACCES.md` | L'idée retenue pour restreindre l'accès au site — **archivée, non engagée** |
 | `outils/empreinte.py` | Régénère `EMPREINTE.txt` |
 
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
 
-Le dépôt contient treize fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
+Le dépôt contient seize fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
 `IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
 le 10 septembre 2026 et restent récupérables dans l'historique git.
 
