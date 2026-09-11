@@ -116,7 +116,7 @@ point qui fixe le calendrier de la commercialisation.
 | Choix du nom commercial | Desktop | **« Le Cherchant » arrêté** le 11 septembre, vérifications INPI et RNE faites |
 | Achat du nom de domaine | Desktop | **FAIT** — `lecherchant.fr`, OVH, 3 ans + 1 an offert, domaine seul, titulaire particulier. Aucun DNS configuré : le domaine attend le VPS |
 | Sortie de GitHub Pages vers le VPS | **VS Code** | **FAIT le 11 septembre** — le site tourne sur le VPS, servi par Traefik. Voir `deploiement/LISEZ-MOI.md` |
-| Branchement du domaine sur le VPS | **Félix** | **SEULE ÉTAPE RESTANTE** — le DNS pointe encore sur le parking OVH `213.186.33.5`. Il faut un `A` et un `AAAA` vers `51.195.223.56` / `2001:41d0:801:2000::86fb`, depuis l'espace client OVH. Sans cela, pas de certificat |
+| Branchement du domaine sur le VPS | Félix | **FAIT le 11 septembre** — `A` et `AAAA` posés chez OVH. **https://lecherchant.fr répond**, certificat Let's Encrypt valable jusqu'au 10 décembre 2026, renouvellement automatique par Traefik |
 | Redirection de GitHub Pages | **VS Code** | À faire **après** la bascule DNS, par une branche `gh-pages` ne contenant qu'une page de redirection — `main` et `index.html` ne sont pas touchés |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026

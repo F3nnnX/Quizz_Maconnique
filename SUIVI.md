@@ -64,9 +64,23 @@ cassée, sans le moindre signe. L'empreinte de ce lot a donc été générée su
 clone jetable, et vérifiée : les fichiers inchangés y portent exactement les empreintes de la
 version précédente. C'est consigné dans `PASSATION.md` § 3.
 
-**Il manque le DNS.** `lecherchant.fr` pointe encore sur `213.186.33.5`, le parking OVH. Tant
-qu'il n'est pas changé, Let's Encrypt ne peut pas émettre le certificat. C'est la seule étape
-de la migration que Claude ne peut pas faire : elle est dans l'espace client OVH.
+**Le DNS a été fait par Félix dans la foulée, et la migration est terminée.**
+**https://lecherchant.fr répond**, certificat Let's Encrypt émis, valable jusqu'au
+10 décembre 2026. Page servie en 0,3 s, contenu identique au dépôt, `www` et `http` redirigés
+en 301, `/.git/` et la documentation toujours en 403.
+
+Une chose à savoir si le cas se représente : **Traefik n'a pas réessayé tout seul.** Ses deux
+tentatives dataient du déploiement, quand le domaine pointait encore sur le parking OVH — les
+journaux montrent Let's Encrypt recevant la page « Site en construction » d'OVH. Une fois le
+DNS corrigé, il a fallu recréer le conteneur pour que le routeur soit réévalué et la demande
+relancée ; le certificat est arrivé en cinq secondes. Recréer *son* conteneur ne touche pas au
+proxy et laisse les sites voisins intacts — ce qui a été recontrôlé après coup.
+
+Au passage, un faux négatif qui aurait pu égarer : au moment de la vérification, Google DNS
+servait encore l'ancien A de l'apex alors que l'AAAA et `www` étaient déjà passés. Les
+enregistrements de Félix étaient corrects depuis le début. **Interroger le serveur faisant
+autorité — `nslookup -type=A lecherchant.fr ns111.ovh.net` — tranche en une commande** ce que
+les résolveurs publics laissent croire pendant la durée du TTL.
 
 ### 11 septembre 2026 — Passation : le travail se poursuit à deux endroits
 
