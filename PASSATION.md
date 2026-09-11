@@ -110,6 +110,34 @@ point qui fixe le calendrier de la commercialisation.
 | Sortie de GitHub Pages vers le VPS | **VS Code** | À démarrer |
 | Branchement du domaine sur le VPS | **VS Code** | Dépend du nom retenu |
 
+## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
+
+Félix pose deux exigences : **confidentialité du WHOIS** et **maîtrise des enregistrements
+A, AAAA, CNAME**. Ce qui a été vérifié, pour que la session VS Code n'ait pas à le refaire :
+
+- **En `.fr`, la confidentialité est acquise d'office.** L'AFNIC applique la « diffusion
+  restreinte » aux **personnes physiques** : nom, adresse, téléphone et courriel sont masqués
+  par défaut, gratuitement, chez n'importe quel registrar. Ce n'est ni une option ni un
+  service. **Condition unique : rester titulaire en nom propre** — une immatriculation en
+  micro-entreprise ferait de Félix une personne morale, et les données redeviendraient
+  publiques.
+- **En `.com`, cela dépend du registrar.** Vérifié comme gratuit chez Porkbun, Namecheap, et
+  inclus chez Cloudflare.
+- **A, AAAA et CNAME ne trient personne** : tous les registrars sérieux les donnent. La vraie
+  distinction est ailleurs — **gérer les enregistrements** (tout le monde) contre **déléguer
+  les serveurs de noms à un tiers** (la plupart, mais **pas Cloudflare**, qui impose les
+  siens). Pour pointer vers le VPS, un `A` et un `AAAA` suffisent.
+- **Le piège à surveiller est le prix de renouvellement**, souvent bien supérieur à celui de
+  la première année.
+
+Recommandation faite à Félix : un `.fr` chez un registrar français (OVH, Gandi, Infomaniak) —
+confidentialité garantie par l'AFNIC, support en français, facture en euros, délégation libre.
+Le `.com` chez Porkbun si le nom retenu n'est libre que là.
+
+**Le nom n'est pas encore arrêté.** Cinq propositions sont sur la table ; « Le Tuileur » a la
+préférence de la session distante, « Quiz Maçonnique » celle de Félix pour sa clarté, avec le
+défaut d'être probablement indéposable comme marque parce que purement descriptif.
+
 ## 5. Ce que la session VS Code doit savoir avant de migrer
 
 Ces points ont été établis ici et il serait coûteux de les redécouvrir :
