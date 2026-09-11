@@ -28,19 +28,21 @@ build : le dépôt contient le produit fini.
 | `TIERS.md` | Inventaire des composants qui ne sont pas de Félix, et de ce que leurs licences exigent |
 | `PROTECTION.md` | Feuille de route : protéger l'œuvre, puis en faire un produit |
 | `EMPREINTE.txt` | Empreintes SHA-256 horodatées du dépôt, pour un dépôt probatoire |
+| `IMAGES.md` | Inventaire des 36 images de l'application, avec l'origine de chacune à renseigner |
+| `ACCES.md` | L'idée retenue pour restreindre l'accès au site — **archivée, non engagée** |
 | `outils/empreinte.py` | Régénère `EMPREINTE.txt` |
 
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
 
-Le dépôt contient treize fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
+Le dépôt contient seize fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
 `IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
 le 10 septembre 2026 et restent récupérables dans l'historique git.
 
 ## Architecture d'index.html
 
 **En-tête** — un long commentaire de changelog, une section par thème (BUGS CORRIGÉS,
-SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.3.1**,
+SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.3.2**,
 répétée dans le `<title>`. Ce changelog est la mémoire du projet côté code : **le tenir à jour
 à chaque changement**, dans le même style — le bug, sa cause technique, sa conséquence pour
 l'utilisateur.
@@ -88,7 +90,11 @@ de Félix, pas un hasard d'ordre.
 un autre grade.
 
 **Écran d'entrée** — `#door-screen` recouvre tout au chargement ; il faut frapper trois fois
-au heurtoir pour entrer. À connaître pour les tests automatisés (voir plus bas).
+au heurtoir pour entrer. **Depuis la V2.3.2, seulement à la première visite** :
+`SETTINGS.dejaFrappe` retient le franchissement et `entrerSansCeremonie()` entre directement
+ensuite. Les deux chemins appellent `preparerAccueil()` — **toute nouveauté à préparer au
+lancement va là, sinon elle ne sera faite que sur un des deux chemins**. Le bouton « Rejouer
+la cérémonie d'entrée » des Réglages remet le drapeau à `false`, pour un rejeu unique.
 
 **Progression** — stockée en `localStorage` : répétition espacée (J+1, J+3, J+7, J+15),
 maîtrise acquise à deux succès consécutifs, banque d'erreurs, reprise de session.
@@ -130,8 +136,11 @@ est unique (`s.count(ancre) == 1`) avant de remplacer.
 sur un CDN — cela recasserait les exports PDF hors connexion, et le service worker mettrait
 cette version en cache.
 
-Il reste **une dépendance externe**, contrairement à ce qu'affirmait le changelog de la
-V2.3.0 : un `<link>` vers `fonts.googleapis.com` en tête de page (Inter, Cinzel, EB Garamond).
+Il reste **deux dépendances externes**, contrairement à ce qu'affirmait le changelog de la
+V2.3.0. La seconde est `script.google.com`, appelée par `logVisit()` et `logResult()` pour
+alimenter le tableur de statistiques de Félix — collecte anonyme, jeton partagé, échec
+silencieux hors connexion ; le détail est dans `TIERS.md`. La première est un `<link>` vers
+`fonts.googleapis.com` en tête de page (Inter, Cinzel, EB Garamond).
 Elle se dégrade proprement — les polices de repli prennent le relais, rien ne casse — mais
 l'application n'est pas autonome au sens strict, et la politique réseau de l'environnement de
 développement bloque ce domaine : **une console qui signale `ERR_CONNECTION_RESET` sur
@@ -176,6 +185,9 @@ Deux points à connaître :
 
 - **`page.click()` échoue tant que `#door-screen` est là** : il recouvre toute la fenêtre.
   Le retirer, ou appeler `frapperPorte()` trois fois en laissant passer l'animation.
+  Depuis la V2.3.2, **il n'est là qu'à la première visite d'un contexte navigateur neuf** :
+  un test qui réutilise le même contexte après une entrée réussie ne le trouvera plus.
+  Pour le forcer : `localStorage.clear()` avant `goto`, ou `SETTINGS.dejaFrappe = false`.
 - **Les exports PDF se testent directement** depuis la V2.3.0 : jsPDF est dans le dépôt, plus
   rien à injecter.
 - **Le service worker exige un vrai serveur HTTP.** Il ne s'enregistre pas en `file://`, et

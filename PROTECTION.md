@@ -216,10 +216,11 @@ vient **après** les points 1 et 2, pas avant.
 4. **Archiver l'historique git complet hors GitHub** — une copie du dépôt avec son `.git`, sur
    un disque et dans un stockage distant. C'est la meilleure preuve disponible et elle
    disparaîtrait avec le compte GitHub.
-5. **Trancher la question du rituel** (point 2) — c'est le seul point qui peut obliger à
-   modifier le produit, donc le plus tôt est le mieux.
+5. ~~Trancher la question du rituel~~ — **mail envoyé à la GLDF le 11 septembre 2026**,
+   réponse en attente. C'est le seul point qui peut obliger à modifier le produit.
 6. **Déposer à l'e-Soleau** une fois le point 5 tranché.
-7. Documenter l'origine des images, retrouver les auteurs des rituels humoristiques.
+7. Documenter l'origine des images — **l'inventaire est dressé (`IMAGES.md`), il ne reste
+   qu'une colonne à remplir** — et retrouver les auteurs des rituels humoristiques.
 8. Consulter l'INPI — rendez-vous gratuit — en apportant `EMPREINTE.txt`, `TIERS.md` et ce
    document. **Signaler spontanément le concours de l'IA** (voir la section 4 de `TIERS.md`) :
    le taire ne protège de rien.

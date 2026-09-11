@@ -6,6 +6,54 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — V2.3.2 : la cérémonie du heurtoir ne se joue plus qu'une fois
+
+Félix : « le fait de devoir cliquer 3x c'est rigolo mais usant à la longue ». Le code lui
+donnait raison — `DELAI_MIN_COUP` impose 700 ms entre deux coups et `ouvrirLeTemple` est
+appelé 3 secondes après le troisième, soit **cinq secondes au bas mot à chaque lancement**,
+sur une application qu'on ouvre pour réviser deux minutes.
+
+`SETTINGS.dejaFrappe` retient le franchissement. Les lancements suivants passent par
+`entrerSansCeremonie()`. Un bouton des Réglages remet le drapeau à `false` : **un rejeu unique,
+pas un réglage permanent** — le besoin réel est de remontrer la porte à un frère, pas de la
+subir tous les jours.
+
+Le piège était le dédoublement du chemin d'entrée : `ouvrirLeTemple()` préparait l'accueil en
+quatre appels (`logVisit`, `renderThemeStats`, `displayMasonicDateToday`, `refreshResumeBanner`),
+et une entrée directe qui les oublierait afficherait un parvis sans statistiques ni date
+maçonnique. D'où `preparerAccueil()`, appelée par les deux — et vérifiée sous Chromium : les
+deux chemins produisent un accueil **identique**, date maçonnique et compteurs compris.
+
+Les quatre états ont été joués : première visite (cérémonie), trois coups (`dejaFrappe` passe à
+`true`), rechargement (entrée directe, la porte n'est même plus dans le DOM), et rejeu (la
+cérémonie revient). Aucune erreur JavaScript.
+
+### 11 septembre 2026 — Les images, et un service tiers découvert au passage
+
+Les 33 images de l'application sont inventoriées dans `IMAGES.md`, et Félix a répondu pour
+toutes : **29 sur 33 viennent d'internet**, de qualité médiocre. Le sceau vient de sa loge et
+partira le jour du payant. Restent deux cases mineures, l'icône iOS et le dos des cartes.
+
+Rien d'urgent tant que l'outil est gratuit. Tout devient bloquant le jour de la vente — c'est
+donc ce point qui fixera le calendrier de la commercialisation, et pas l'inverse. Seule
+exception : la photo de la porte du Temple, sur le premier écran, à retirer avant. Elle partira
+sans doute d'elle-même avec l'écran.
+
+La refonte en SVG, proposée par Félix avec l'aide de Claude Design, est la bonne réponse pour
+trois raisons cumulées : ces images font 46 à 112 px de large et sont floues sur un écran
+moderne ; elles pèsent 774 Ko ; et vingt-sept images glanées à vingt-sept endroits n'ont aucune
+unité de trait. Le jeu des carrières a déjà fait la démonstration — dix-sept décors SVG, aucun
+fichier image, 87 Ko en tout.
+
+**Découverte imprévue** en instrumentant le navigateur : l'application appelle
+`script.google.com` à chaque visite et à chaque quiz terminé, pour le tableur de statistiques.
+C'est une seconde dépendance externe, après les polices Google. La collecte elle-même est
+irréprochable — aucun identifiant de personne, un jeton partagé par tous, rien qui permette de
+reconstituer qui a fait quoi — et c'est une position de départ enviable pour un futur produit
+commercial. Le point à corriger un jour : ce jeton est écrit en clair dans un dépôt public, il
+ne protège donc rien, et n'importe qui peut polluer les statistiques. À faire passer par le VPS
+quand il existera.
+
 ### 11 septembre 2026 — Protéger l'oeuvre avant d'en faire un produit
 
 Félix a partagé le dépôt. Un frère l'a appelé pour l'alerter : il fallait protéger ce travail
@@ -470,8 +518,37 @@ atteignables, zéro erreur console, son propre vérificateur passe intégralemen
   reprise de partie qui existe, les contrastes du texte secondaire sont à mesurer, et
   l'abandon de partie ouvre un `window.confirm()` natif au milieu du noir et or.
 
-### D. Ce que ces trois chantiers ont en commun
+### D. L'écran de la porte est en sursis
 
-Ils font tous grossir la page, et deux d'entre eux la font grossir beaucoup. **Le point 6 —
-sortir les images du fichier — cesse d'être un chantier de fond le jour où l'un d'eux
-démarre.** À traiter avant, pas après.
+Félix, le 11 septembre 2026 : « le fait de devoir cliquer 3x c'est rigolo mais usant à la
+longue. Je le garde pour le fun mais ça va tendre à disparaître, c'est certain. »
+
+Le chiffre lui donne raison. `DELAI_MIN_COUP` impose 700 ms entre deux coups, et
+`ouvrirLeTemple` est appelé 3 secondes après le troisième : **il faut au minimum cinq secondes
+pour entrer, à chaque lancement**, sur une application qu'on ouvre pour réviser deux minutes
+dans le métro.
+
+S'y ajoute que cet écran porte l'image 04, la photographie trouvée sur internet (voir
+`IMAGES.md`) : **le supprimer réglerait le problème de droits le plus urgent par la même
+occasion.**
+
+Avant de le supprimer, considérer ce qu'on perdrait. La porte est la première impression du
+produit, et c'est elle qu'on montre à un frère à qui l'on fait découvrir l'outil. Sa valeur est
+réelle — elle est simplement **entièrement concentrée sur la première visite**.
+
+D'où une voie moyenne qui coûte peu : **mémoriser dans `localStorage` qu'on a déjà frappé**.
+Cérémonie complète la première fois, entrée directe ensuite, avec peut-être un moyen discret de
+la rejouer pour qui veut la montrer. On garde le charme là où il sert et on retire le péage.
+Cela laisse aussi le temps de trouver une image dont Félix ait les droits, au lieu de devoir
+choisir entre garder une photo d'autrui et supprimer l'écran.
+
+Rien n'est décidé : c'est une intention de Félix, notée pour ne pas se perdre.
+
+### E. Ce que ces chantiers ont en commun
+
+Les trois premiers font tous grossir la page, et deux d'entre eux la font grossir beaucoup.
+**Le point 6 — sortir les images du fichier — cesse d'être un chantier de fond le jour où l'un
+d'eux démarre.** À traiter avant, pas après.
+
+Le quatrième va dans l'autre sens : supprimer ou alléger l'écran de la porte rendrait 158 Ko,
+la plus grosse image de l'application.
