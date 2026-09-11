@@ -32,6 +32,7 @@ build : le dépôt contient le produit fini.
 | `LICENSE` | Réserve de droits — tous droits réservés, aucune licence libre |
 | `TIERS.md` | Inventaire des composants qui ne sont pas de Félix, et de ce que leurs licences exigent |
 | `PROTECTION.md` | Feuille de route : protéger l'œuvre, puis en faire un produit |
+| `COMMERCIALISATION.md` | Feuille de route pour vendre l'application — modèle, cadre légal, mise sur le marché ; prolonge `PROTECTION.md` |
 | `EMPREINTE.txt` | Empreintes SHA-256 horodatées du dépôt, pour un dépôt probatoire |
 | `IMAGES.md` | Inventaire des 36 images de l'application, avec l'origine de chacune à renseigner |
 | `ACCES.md` | L'idée retenue pour restreindre l'accès au site — **archivée, non engagée** |
