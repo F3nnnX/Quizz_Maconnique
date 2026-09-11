@@ -6,6 +6,26 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Kata sort du depot et devient un projet independant
+
+Felix : « balance kata dans son dossier kata et decorele-le du quiz, il n'a rien a etre la pour
+le moment ». Fait.
+
+Etat de depart : Kata — La Descente vivait sur la branche non fusionnee de la PR #2, dans
+`kata-la-descente/`, et n'etait relie au quiz par aucun code — seuls `JEU-PISTES.md` et
+`SUIVI.md` decrivaient un plan d'integration futur. Fonctionnellement, il etait deja a part.
+
+Ce qui a ete fait : le sous-dossier a ete extrait avec son historique (`git subtree split`,
+4 commits preserves) et clone en **projet git independant** chez Felix, `Desktop/dev/kata`,
+sans aucun remote vers ce depot. Verifie : il s'ouvre et fonctionne seul, aucune erreur JS. La
+PR #2 est fermee sans fusion ; sa branche est conservee comme trace d'origine. Les docs qui
+planifiaient l'integration sont marquees « reportee, Kata vit ailleurs » — rien n'est perdu,
+l'idee du bouton POUR JOUER reste au chaud dans `JEU-PISTES.md`.
+
+Pourquoi hors du depot plutot qu'en simple dossier `kata/` : c'est le choix de Felix, et il a
+du sens tant que le quiz avance vers la commercialisation — un jeu de catacombes sans rapport
+avec l'instruction maconnique n'a pas a alourdir ni le produit ni l'inventaire des droits.
+
 ### 11 septembre 2026 — V2.3.3 : plus de porte, entree directe sur le parvis
 
 Felix : « le fait de devoir cliquer trois fois sur le temple, c'est rigolo mais je veux de
@@ -647,8 +667,11 @@ aucun outil de suppression de branche. Félix les a supprimées à la main depui
 *Branches* du dépôt. **À retenir pour la prochaine fois : ce ménage-là ne peut pas être fait
 depuis ici, il faut le demander.**
 
-**Ne pas toucher à `claude/kata-catacombes-game-t7cddr`** : elle n'est pas fusionnée et porte
-le projet Kata (fiction interactive), 2 173 lignes en attente.
+**`claude/kata-catacombes-game-t7cddr`** : branche non fusionnée qui portait le projet Kata
+(fiction interactive), 2 173 lignes. **Le 11 septembre 2026, Kata est sorti du dépôt** à la
+demande de Félix (« il n'a rien à être là pour le moment ») : c'est maintenant un projet git
+indépendant chez Félix (`Desktop/dev/kata`), historique préservé, PR #2 fermée. La branche est
+**conservée** comme trace d'origine — ne pas la supprimer.
 
 ### 2. Mode hors connexion et jsPDF — *faits le 10 septembre 2026 (V2.3.0)*
 
