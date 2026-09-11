@@ -54,7 +54,7 @@ cd Quizz_Maconnique
 Puis, dans Claude Code : demander de lire `PASSATION.md`, `CLAUDE.md` et `SUIVI.md` avant de
 toucher à quoi que ce soit.
 
-**Deux différences d'environnement à connaître, parce qu'elles font échouer ce qui marchait ici :**
+**Trois différences d'environnement à connaître, parce qu'elles font échouer ce qui marchait ici :**
 
 - Les chemins de ce dépôt sont écrits pour Linux. Sur Windows, `python3` s'appelle souvent
   `python`, et Playwright n'est pas installé au même endroit — le chemin
@@ -62,6 +62,14 @@ toucher à quoi que ce soit.
 - L'environnement distant bloque `github.io`, `fonts.googleapis.com` et la plupart des
   domaines externes. **Sur la machine de Félix, ces blocages n'existent pas** : la session
   VS Code peut visiter le site déployé, ce que celle-ci n'a jamais pu faire.
+- **Ne jamais régénérer `EMPREINTE.txt` depuis Windows.** Le dépôt y est cloné avec
+  `core.autocrlf=true` : tous les fichiers texte ont des CRLF sur le disque, et
+  `outils/empreinte.py` hache les fichiers du disque. Les SHA-256 produits ne
+  correspondraient à rien de reproductible — `index.html` y pèse 2 400 511 octets au lieu de
+  2 395 995, soit exactement les 4 516 retours chariot ajoutés — et la sortie serait en plus
+  écrite en cp1252 au lieu d'UTF-8. Pour une pièce destinée à l'INPI, **cela casserait la
+  chaîne probatoire en silence**. La régénérer sur une machine Linux : un clone jetable sur le
+  VPS suffit (`git clone --branch <branche> ... /tmp/x && python3 outils/empreinte.py`).
 
 ## 4. Où en est le projet — au 11 septembre 2026
 

@@ -54,6 +54,16 @@ Mesures : la page est servie en 0,2 s, **2 395 995 → 1 339 007 octets** compre
 son empreinte est identique à celle du dépôt. Les deux sites voisins ont été recontrôlés après
 coup — 200, certificats valides, aucun conteneur redémarré.
 
+**Un piège trouvé en chemin, et qui ne concerne pas la migration.** `CLAUDE.md` demande de
+régénérer `EMPREINTE.txt` après toute modification du dépôt. Fait depuis Windows, cela produit
+une pièce fausse : `core.autocrlf=true` met des CRLF sur tous les fichiers texte du disque, et
+`empreinte.py` hache les fichiers du disque. Tous les SHA-256 divergent, `index.html` y pèse
+2 400 511 octets au lieu de 2 395 995 — les 4 516 retours chariot ajoutés — et la sortie part
+en cp1252 au lieu d'UTF-8. Pour une pièce destinée à l'INPI, la chaîne probatoire serait
+cassée, sans le moindre signe. L'empreinte de ce lot a donc été générée sur le VPS, dans un
+clone jetable, et vérifiée : les fichiers inchangés y portent exactement les empreintes de la
+version précédente. C'est consigné dans `PASSATION.md` § 3.
+
 **Il manque le DNS.** `lecherchant.fr` pointe encore sur `213.186.33.5`, le parking OVH. Tant
 qu'il n'est pas changé, Let's Encrypt ne peut pas émettre le certificat. C'est la seule étape
 de la migration que Claude ne peut pas faire : elle est dans l'espace client OVH.
