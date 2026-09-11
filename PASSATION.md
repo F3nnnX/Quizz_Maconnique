@@ -117,7 +117,8 @@ point qui fixe le calendrier de la commercialisation.
 | Achat du nom de domaine | Desktop | **FAIT** — `lecherchant.fr`, OVH, 3 ans + 1 an offert, domaine seul, titulaire particulier. Aucun DNS configuré : le domaine attend le VPS |
 | Sortie de GitHub Pages vers le VPS | **VS Code** | **FAIT le 11 septembre** — le site tourne sur le VPS, servi par Traefik. Voir `deploiement/LISEZ-MOI.md` |
 | Branchement du domaine sur le VPS | Félix | **FAIT le 11 septembre** — `A` et `AAAA` posés chez OVH. **https://lecherchant.fr répond**, certificat Let's Encrypt valable jusqu'au 10 décembre 2026, renouvellement automatique par Traefik |
-| Redirection de GitHub Pages | **VS Code** | À faire **après** la bascule DNS, par une branche `gh-pages` ne contenant qu'une page de redirection — `main` et `index.html` ne sont pas touchés |
+| Redirection de GitHub Pages | **VS Code** | **FAIT le 11 septembre** — branche orpheline `gh-pages`, Pages basculé dessus. `index.html` non modifié. Désinscrit aussi le service worker de l'ancienne origine |
+| Passage du dépôt en privé | **Félix** | **Décidé, à faire dans quelques semaines.** Lire l'avertissement ci-dessous avant : la redirection mourra ce jour-là |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
 
@@ -183,6 +184,31 @@ mais l'adresse doit dire le nom de la marque — « Le Cherchant » — et non u
 le nom de domaine, le titre de l'application et son `<title>`, le manifeste PWA, le sceau de
 la loge à remplacer par une marque propre (voir `IMAGES.md`), et le dépôt de marque à l'INPI.
 **L'application s'appelle toujours « Le Quiz Maçonnique » et rien n'a été renommé.**
+
+## 4 ter. Le passage du dépôt en privé — ce qu'il coûte
+
+Décidé par Félix le 11 septembre 2026 : le dépôt passera en privé dans quelques semaines, le
+temps que les frères basculent sur `lecherchant.fr`. Trois conséquences, dont deux se
+retournent contre nous si on les oublie.
+
+**La redirection meurt ce jour-là.** Sur un compte gratuit, GitHub Pages s'éteint quand le
+dépôt devient privé. `f3nnnx.github.io` ne redirigera plus : elle ne répondra plus du tout.
+La redirection n'est donc pas une solution, c'est une **fenêtre**, et sa durée est exactement
+le temps qu'on laisse avant de fermer.
+
+**Elle ne profite qu'à ceux qui ouvrent l'application pendant cette fenêtre.** Un frère qui a
+installé l'application et ne l'ouvre pas d'ici là garde sa version en cache, figée, et ne verra
+jamais la page de redirection. Il faut donc **prévenir les frères**, pas seulement rediriger.
+
+**L'archive hors ligne devient la seule copie complète.** Une fois le dépôt privé, `git clone`
+public ne fonctionne plus. L'archive du Drive et `EMPREINTE.txt` prennent alors toute leur
+valeur — ce sont les pièces qui documentent la paternité, et le dépôt e-Soleau à l'INPI reste
+à faire (voir `PROTECTION.md`).
+
+Ce que le passage en privé ne coûte pas : **rien pour le site**. Il est servi par le VPS depuis
+un clone git déjà en place sur la machine, qui continuera de fonctionner. Seul `deploie.sh`
+devra s'authentifier pour faire son `git pull` — une clé de déploiement en lecture seule sur le
+dépôt suffit, à poser **avant** de fermer, pas après.
 
 ## 5. Ce que la session VS Code doit savoir avant de migrer
 

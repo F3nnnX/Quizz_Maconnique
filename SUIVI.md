@@ -6,6 +6,42 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — L'ancienne adresse redirige, et le compte à rebours est lancé
+
+La PR #18 est fusionnée, la production tourne sur le `main` fusionné, et
+**https://f3nnnx.github.io/Quizz_Maconnique/ ne sert plus l'application** : elle redirige vers
+`lecherchant.fr`. Vérifié en navigateur réel — l'ancienne adresse conduit à la nouvelle,
+l'application charge, aucune erreur JavaScript.
+
+La redirection vit sur une **branche orpheline `gh-pages`**, sans aucun lien avec `main`, et
+Pages a été basculé dessus. C'était la condition posée : `index.html` ne devait pas être
+modifié pour cela. La branche a été fabriquée avec les commandes de plomberie git
+(`hash-object`, `mktree`, `commit-tree`) plutôt qu'avec un `checkout --orphan`, ce qui évite
+de faire passer l'arbre de travail par un état vide.
+
+**La page ne se contente pas de rediriger, et c'est le vrai travail.** L'application installait
+un service worker sur cette origine. Laissé en place, il continuerait de servir l'ancienne
+version depuis son cache ; et le jour où le dépôt passera en privé, GitHub Pages s'éteindra
+sur un compte gratuit — ce cache deviendrait alors **la seule chose que les frères verraient,
+sans aucun moyen de s'en défaire**. La page désinscrit donc le service worker et vide ses
+caches avant de partir. Le départ ne dépend pas du succès de ce ménage : une promesse qui
+n'aboutit pas laisserait le visiteur bloqué là, d'où un `meta refresh` à 3 secondes, un
+`setTimeout` à 2,5 et un lien visible. `404.html` porte la même page, pour les adresses
+profondes.
+
+**Ce qu'il faut avoir en tête pour la suite.** Le passage du dépôt en privé est décidé, dans
+quelques semaines, le temps que les frères basculent. Ce jour-là, **la redirection meurt avec
+Pages** : elle n'est qu'une passerelle temporaire. Et elle ne profite qu'à ceux qui ouvrent
+l'application pendant la fenêtre — ceux qui ne l'ouvrent pas garderont leur version installée,
+figée, jusqu'à ce qu'ils y reviennent. Plus la fenêtre est longue, moins il en reste.
+
+L'archive du Drive a été refaite : celle de 11h03 ne connaissait ni la migration ni le domaine.
+La nouvelle décrit l'état fusionné, avec tout l'historique git, et elle a été fabriquée sur
+Linux — pour la même raison que l'empreinte (voir l'entrée précédente).
+
+Un défaut de mon propre script a été corrigé au passage : `deploie.sh` vérifiait le site en
+HTTP, où le proxy répond 301. Il n'apprenait donc rien. Il interroge désormais HTTPS.
+
 ### 11 septembre 2026 — Le site est sur le VPS, et le VPS n'était pas ce qu'on croyait
 
 La migration est faite, à une étape près : le DNS. Le site tourne sur le VPS, servi par

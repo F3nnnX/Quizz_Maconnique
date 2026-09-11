@@ -42,6 +42,22 @@ C'était le choix le moins intrusif : poser un site statique ne valait pas de de
 au tableau de bord d'un tiers. Il redémarre seul (`restart: unless-stopped`) et survit aux
 reboots.
 
+## Attention : les fichiers de configuration existent en deux exemplaires
+
+`docker-compose.yml`, `nginx.conf` et `deploie.sh` vivent **à la fois** dans ce dossier du
+dépôt et dans `/data/sites/lecherchant/` sur le serveur. Ils ne sont pas liés : le conteneur
+lit ceux du serveur, pas ceux du clone. **Après avoir modifié l'un des trois ici, il faut le
+recopier**, sinon le dépôt décrit une configuration qui n'est pas celle qui tourne :
+
+```sh
+scp deploiement/{docker-compose.yml,nginx.conf,deploie.sh} fts:/data/sites/lecherchant/
+ssh fts 'cd /data/sites/lecherchant && sudo docker compose up -d'
+```
+
+C'est délibéré : faire lire au conteneur des fichiers du clone rendrait la configuration du
+serveur modifiable par un `git pull`, et `deploie.sh` se réécrirait lui-même pendant son
+exécution.
+
 ## Mettre le site à jour
 
 ```sh
