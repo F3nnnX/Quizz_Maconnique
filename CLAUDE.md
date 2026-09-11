@@ -2,6 +2,11 @@
 
 Fiche de reprise pour toute session de développement. À lire avant de toucher au code.
 
+> **Deux sessions travaillent sur ce dépôt depuis le 11 septembre 2026** — une dans VS Code
+> chez Félix, une à distance. Elles ne se voient pas : le dépôt git est leur seule mémoire
+> commune. **Lire `PASSATION.md` avant ce fichier** : qui fait quoi, comment rester à jour,
+> et où en est le projet.
+
 ## Ce que c'est
 
 Application web d'instruction maçonnique au 1er degré (REAA), pour la R.·.L.·. Philadelphia
@@ -30,12 +35,16 @@ build : le dépôt contient le produit fini.
 | `EMPREINTE.txt` | Empreintes SHA-256 horodatées du dépôt, pour un dépôt probatoire |
 | `IMAGES.md` | Inventaire des 36 images de l'application, avec l'origine de chacune à renseigner |
 | `ACCES.md` | L'idée retenue pour restreindre l'accès au site — **archivée, non engagée** |
+| `PASSATION.md` | **À lire en premier** — répartition entre les deux sessions et état du projet |
+| `travaux/` | Travaux mis de côté, non intégrés à l'application |
 | `outils/empreinte.py` | Régénère `EMPREINTE.txt` |
 
 Tout est dans `index.html` : Tailwind compilé en ligne, JS en ligne, images et polices en
 base64. Pas de dépendance à installer, pas d'étape de build. On ouvre le fichier, ça marche.
 
-Le dépôt contient seize fichiers, pour 2,8 Mo. `index-4.html` (V1.4) et
+Le dépôt contient dix-huit fichiers suivis, plus le dossier `travaux/`, pour 3,1 Mo.
+**`travaux/` ne fait pas partie du produit** : ce qui s'y trouve n'est pas servi par
+l'application et n'a pas à être tenu à jour. `index-4.html` (V1.4) et
 `IMG20260814110022.jpg` en pesaient 9 à eux deux sans servir à rien ; ils ont été supprimés
 le 10 septembre 2026 et restent récupérables dans l'historique git.
 
@@ -214,6 +223,9 @@ impossible six mois plus tard.
 EMPREINTE.txt`. Elle n'a de valeur que si elle correspond à l'état déposé.
 
 ## Git
+
+**Toujours repartir de `origin/main` fraîchement récupéré** : une autre session a pu pousser
+entre-temps (voir `PASSATION.md`).
 
 Développement sur une branche `claude/...` dédiée, jamais directement sur `main`.
 Une pull request par lot de travail ; Félix relit et fusionne. Si la PR précédente est déjà

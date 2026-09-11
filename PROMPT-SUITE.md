@@ -4,6 +4,29 @@
 
 ---
 
+## Prompt pour la session VS Code — reprendre le projet sur la machine de Félix
+
+À coller au tout début d'une session Claude Code ouverte dans
+`C:\Users\Utilisateur\Desktop\dev\Quizz_Maconnique`.
+
+```
+Lis PASSATION.md, puis CLAUDE.md, puis SUIVI.md, dans cet ordre, avant de toucher à
+quoi que ce soit.
+
+Contexte : deux sessions Claude travaillent sur ce dépôt et ne se voient pas. Le
+dépôt git est leur seule mémoire commune. PASSATION.md dit qui fait quoi et dans
+quel état est le projet.
+
+Tu as la migration en charge : sortir de GitHub Pages, poser le site sur le VPS,
+brancher le nom de domaine. Le nom n'est pas encore arrêté — l'autre session s'en
+occupe, ne le choisis pas à sa place.
+
+Avant de commencer, dis-moi ce que tu as compris de l'état du projet et ce que tu
+proposes de faire en premier. Ne code rien avant que j'aie validé.
+```
+
+---
+
 ## Prompt court — reprendre là où on s'est arrêté
 
 ```

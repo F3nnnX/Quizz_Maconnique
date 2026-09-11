@@ -1,0 +1,233 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 719" width="500" height="719" role="img" aria-label="Tableau de Loge du 1er degré">
+  <style>
+    .i  { fill:none; stroke:#2b2419; stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; }
+    .d  { fill:none; stroke:#2b2419; stroke-width:1.25; stroke-linecap:round; stroke-linejoin:round; }
+    .if { fill:#2b2419; stroke:none; }
+    .o  { fill:none; stroke:#a3813f; stroke-width:2.1; stroke-linecap:round; stroke-linejoin:round; }
+    .od { fill:none; stroke:#a3813f; stroke-width:1.25; stroke-linecap:round; stroke-linejoin:round; }
+    .of { fill:#a3813f; stroke:none; }
+    .cord { fill:none; stroke:#967f52; stroke-width:1.6; stroke-linecap:round; }
+    .st { fill:#efe9db; stroke:#2b2419; stroke-width:2.1; stroke-linejoin:round; }
+  </style>
+
+  <rect width="500" height="719" fill="#e9e3d3"/>
+
+  <!-- Les lacs d'amour isoles (440,8,46) -->
+  <g transform="translate(463,31)">
+    <path class="o" d="M-17 3 C-17 -10 -4 -12 0 -2 C4 -12 17 -10 17 3 C17 12 4 14 0 7 C-4 14 -17 12 -17 3 Z"/>
+    <path class="od" d="M-10 3 q10 7 20 0"/>
+  </g>
+
+  <!-- ORIENT : Lune (40,60,88) — Delta (213,63,76) — Soleil (373,57,88) -->
+  <g transform="translate(84,104)">
+    <path class="o" d="M8 -27 A27 27 0 1 0 8 27 A22 22 0 0 1 8 -27 Z"/>
+    <path class="of" d="M25 -26 l2.3 5.6 5.6 2.3 -5.6 2.3 -2.3 5.6 -2.3 -5.6 -5.6 -2.3 5.6 -2.3 z"/>
+    <path class="of" d="M27 9 l1.6 3.9 3.9 1.6 -3.9 1.6 -1.6 3.9 -1.6 -3.9 -3.9 -1.6 3.9 -1.6 z"/>
+  </g>
+
+  <g transform="translate(251,101)">
+    <g class="od">
+      <path d="M0 -40 v-11"/><path d="M20 -33 l6.5 -9.5"/><path d="M36 -18 l10.5 -6"/>
+      <path d="M41 2 h11"/><path d="M36 21 l10.5 6"/>
+      <path d="M-20 -33 l-6.5 -9.5"/><path d="M-36 -18 l-10.5 -6"/>
+      <path d="M-41 2 h-11"/><path d="M-36 21 l-10.5 6"/>
+    </g>
+    <path class="o" d="M0 -28 L26 17 H-26 Z"/>
+    <path class="od" d="M-11.5 1 q11.5 -9.5 23 0 q-11.5 9.5 -23 0 z"/>
+    <circle class="of" cx="0" cy="1" r="3.2"/>
+  </g>
+
+  <g transform="translate(417,101)">
+    <g class="od">
+      <path d="M0 -35 v-9"/><path d="M24.7 -24.7 l6.4 -6.4"/><path d="M35 0 h9"/>
+      <path d="M24.7 24.7 l6.4 6.4"/><path d="M0 35 v9"/><path d="M-24.7 24.7 l-6.4 6.4"/>
+      <path d="M-35 0 h-9"/><path d="M-24.7 -24.7 l-6.4 -6.4"/>
+      <path d="M12.6 -32.6 l3.4 -8.3"/><path d="M32.6 -12.6 l8.3 -3.4"/>
+      <path d="M32.6 12.6 l8.3 3.4"/><path d="M12.6 32.6 l3.4 8.3"/>
+      <path d="M-12.6 -32.6 l-3.4 -8.3"/><path d="M-32.6 -12.6 l-8.3 -3.4"/>
+      <path d="M-32.6 12.6 l-8.3 3.4"/><path d="M-12.6 32.6 l-3.4 8.3"/>
+    </g>
+    <circle class="o" cx="0" cy="0" r="25"/>
+    <circle class="od" cx="0" cy="0" r="17"/>
+  </g>
+
+  <!-- La Planche a tracer (131,149,56) -->
+  <g transform="translate(159,177)">
+    <path class="st" d="M-24 -18 h48 v36 h-48 z"/>
+    <path class="d" d="M-17 -10 h22 M-17 -3 h28 M-17 4 h15"/>
+    <path class="i" d="M7 4 l13 -10 4 5 -13 10 -5 1 1 -6 z"/>
+  </g>
+
+  <!-- Les Trois Petites Lumieres (215,194,72) -->
+  <g transform="translate(251,230)">
+    <g class="i">
+      <path d="M-23 16 v-17"/><path d="M-31 18 h16"/>
+      <path d="M0 12 v-23"/><path d="M-8 14 h16"/>
+      <path d="M23 16 v-17"/><path d="M15 18 h16"/>
+    </g>
+    <g class="of">
+      <path d="M-23 -9 q4.5 5 0 8 q-4.5 -3 0 -8 z"/>
+      <path d="M0 -19 q4.5 5 0 8 q-4.5 -3 0 -8 z"/>
+      <path d="M23 -9 q4.5 5 0 8 q-4.5 -3 0 -8 z"/>
+    </g>
+  </g>
+
+  <!-- La Pierre brute (35,207,88) : quelques eclats, pas une toile d'araignee -->
+  <g transform="translate(79,251)">
+    <path class="st" d="M-29 12 l-2 -21 9 -13 16 -6 18 5 8 15 -5 21 -19 7 z"/>
+    <path class="d" d="M-22 -13 l13 7 M-9 -6 l-5 18 M-9 -6 l17 -12 M8 -18 l4 13 M12 -5 l14 3"/>
+  </g>
+
+  <!-- La Pierre cubique (380,211,60) -->
+  <g transform="translate(410,241)">
+    <path class="st" d="M-19 -8 l19 -11 19 11 -19 11 z"/>
+    <path class="st" d="M-19 -8 v20 l19 11 v-20 z"/>
+    <path class="st" d="M19 -8 v20 l-19 11 v-20 z"/>
+  </g>
+
+  <!-- Maillet et Ciseau (39,291,90) -->
+  <g transform="translate(84,336)">
+    <g transform="rotate(-26)">
+      <path class="st" d="M-18 -23 h36 v16 h-36 z"/>
+      <path class="st" d="M-3 -7 h6 v36 h-6 z"/>
+      <path class="d" d="M-18 -15 h36"/>
+    </g>
+    <g transform="translate(21,-1) rotate(21)">
+      <path class="st" d="M-5.5 -23 h11 v30 l-5.5 9 -5.5 -9 z"/>
+      <path class="d" d="M-5.5 -9 h11"/>
+    </g>
+  </g>
+
+  <!-- La Regle de 24 pouces (56,390,56) -->
+  <g transform="translate(84,418)">
+    <g transform="rotate(-17)">
+      <path class="st" d="M-28 -6.5 h56 v13 h-56 z"/>
+      <path class="d" d="M-21 -6.5 v5 M-14 -6.5 v7.5 M-7 -6.5 v5 M0 -6.5 v7.5 M7 -6.5 v5 M14 -6.5 v7.5 M21 -6.5 v5"/>
+    </g>
+  </g>
+
+  <!-- Le Fil a plomb (400,378,52) -->
+  <g transform="translate(426,404)">
+    <path class="i" d="M-15 -23 h30"/>
+    <path class="d" d="M0 -23 v29"/>
+    <path class="st" d="M0 6 l7 7 -7 15 -7 -15 z"/>
+  </g>
+
+  <!-- Le Niveau (56,503,56) -->
+  <g transform="translate(84,531)">
+    <path class="i" d="M-26 8 h52"/>
+    <path class="i" d="M-26 8 l26 -27 26 27"/>
+    <path class="d" d="M0 -19 v22"/>
+    <path class="st" d="M0 3 l5 5 -5 10 -5 -10 z"/>
+  </g>
+
+  <!-- Les trois Fenetres (314,148) (400,300) (367,513) -->
+  <g transform="translate(342,176)">
+    <path class="st" d="M-17 -19 q17 -15 34 0 v38 h-34 z"/>
+    <path class="d" d="M0 -30 v49 M-17 -2 h34"/>
+  </g>
+  <g transform="translate(428,328)">
+    <path class="st" d="M-17 -19 q17 -15 34 0 v38 h-34 z"/>
+    <path class="d" d="M0 -30 v49 M-17 -2 h34"/>
+  </g>
+  <g transform="translate(395,541)">
+    <path class="st" d="M-17 -19 q17 -15 34 0 v38 h-34 z"/>
+    <path class="d" d="M0 -30 v49 M-17 -2 h34"/>
+  </g>
+
+  <!-- LE TEMPLE — fronton (210,326,80), colonnes B et J (128/308,449,64), porte (222,495,56).
+       Les futs montent jusqu'a l'entablement : sans cela le fronton flotte au-dessus du vide. -->
+  <path class="st" d="M136 394 L250 338 L364 394 Z"/>
+  <path class="d" d="M160 388 L250 344 L340 388"/>
+  <path class="st" d="M130 394 h240 v14 h-240 z"/>
+  <path class="d" d="M130 401 h240"/>
+
+  <g transform="translate(160,481)">
+    <path class="st" d="M-16 -73 h32 v12 h-32 z"/>
+    <path class="st" d="M-12 -61 h24 v98 h-24 z"/>
+    <path class="d" d="M-5.5 -61 v98 M2 -61 v98"/>
+    <path class="st" d="M-17 37 h34 v11 h-34 z"/>
+    <text x="0" y="4" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="27" font-weight="700" fill="#2b2419">B</text>
+  </g>
+  <g transform="translate(340,481)">
+    <path class="st" d="M-16 -73 h32 v12 h-32 z"/>
+    <path class="st" d="M-12 -61 h24 v98 h-24 z"/>
+    <path class="d" d="M-5.5 -61 v98 M2 -61 v98"/>
+    <path class="st" d="M-17 37 h34 v11 h-34 z"/>
+    <text x="0" y="4" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="27" font-weight="700" fill="#2b2419">J</text>
+  </g>
+
+  <g transform="translate(250,523)">
+    <path class="st" d="M-28 28 v-41 q28 -21 56 0 v41 z"/>
+    <path class="d" d="M0 -27 v55"/>
+    <path class="d" d="M-20 -8 h14 M6 -8 h14"/>
+    <circle class="if" cx="-6" cy="7" r="2.5"/>
+    <circle class="if" cx="6" cy="7" r="2.5"/>
+  </g>
+
+  <!-- Les trois Marches (210,585,80x42) : elles s'elargissent vers le bas, sinon elles
+       se lisent comme une piece montee posee a cote du Temple au lieu d'y conduire. -->
+  <path class="st" d="M219 564 h62 v15 h-62 z"/>
+  <path class="d"  d="M219 570 h62"/>
+  <path class="st" d="M205 579 h90 v15 h-90 z"/>
+  <path class="d"  d="M205 585 h90"/>
+  <path class="st" d="M191 594 h118 v16 h-118 z"/>
+  <path class="d"  d="M191 601 h118"/>
+
+  <!-- Le Pave mosaique (340,600,100) : le sol du Temple, en perspective -->
+  <clipPath id="sol"><path d="M64 672 L140 610 H360 L436 672 Z"/></clipPath>
+  <g clip-path="url(#sol)">
+    <rect x="60" y="604" width="382" height="72" fill="#efe9db"/>
+    <g class="if">
+        <rect x="60" y="606" width="26" height="18"/>
+        <rect x="112" y="606" width="26" height="18"/>
+        <rect x="164" y="606" width="26" height="18"/>
+        <rect x="216" y="606" width="26" height="18"/>
+        <rect x="268" y="606" width="26" height="18"/>
+        <rect x="320" y="606" width="26" height="18"/>
+        <rect x="372" y="606" width="26" height="18"/>
+        <rect x="424" y="606" width="26" height="18"/>
+        <rect x="86" y="624" width="26" height="18"/>
+        <rect x="138" y="624" width="26" height="18"/>
+        <rect x="190" y="624" width="26" height="18"/>
+        <rect x="242" y="624" width="26" height="18"/>
+        <rect x="294" y="624" width="26" height="18"/>
+        <rect x="346" y="624" width="26" height="18"/>
+        <rect x="398" y="624" width="26" height="18"/>
+        <rect x="60" y="642" width="26" height="18"/>
+        <rect x="112" y="642" width="26" height="18"/>
+        <rect x="164" y="642" width="26" height="18"/>
+        <rect x="216" y="642" width="26" height="18"/>
+        <rect x="268" y="642" width="26" height="18"/>
+        <rect x="320" y="642" width="26" height="18"/>
+        <rect x="372" y="642" width="26" height="18"/>
+        <rect x="424" y="642" width="26" height="18"/>
+        <rect x="86" y="660" width="26" height="18"/>
+        <rect x="138" y="660" width="26" height="18"/>
+        <rect x="190" y="660" width="26" height="18"/>
+        <rect x="242" y="660" width="26" height="18"/>
+        <rect x="294" y="660" width="26" height="18"/>
+        <rect x="346" y="660" width="26" height="18"/>
+        <rect x="398" y="660" width="26" height="18"/>
+    </g>
+  </g>
+  <path class="i" d="M64 672 L140 610 H360 L436 672 Z"/>
+
+  <!-- LA HOUPPE DENTELEE — corde a lacs d'amour, generee par outils/tableau.py -->
+  <g>
+    <path class="cord" d="M40.0 40.0 C19.5 74.1 86.7 74.1 66.2 40.0 M66.2 40.0 C45.8 74.1 113.0 74.1 92.5 40.0 M92.5 40.0 C72.0 74.1 139.2 74.1 118.8 40.0 M118.8 40.0 C98.3 74.1 165.5 74.1 145.0 40.0 M145.0 40.0 C124.5 74.1 191.7 74.1 171.2 40.0 M171.2 40.0 C150.8 74.1 218.0 74.1 197.5 40.0 M197.5 40.0 C177.0 74.1 244.2 74.1 223.8 40.0 M223.8 40.0 C203.3 74.1 270.5 74.1 250.0 40.0 M250.0 40.0 C229.5 74.1 296.7 74.1 276.2 40.0 M276.2 40.0 C255.8 74.1 323.0 74.1 302.5 40.0 M302.5 40.0 C282.0 74.1 349.2 74.1 328.8 40.0 M328.8 40.0 C308.3 74.1 375.5 74.1 355.0 40.0 M355.0 40.0 C334.5 74.1 401.7 74.1 381.2 40.0 M381.2 40.0 C360.8 74.1 428.0 74.1 407.5 40.0 M407.5 40.0 C387.0 74.1 454.2 74.1 433.8 40.0 M433.8 40.0 C413.3 74.1 480.5 74.1 460.0 40.0"/>
+    <path class="cord" d="M460.0 40.0 C425.4 19.2 425.4 87.4 460.0 66.6 M460.0 66.6 C425.4 45.9 425.4 114.0 460.0 93.2 M460.0 93.2 C425.4 72.5 425.4 140.6 460.0 119.9 M460.0 119.9 C425.4 99.1 425.4 167.3 460.0 146.5 M460.0 146.5 C425.4 125.7 425.4 193.9 460.0 173.1 M460.0 173.1 C425.4 152.4 425.4 220.5 460.0 199.8 M460.0 199.8 C425.4 179.0 425.4 247.1 460.0 226.4 M460.0 226.4 C425.4 205.6 425.4 273.8 460.0 253.0 M460.0 253.0 C425.4 232.2 425.4 300.4 460.0 279.6 M460.0 279.6 C425.4 258.9 425.4 327.0 460.0 306.2 M460.0 306.2 C425.4 285.5 425.4 353.6 460.0 332.9 M460.0 332.9 C425.4 312.1 425.4 380.3 460.0 359.5 M460.0 359.5 C425.4 338.7 425.4 406.9 460.0 386.1 M460.0 386.1 C425.4 365.4 425.4 433.5 460.0 412.8 M460.0 412.8 C425.4 392.0 425.4 460.1 460.0 439.4 M460.0 439.4 C425.4 418.6 425.4 486.8 460.0 466.0 M460.0 466.0 C425.4 445.2 425.4 513.4 460.0 492.6 M460.0 492.6 C425.4 471.9 425.4 540.0 460.0 519.2 M460.0 519.2 C425.4 498.5 425.4 566.6 460.0 545.9 M460.0 545.9 C425.4 525.1 425.4 593.3 460.0 572.5 M460.0 572.5 C425.4 551.7 425.4 619.9 460.0 599.1 M460.0 599.1 C425.4 578.4 425.4 646.5 460.0 625.8 M460.0 625.8 C425.4 605.0 425.4 673.1 460.0 652.4 M460.0 652.4 C425.4 631.6 425.4 699.8 460.0 679.0"/>
+    <path class="cord" d="M460.0 679.0 C480.5 644.9 413.3 644.9 433.8 679.0 M433.8 679.0 C454.2 644.9 387.0 644.9 407.5 679.0 M407.5 679.0 C428.0 644.9 360.8 644.9 381.2 679.0 M381.2 679.0 C401.7 644.9 334.5 644.9 355.0 679.0 M355.0 679.0 C375.5 644.9 308.3 644.9 328.8 679.0 M328.8 679.0 C349.2 644.9 282.0 644.9 302.5 679.0 M302.5 679.0 C323.0 644.9 255.8 644.9 276.2 679.0 M276.2 679.0 C296.7 644.9 229.5 644.9 250.0 679.0 M250.0 679.0 C270.5 644.9 203.3 644.9 223.8 679.0 M223.8 679.0 C244.2 644.9 177.0 644.9 197.5 679.0 M197.5 679.0 C218.0 644.9 150.8 644.9 171.2 679.0 M171.2 679.0 C191.7 644.9 124.5 644.9 145.0 679.0 M145.0 679.0 C165.5 644.9 98.3 644.9 118.8 679.0 M118.8 679.0 C139.2 644.9 72.0 644.9 92.5 679.0 M92.5 679.0 C113.0 644.9 45.8 644.9 66.2 679.0 M66.2 679.0 C86.7 644.9 19.5 644.9 40.0 679.0"/>
+    <path class="cord" d="M40.0 679.0 C74.6 699.8 74.6 631.6 40.0 652.4 M40.0 652.4 C74.6 673.1 74.6 605.0 40.0 625.8 M40.0 625.8 C74.6 646.5 74.6 578.4 40.0 599.1 M40.0 599.1 C74.6 619.9 74.6 551.7 40.0 572.5 M40.0 572.5 C74.6 593.3 74.6 525.1 40.0 545.9 M40.0 545.9 C74.6 566.6 74.6 498.5 40.0 519.2 M40.0 519.2 C74.6 540.0 74.6 471.9 40.0 492.6 M40.0 492.6 C74.6 513.4 74.6 445.2 40.0 466.0 M40.0 466.0 C74.6 486.8 74.6 418.6 40.0 439.4 M40.0 439.4 C74.6 460.1 74.6 392.0 40.0 412.8 M40.0 412.8 C74.6 433.5 74.6 365.4 40.0 386.1 M40.0 386.1 C74.6 406.9 74.6 338.7 40.0 359.5 M40.0 359.5 C74.6 380.3 74.6 312.1 40.0 332.9 M40.0 332.9 C74.6 353.6 74.6 285.5 40.0 306.2 M40.0 306.2 C74.6 327.0 74.6 258.9 40.0 279.6 M40.0 279.6 C74.6 300.4 74.6 232.2 40.0 253.0 M40.0 253.0 C74.6 273.8 74.6 205.6 40.0 226.4 M40.0 226.4 C74.6 247.1 74.6 179.0 40.0 199.8 M40.0 199.8 C74.6 220.5 74.6 152.4 40.0 173.1 M40.0 173.1 C74.6 193.9 74.6 125.7 40.0 146.5 M40.0 146.5 C74.6 167.3 74.6 99.1 40.0 119.9 M40.0 119.9 C74.6 140.6 74.6 72.5 40.0 93.2 M40.0 93.2 C74.6 114.0 74.6 45.9 40.0 66.6 M40.0 66.6 C74.6 87.4 74.6 19.2 40.0 40.0"/>
+    <g transform="translate(40,679)">
+      <path class="cord" d="M0 0 q-3 7 -1 13"/>
+      <path class="of" d="M-1 12 q-7 9 -1 17 q7 -7 2 -17 z"/>
+      <path class="od" d="M-5 22 v6 M-1 23 v7 M3 22 v6"/>
+    </g>
+    <g transform="translate(460,679)">
+      <path class="cord" d="M0 0 q3 7 1 13"/>
+      <path class="of" d="M1 12 q7 9 1 17 q-7 -7 -2 -17 z"/>
+      <path class="od" d="M-3 22 v6 M1 23 v7 M5 22 v6"/>
+    </g>
+  </g>
+</svg>
