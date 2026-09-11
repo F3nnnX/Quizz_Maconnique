@@ -7,6 +7,13 @@ Félix puisse y réfléchir sans que rien ne se perde entre deux sessions.
 cahier des charges. Il sera relu, élagué, et une seule voie en sortira — ce jour-là, elle
 partira dans SUIVI.md sous forme de tâches, et ce fichier retournera à l'état de brouillon.
 
+> **11 septembre 2026 — Kata est sorti du projet quiz, à la demande de Félix.** « Il n'a rien à
+> être là pour le moment. » Le jeu est désormais **un projet git indépendant**, hors de ce
+> dépôt (chez Félix, dans `Desktop/dev/kata`), avec son historique complet préservé. La PR #2 a
+> été fermée sans fusion ; sa branche `claude/kata-catacombes-game-t7cddr` reste conservée comme
+> trace d'origine. **L'intégration au Quiz décrite plus bas est reportée**, pas abandonnée — ce
+> carnet la garde au chaud pour le jour où elle reviendra à l'ordre du jour.
+
 ---
 
 ## 1. Ce qui est acquis
