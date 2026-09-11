@@ -6,6 +6,33 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — V2.3.3 : plus de porte, entree directe sur le parvis
+
+Felix : « le fait de devoir cliquer trois fois sur le temple, c'est rigolo mais je veux de
+l'efficace. Quand on entre sur le site on est direct sur le quiz. Ca enleve la photo et tout
+est mieux ainsi, plus propre et pro. »
+
+Fait. L'ecran d'entree `#door-screen` est retire en entier — porte, heurtoir, indicateurs,
+messages, et surtout la photo de la porte (image 04, 158 Ko, la seule que `IMAGES.md`
+demandait de retirer avant de vendre parce qu'elle venait d'internet). Le parvis
+`#welcome-screen` devient visible par defaut, et `initQuizMaconnique()` appelle
+`preparerAccueil()` sans condition. Le fichier perd 221 Ko au passage — un gain net pour le
+point 6 de ce suivi (poids de la page), obtenu sans effort puisqu'on supprimait de toute facon.
+
+Sont parties avec la ceremonie les fonctions qui n'avaient plus d'objet : `frapperPorte`,
+`ouvrirLeTemple`, `entrerSansCeremonie`, `rejouerCeremonie`, le bouton « Rejouer la ceremonie »
+des Reglages, et l'easter egg `secretTapCheck`/`skipToMenuInstant` (quatre tapes sur la porte
+pour sauter au menu — sans objet quand on entre deja directement). `SETTINGS.dejaFrappe` reste,
+inutilise, pour ne pas toucher a la logique de sauvegarde des reglages.
+
+Verifie sous Chromium a 390 px : la porte n'est plus dans le DOM, le parvis s'affiche d'emblee,
+les neuf themes sont la, un clic ouvre la modale du nombre de questions, aucune erreur JS.
+`node --check` sur le bloc applicatif passe. Aucune reference morte ne subsiste dans le code —
+seul le changelog nomme encore les fonctions retirees.
+
+Cette modification touche `index.html`, normalement du ressort de la session Desktop. Elle a
+ete faite par la session VS Code **a la demande explicite de Felix** ; voir `PASSATION.md`.
+
 ### 11 septembre 2026 — Audit de securite : deux choses a corriger, le reste est sain
 
 Audit complet dans `AUDIT-SECURITE.md`, conduit avec le skill `agamm/claude-code-owasp` (MIT,
@@ -136,6 +163,7 @@ Linux — pour la même raison que l'empreinte (voir l'entrée précédente).
 
 Un défaut de mon propre script a été corrigé au passage : `deploie.sh` vérifiait le site en
 HTTP, où le proxy répond 301. Il n'apprenait donc rien. Il interroge désormais HTTPS.
+
 
 ### 11 septembre 2026 — Le site est sur le VPS, et le VPS n'était pas ce qu'on croyait
 

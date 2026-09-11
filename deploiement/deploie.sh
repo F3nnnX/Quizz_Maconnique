@@ -39,10 +39,12 @@ git --no-pager log --oneline "$avant..$apres" | sed 's/^/  /'
 echo ""
 echo "Vérification : le site répond-il ?"
 
-# En HTTP le proxy redirige vers HTTPS : interroger le port 80 renvoie 301, ce
-# qui n'apprend rien sur l'état du site. On passe donc par HTTPS, en forçant la
-# résolution sur la boucle locale — le certificat reste valide, c'est bien le
-# nom qui est présenté en SNI.
-code=$(curl -s -o /dev/null -w '%{http_code}' --resolve lecherchant.fr:443:127.0.0.1        https://lecherchant.fr/ --max-time 15 || echo 000)
-echo "  https://lecherchant.fr -> $code"
-[ "$code" = "200" ] || echo "  ATTENTION : 200 attendu."
+# On interroge nginx DIRECTEMENT dans le conteneur, pas l'URL publique : celle-ci
+# passe par la porte d'accès (basicauth) et renverrait 401 sans le code, ce qui
+# ferait crier le script à chaque déploiement alors que tout va bien. Sonder
+# nginx en interne prouve que le contenu est servi, sans dépendre de la porte.
+if sudo docker exec lecherchant wget -q -O /dev/null http://127.0.0.1/ 2>/dev/null; then
+    echo "  nginx interne -> 200, le contenu est servi."
+else
+    echo "  ATTENTION : nginx interne ne répond pas 200."
+fi

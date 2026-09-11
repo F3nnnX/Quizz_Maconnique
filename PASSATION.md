@@ -21,6 +21,12 @@ dépôt git est leur seule mémoire commune.** D'où ce fichier.
 session Desktop ne touche pas à l'infrastructure.** Les deux peuvent écrire dans les fichiers
 `.md`, mais jamais dans le même au cours de la même journée sans se relire.
 
+> **Exception assumée, 11 septembre 2026.** La session VS Code a modifié `index.html` (V2.3.3 :
+> suppression de l'écran d'entrée et de la cérémonie du heurtoir) **à la demande explicite de
+> Félix**. Le détail est au journal de `SUIVI.md`. Session Desktop : si tu avais des
+> modifications d'`index.html` en cours, relis ce commit avant de repartir, la porte n'existe
+> plus.
+
 ## 2. Comment les deux restent à jour
 
 Il n'existe aucun lien direct entre deux sessions Claude. **Le lien, c'est git**, et il ne

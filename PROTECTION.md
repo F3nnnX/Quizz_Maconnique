@@ -232,7 +232,8 @@ vient **après** les points 1 et 2, pas avant.
    document. **Signaler spontanément le concours de l'IA** (voir la section 4 de `TIERS.md`) :
    le taire ne protège de rien.
 9. Choisir le nom définitif, puis déposer la marque.
-10. Alors seulement, ouvrir le chantier du service payant et des applications.
+10. Alors seulement, ouvrir le chantier du service payant et des applications —
+    **il est détaillé et séquencé dans `COMMERCIALISATION.md`.**
 
 ---
 
