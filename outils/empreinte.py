@@ -6,6 +6,11 @@ Ce que ce fichier prouve : qu'a une date donnee, ces fichiers-la, avec ce
 contenu-la exactement, existaient. Il ne prouve pas la paternite — c'est
 l'historique git qui la documente, commit par commit, depuis le 27 juillet 2026.
 
+EMPREINTE.txt est exclu de son propre manifeste, sans quoi le calcul ne serait
+pas reproductible. Il en decoule que le manifeste reste valable apres le commit
+qui l'enregistre, mais que la ligne « Etat decrit » designe le commit parent :
+aucun fichier ne peut porter l'empreinte du commit qui le contient.
+
 Usage : python3 outils/empreinte.py > EMPREINTE.txt
 """
 
@@ -62,8 +67,13 @@ def main():
     out.write("Oeuvre              : Le Quiz Maconnique, application web d'instruction\n")
     out.write("                      maconnique au 1er degre (REAA)\n")
     out.write("Date de l'empreinte : %s\n" % datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC"))
-    out.write("Commit git          : %s\n" % git("rev-parse", "HEAD"))
-    out.write("Date du commit      : %s\n" % git("log", "-1", "--format=%cI"))
+    out.write("Etat decrit         : commit %s\n" % git("rev-parse", "HEAD"))
+    out.write("                      (du %s)\n" % git("log", "-1", "--format=%cI"))
+    out.write("                      Un fichier ne peut pas contenir l'empreinte du commit\n")
+    out.write("                      qui le contient : celle-ci depend de son propre contenu.\n")
+    out.write("                      Ce numero designe donc l'etat mesure, et le commit qui\n")
+    out.write("                      porte ce fichier en est l'enfant immediat. Le manifeste,\n")
+    out.write("                      lui, reste exact dans les deux.\n")
     out.write("Premier commit      : %s\n" % git("log", "--reverse", "--format=%cI %H", "--max-parents=0"))
     out.write("Nombre de commits   : %s\n" % git("rev-list", "--count", "HEAD"))
     out.write("Fichiers            : %d\n" % len(lignes))
