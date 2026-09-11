@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Le Quiz Maçonnique a déménagé — lecherchant.fr</title>
+<link rel="canonical" href="https://lecherchant.fr/">
+<meta name="robots" content="noindex, follow">
+<meta http-equiv="refresh" content="3;url=https://lecherchant.fr/">
+<style>
+  :root { color-scheme: light; }
+  body {
+    margin: 0; min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    background: #f4f1e6; color: #3a3428;
+    font-family: Georgia, "EB Garamond", "Times New Roman", serif;
+    padding: 24px; box-sizing: border-box;
+  }
+  main { max-width: 34rem; text-align: center; }
+  h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 1.2rem; letter-spacing: .02em; }
+  p { font-size: 1.05rem; line-height: 1.6; margin: 0 0 1rem; }
+  a.lien {
+    display: inline-block; margin-top: .6rem; padding: .7rem 1.4rem;
+    background: #3a3428; color: #f4f1e6; text-decoration: none;
+    border-radius: 4px; font-size: 1.05rem;
+  }
+  a.lien:hover, a.lien:focus { background: #554d3c; }
+  .note { font-size: .9rem; color: #6b6250; margin-top: 1.8rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Le Quiz Maçonnique a déménagé</h1>
+  <p>L’application est désormais à l’adresse :</p>
+  <p><a class="lien" href="https://lecherchant.fr/">lecherchant.fr</a></p>
+  <p class="note">
+    Vous allez y être conduit automatiquement. Si rien ne se passe, suivez le lien
+    ci-dessus. Pensez à remplacer le raccourci que vous aviez enregistré : cette
+    ancienne adresse cessera de fonctionner.
+  </p>
+</main>
+<script>
+// Cette page remplace une application qui installait un service worker sur cette
+// origine. Si on le laisse en place, il continuera de servir l'ancienne version
+// depuis son cache — et le jour ou GitHub Pages s'eteindra, ce sera la SEULE chose
+// que les freres verront, sans aucun moyen de s'en defaire. On le desinscrit donc,
+// et on vide ses caches, avant de rediriger.
+(function () {
+  var partir = function () { location.replace('https://lecherchant.fr/'); };
+
+  if (!('serviceWorker' in navigator)) { setTimeout(partir, 1200); return; }
+
+  var menage = [];
+
+  menage.push(
+    navigator.serviceWorker.getRegistrations()
+      .then(function (rs) { return Promise.all(rs.map(function (r) { return r.unregister(); })); })
+      .catch(function () {})
+  );
+
+  if (window.caches && caches.keys) {
+    menage.push(
+      caches.keys()
+        .then(function (noms) { return Promise.all(noms.map(function (n) { return caches.delete(n); })); })
+        .catch(function () {})
+    );
+  }
+
+  // On ne fait pas dependre le depart du succes du menage : une promesse qui
+  // n'aboutit pas laisserait le visiteur sur cette page indefiniment.
+  Promise.all(menage).then(partir).catch(partir);
+  setTimeout(partir, 2500);
+})();
+</script>
+</body>
+</html>
