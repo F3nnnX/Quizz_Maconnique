@@ -105,10 +105,10 @@ point qui fixe le calendrier de la commercialisation.
 
 | Sujet | Session | État |
 |---|---|---|
-| Choix du nom commercial | Desktop | Cinq propositions faites le 11 septembre, décision de Félix attendue |
-| Achat du nom de domaine | Desktop | Inleed envisagé ; conditions expliquées le 11 septembre |
-| Sortie de GitHub Pages vers le VPS | **VS Code** | À démarrer |
-| Branchement du domaine sur le VPS | **VS Code** | Dépend du nom retenu |
+| Choix du nom commercial | Desktop | **« Le Cherchant » arrêté** le 11 septembre, vérifications INPI et RNE faites |
+| Achat du nom de domaine | Desktop | **FAIT** — `lecherchant.fr`, OVH, 3 ans + 1 an offert, domaine seul, titulaire particulier. Aucun DNS configuré : le domaine attend le VPS |
+| Sortie de GitHub Pages vers le VPS | **VS Code** | **Prêt à démarrer** — le domaine est acheté et libre de toute configuration |
+| Branchement du domaine sur le VPS | **VS Code** | À faire : un `A` vers l'IPv4 du VPS, un `AAAA` vers l'IPv6, depuis l'espace client OVH |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
 
@@ -134,9 +134,46 @@ Recommandation faite à Félix : un `.fr` chez un registrar français (OVH, Gand
 confidentialité garantie par l'AFNIC, support en français, facture en euros, délégation libre.
 Le `.com` chez Porkbun si le nom retenu n'est libre que là.
 
-**Le nom n'est pas encore arrêté.** Cinq propositions sont sur la table ; « Le Tuileur » a la
-préférence de la session distante, « Quiz Maçonnique » celle de Félix pour sa clarté, avec le
-défaut d'être probablement indéposable comme marque parce que purement descriptif.
+### Le nom retenu : **Le Cherchant**
+
+Décidé par Félix le 11 septembre 2026, **après vérification** :
+
+| Contrôle | Résultat |
+|---|---|
+| Marque « cherchant » à l'INPI | **aucune** |
+| Société active du même nom | **aucune** — « Au Parvis du Cherchant », librairie du Var, radiée le 10/12/2018 |
+| Site concurrent | **aucun** — trois domaines testés, zéro résolution |
+| `lecherchant.fr` | **acheté chez OVH le 11 septembre 2026**, 3 ans + 1 an offert |
+
+Une société radiée ne détient plus rien : la protection d'une dénomination sociale suppose un
+usage effectif dans le commerce, et il a cessé il y a huit ans. Aucun des quatre obstacles qui
+ont fait tomber « Le Tuileur » ne se présente ici.
+
+Le cherchant, c'est celui qui frappe à la porte du Temple et demande la lumière. Le mot est
+déjà dans l'application, au premier coup de heurtoir : « C'est un peu timide pour un
+cherchant ! ». Il dit le public — celui qui cherche, pas celui qui sait — et il est
+**distinctif et non descriptif**, donc déposable comme marque, contrairement aux deux
+candidats écartés.
+
+**Le domaine retenu est `lecherchant.fr`**, l'article compris. `cherchant.fr` était plus court,
+mais l'adresse doit dire le nom de la marque — « Le Cherchant » — et non un mot amputé.
+
+**Deux noms ont été écartés, et il faut savoir pourquoi pour ne pas y revenir :**
+
+- **« Quiz Maçonnique »** décrit purement le produit. L'INPI refuse les marques qui se
+  contentent de décrire, donc Félix ne pourrait empêcher personne de l'employer.
+- **« Le Tuileur »**, un moment retenu, a été abandonné le jour même : `letuileur.fr` est
+  **une boutique maçonnique active** — « Le Portail Maçonnique », décors et produits de tous
+  rites. Antériorité, activité commerciale réelle, public identique, et deux noms qui ne
+  diffèrent que par un article. Le problème est d'abord de produit — les frères
+  confondraient — et accessoirement de concurrence déloyale le jour de la vente. La base
+  INPI donne par ailleurs une SCI « Le Tuileur de Lutèce » (immobilier, sans rapport) et une
+  marque restant à examiner.
+
+**Ce que le nom touchera, le jour où il sera adopté** — rien n'est fait, tout est à décider :
+le nom de domaine, le titre de l'application et son `<title>`, le manifeste PWA, le sceau de
+la loge à remplacer par une marque propre (voir `IMAGES.md`), et le dépôt de marque à l'INPI.
+**L'application s'appelle toujours « Le Quiz Maçonnique » et rien n'a été renommé.**
 
 ## 5. Ce que la session VS Code doit savoir avant de migrer
 

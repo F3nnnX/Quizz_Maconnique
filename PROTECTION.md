@@ -154,6 +154,13 @@ domaine donné.
 **À faire au moment où le nom est arrêté**, pas avant : déposer « Le Quiz Maçonnique » puis
 lancer le produit sous un autre nom, c'est payer deux fois.
 
+**Le nom est arrêté depuis le 11 septembre 2026 : « Le Cherchant »**, sous réserve de la
+recherche d'antériorité sur `data.inpi.fr`. Le raisonnement et les deux noms écartés sont dans
+`PASSATION.md`. Une leçon en est tirée et vaut pour tout nom futur : **vérifier la
+disponibilité du domaine et la base des marques avant de s'attacher à un nom**, et non après.
+« Le Tuileur » a été retenu une demi-heure avant qu'on ne découvre une boutique maçonnique
+active sous ce nom.
+
 ---
 
 ## 4. Le mot de passe et l'application payante — ce qui marche et ce qui n'y fait rien
