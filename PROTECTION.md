@@ -84,6 +84,16 @@ Pour le régénérer après une modification :
 python3 outils/empreinte.py > EMPREINTE.txt
 ```
 
+**Une limite à connaître, et elle est dans la nature des choses** : `EMPREINTE.txt` ne peut pas
+contenir l'empreinte du commit qui le contient, puisque celle-ci dépend de son propre contenu.
+La ligne « État décrit » désigne donc l'état mesuré, et le commit qui enregistre le fichier en
+est l'enfant immédiat. **Le manifeste, lui, reste exact dans les deux** — c'est lui qui compte,
+et il se vérifie fichier par fichier.
+
+Pour un dépôt probatoire, la pièce de référence n'est d'ailleurs pas le fichier dans le dépôt
+mais **l'archive ZIP et son propre SHA-256** : elle fige tout d'un coup, fichier d'empreinte
+compris, et ne souffre pas de cette circularité.
+
 ### 1.4 Choisir la voie du dépôt probatoire
 
 Trois voies, par ordre de coût croissant. **Elles ne donnent aucun droit supplémentaire** : elles

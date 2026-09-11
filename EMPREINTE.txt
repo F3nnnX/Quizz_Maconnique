@@ -4,16 +4,21 @@ EMPREINTE DU DEPOT — Le Quiz Maconnique
 Auteur declare      : Felix Casellato
 Oeuvre              : Le Quiz Maconnique, application web d'instruction
                       maconnique au 1er degre (REAA)
-Date de l'empreinte : 2026-09-11 10:56:10 UTC
-Commit git          : c8719319c83c5178930e7867d7fdca434cbe1698
-Date du commit      : 2026-09-11T12:55:55+02:00
+Date de l'empreinte : 2026-09-11 11:05:21 UTC
+Etat decrit         : commit 3b51e818a16c455307d31dc76dd2c9c9e2226a90
+                      (du 2026-09-11T13:04:29+02:00)
+                      Un fichier ne peut pas contenir l'empreinte du commit
+                      qui le contient : celle-ci depend de son propre contenu.
+                      Ce numero designe donc l'etat mesure, et le commit qui
+                      porte ce fichier en est l'enfant immediat. Le manifeste,
+                      lui, reste exact dans les deux.
 Premier commit      : 2026-07-27T16:33:16+02:00 f8314705290e8cb9926bdf4482485ecea19acd85
-Nombre de commits   : 56
+Nombre de commits   : 58
 Fichiers            : 13
-Poids total         : 2854243 octets (2.72 Mo)
+Poids total         : 2855704 octets (2.72 Mo)
 
 EMPREINTE GLOBALE (SHA-256 du manifeste ci-dessous) :
-  a5415e6c2d6dcef9a0cd22b77d2be7a61a96b02cc3a6f0208443b6e1968f5456
+  3416fbd08751ace4428beda696483affe19d6a68f9c404d69701473e2e444c86
 
 MANIFESTE — SHA-256, taille en octets, chemin
 ------------------------------------------------------------------------
@@ -21,12 +26,12 @@ c56655841c40e52e141b04e7b7d0b6bb69fc7c24cad44bd5cecef52bf9c04eb6         12829  
 6f7d20bfc34857094c9c6b37a9255a8a01c142f403c1fdac9de23b878f048b62         13302  JEU-PISTES.md
 a06001b702fa10d3bf813ad2cb76904d20d2bfe132a6a4066644423a03ed6035          1792  LICENSE
 5bb5d834d3257eb664eccded050209199f94ada9514f8168ebee4b2e7b8cb6a8          2618  PROMPT-SUITE.md
-0f9d906188ab901bd7a0455fe59ad78b1444c1b5ba72186b070ec9d95b8bc546         12303  PROTECTION.md
+f2b2579a37e14b21157605403a52f15f8f4ad6c926d72187c899d96a3b4a8c09         12983  PROTECTION.md
 b2643b55ee153ae11acce18e49fcc3c11789ca587c9ac79226c51cdb1e50e707          2599  README.md
 a8bacb3f13ecb5db7d61b6c18da0621425cfa713233a68cd247fee52ad57bc34         11121  RELECTURE-V2.1.md
 464cfeeb00c1ae20e110c07e031c310c2dd903f4c17ec1c9b187ffbdc5db36e6         28933  SUIVI.md
 7d2f70e9d8a302d9a486059c7e48732f5145c3750af6097f03c5e466a134d894          5814  TIERS.md
 1e2ccb7c4912628d83d3f3762a9f37455967b43d0051cdff548f859669bae694       2392602  index.html
 98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875        364463  jspdf.umd.min.js
-f7a119eb4ec4b1e2c177c23da7ad56cc906b6d4ef19ddf1cf483ee40bdbe7b3a          3121  outils/empreinte.py
+3b8b3ead996f2d626c6a893e8a12bf4277c679f5c930b8d217fda3446f1d1461          3902  outils/empreinte.py
 bb280816e1b05cd4b107dce603911ee0c7c48d60eb823c2a0fa9ed672879733d          2746  sw.js
