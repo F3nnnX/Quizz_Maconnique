@@ -44,6 +44,11 @@ Trois raisons d'en faire la première à remplacer, avant même la question du p
 dossier « Photo porte Temple » créé le 20 juillet 2026. Une photo prise par Félix réglerait la
 question **et vaudrait mieux** — ce serait la porte de sa loge, pas celle d'un temple inconnu.
 
+**Ou bien la question se réglera d'elle-même.** Félix a indiqué le 11 septembre 2026 que
+l'écran de la porte est en sursis : trois coups à frapper, c'est amusant une fois et pesant à
+la centième. Voir le point D de la feuille de route dans `SUIVI.md`. S'il disparaît, l'image
+disparaît avec lui — et avec elle 158 Ko et le problème de droits le plus urgent du dépôt.
+
 ### Image 02 — le sceau de la loge : une autre question, et Félix a vu juste
 
 Il vient de la loge Philadelphia n°1604, et Félix a dit de lui-même qu'il devra disparaître le

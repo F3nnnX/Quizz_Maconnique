@@ -470,8 +470,37 @@ atteignables, zéro erreur console, son propre vérificateur passe intégralemen
   reprise de partie qui existe, les contrastes du texte secondaire sont à mesurer, et
   l'abandon de partie ouvre un `window.confirm()` natif au milieu du noir et or.
 
-### D. Ce que ces trois chantiers ont en commun
+### D. L'écran de la porte est en sursis
 
-Ils font tous grossir la page, et deux d'entre eux la font grossir beaucoup. **Le point 6 —
-sortir les images du fichier — cesse d'être un chantier de fond le jour où l'un d'eux
-démarre.** À traiter avant, pas après.
+Félix, le 11 septembre 2026 : « le fait de devoir cliquer 3x c'est rigolo mais usant à la
+longue. Je le garde pour le fun mais ça va tendre à disparaître, c'est certain. »
+
+Le chiffre lui donne raison. `DELAI_MIN_COUP` impose 700 ms entre deux coups, et
+`ouvrirLeTemple` est appelé 3 secondes après le troisième : **il faut au minimum cinq secondes
+pour entrer, à chaque lancement**, sur une application qu'on ouvre pour réviser deux minutes
+dans le métro.
+
+S'y ajoute que cet écran porte l'image 04, la photographie trouvée sur internet (voir
+`IMAGES.md`) : **le supprimer réglerait le problème de droits le plus urgent par la même
+occasion.**
+
+Avant de le supprimer, considérer ce qu'on perdrait. La porte est la première impression du
+produit, et c'est elle qu'on montre à un frère à qui l'on fait découvrir l'outil. Sa valeur est
+réelle — elle est simplement **entièrement concentrée sur la première visite**.
+
+D'où une voie moyenne qui coûte peu : **mémoriser dans `localStorage` qu'on a déjà frappé**.
+Cérémonie complète la première fois, entrée directe ensuite, avec peut-être un moyen discret de
+la rejouer pour qui veut la montrer. On garde le charme là où il sert et on retire le péage.
+Cela laisse aussi le temps de trouver une image dont Félix ait les droits, au lieu de devoir
+choisir entre garder une photo d'autrui et supprimer l'écran.
+
+Rien n'est décidé : c'est une intention de Félix, notée pour ne pas se perdre.
+
+### E. Ce que ces chantiers ont en commun
+
+Les trois premiers font tous grossir la page, et deux d'entre eux la font grossir beaucoup.
+**Le point 6 — sortir les images du fichier — cesse d'être un chantier de fond le jour où l'un
+d'eux démarre.** À traiter avant, pas après.
+
+Le quatrième va dans l'autre sens : supprimer ou alléger l'écran de la porte rendrait 158 Ko,
+la plus grosse image de l'application.

@@ -4,34 +4,34 @@ EMPREINTE DU DEPOT — Le Quiz Maconnique
 Auteur declare      : Felix Casellato
 Oeuvre              : Le Quiz Maconnique, application web d'instruction
                       maconnique au 1er degre (REAA)
-Date de l'empreinte : 2026-09-11 11:33:16 UTC
-Etat decrit         : commit 5d8fa9c836349589efcb2228cef1b68a41b809c1
-                      (du 2026-09-11T11:30:59+00:00)
+Date de l'empreinte : 2026-09-11 11:34:57 UTC
+Etat decrit         : commit f16bc35153ece840c044709c98eb0928c17de807
+                      (du 2026-09-11T11:33:34+00:00)
                       Un fichier ne peut pas contenir l'empreinte du commit
                       qui le contient : celle-ci depend de son propre contenu.
                       Ce numero designe donc l'etat mesure, et le commit qui
                       porte ce fichier en est l'enfant immediat. Le manifeste,
                       lui, reste exact dans les deux.
 Premier commit      : 2026-07-27T16:33:16+02:00 f8314705290e8cb9926bdf4482485ecea19acd85
-Nombre de commits   : 61
+Nombre de commits   : 62
 Fichiers            : 15
-Poids total         : 2872797 octets (2.74 Mo)
+Poids total         : 2874853 octets (2.74 Mo)
 
 EMPREINTE GLOBALE (SHA-256 du manifeste ci-dessous) :
-  a27847924d92a1ac0a785bf24a152d53cee8940712a8d2c4d7b09a29e3a53b04
+  fb656a64d5fbf87bc6e1487b769978db7f78c340695012d6a4b8a8e1e8bb8eeb
 
 MANIFESTE — SHA-256, taille en octets, chemin
 ------------------------------------------------------------------------
 282a9d7a2dc2439d091246fc0dff9a23ef6c189de8c46c45fdf02b62c9a6bf2a          4194  ACCES.md
 0d3db4bfe8b38455c28fa3c654b6a441d183b63b4014488423d66b9b5656df52         13028  CLAUDE.md
-761a093faf1eae7aa20ffc483501a87958e6aad77ae14b768510ea2420d6da0a         10296  IMAGES.md
+d383d2b70f2aef895c78fbf131c28a516b989b2399d87d251277b40f4c8f0d22         10679  IMAGES.md
 6f7d20bfc34857094c9c6b37a9255a8a01c142f403c1fdac9de23b878f048b62         13302  JEU-PISTES.md
 a06001b702fa10d3bf813ad2cb76904d20d2bfe132a6a4066644423a03ed6035          1792  LICENSE
 5bb5d834d3257eb664eccded050209199f94ada9514f8168ebee4b2e7b8cb6a8          2618  PROMPT-SUITE.md
 af8baf0dd993e60cded7aea01736a56bbe679bcb462c1eb5c53eed251a532680         13107  PROTECTION.md
 b2643b55ee153ae11acce18e49fcc3c11789ca587c9ac79226c51cdb1e50e707          2599  README.md
 a8bacb3f13ecb5db7d61b6c18da0621425cfa713233a68cd247fee52ad57bc34         11121  RELECTURE-V2.1.md
-464cfeeb00c1ae20e110c07e031c310c2dd903f4c17ec1c9b187ffbdc5db36e6         28933  SUIVI.md
+fe07096db77b42c6b125b890dfb7765169ea33d385f582a8a9cf433f365f0bf4         30606  SUIVI.md
 bf415cb8af13a5189840ce7e3b2d032be26557dcf2cefcfd60d0de8c558dbe4a          8094  TIERS.md
 1e2ccb7c4912628d83d3f3762a9f37455967b43d0051cdff548f859669bae694       2392602  index.html
 98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875        364463  jspdf.umd.min.js
