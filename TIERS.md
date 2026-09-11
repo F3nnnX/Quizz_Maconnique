@@ -97,9 +97,26 @@ travail — les 11 bijoux d'officiers et les 16 symboles du tableau forment chac
 homogène, et **une seule réponse réglera vraisemblablement chaque série**.
 
 Reste à établir, pour chacune, si elle a été **créée par Félix**, **générée**, ou **trouvée**.
-Seul Félix peut le faire : l'origine ne se déduit pas du fichier. Une image trouvée sur
-internet est le cas le plus fréquent et le plus dangereux — c'est le motif de réclamation le
-plus simple à détecter automatiquement et le plus couramment poursuivi.
+Seul Félix peut le faire : l'origine ne se déduit pas du fichier.
+
+**Trois réponses obtenues le 11 septembre 2026, et elles changent le tableau :**
+
+- **La porte du Temple** (image 04, écran d'entrée) a été **trouvée sur internet**. C'est une
+  photographie moderne, donc l'œuvre d'un photographe, et c'est **le premier écran que voit
+  tout visiteur**. Une photographie se retrouve en quelques secondes par recherche d'image
+  inversée. **À remplacer en priorité** — et le remplacement existe peut-être déjà, Félix ayant
+  un dossier « Photo porte Temple » dans son Drive.
+- **Le tableau de loge** (image 05) a lui aussi été **trouvé sur internet**. Son sort dépend de
+  son âge : la reproduction fidèle d'une planche ancienne suit le domaine public, un redessin
+  moderne est protégé. À vérifier. C'est du dessin au trait, donc la plus facile à refaire.
+- **Le sceau de la loge** (image 02) vient de Philadelphia n°1604. Ici le problème n'est pas le
+  droit d'auteur mais **l'identité** : un sceau de loge sur un produit vendu laisse entendre
+  que la loge est derrière. Félix l'a vu de lui-même et prévoit de le retirer le jour venu.
+
+**Les 27 images des deux séries restent à qualifier**, et c'est désormais la question ouverte
+la plus importante de ce document.
+
+Le détail, image par image, est dans `IMAGES.md`.
 
 ---
 
