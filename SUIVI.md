@@ -6,6 +6,48 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Audit de securite : deux choses a corriger, le reste est sain
+
+Audit complet dans `AUDIT-SECURITE.md`, conduit avec le skill `agamm/claude-code-owasp` (MIT,
+361 etoiles, maintenu), installe hors du depot : il outille la machine, il n'est pas un
+composant du produit. Celui qu'avait trouve Felix, `VicKayro/claude-security-audit`, a ete
+ecarte pour une raison qui compte dans ce projet — **il n'a aucune licence**, donc tous droits
+reserves, donc juridiquement inutilisable.
+
+**Le point le plus grave n'est pas dans le code : la cle SSH de Felix n'a pas de phrase de
+passe**, et le compte qu'elle ouvre a `sudo` sans mot de passe. Une copie du profil Windows
+suffit a obtenir root sur un serveur qui heberge aussi la production d'un tiers. Le correctif
+tient en une commande, mais elle doit etre lancee par Felix : une phrase de passe n'a pas a
+transiter par une session Claude, ou elle serait journalisee.
+
+Le second est connu et attendait le VPS : **le jeton d'analytique est servi dans `index.html`**
+a chaque visiteur. Le changer ne servirait a rien — le nouveau serait publie pareil. Seul le
+relais par le VPS corrige, et cela touche `index.html`, donc la session Desktop.
+
+**Ce que l'audit a surtout etabli, c'est ce qui ne pose pas de probleme**, et c'est la le
+travail utile. L'application n'a **aucun vecteur d'injection** : zero source controlable par un
+attaquant — pas de parametre d'URL, pas de `hash`, pas de `postMessage`, pas de `referrer`. Les
+35 `innerHTML` ne sont alimentes que par les constantes du fichier. Les quatre appels reseau
+sont en `no-cors` sans lecture de reponse.
+
+Et les CVE de jsPDF 2.5.1 **ne sont pas atteignables** : les methodes vulnerables sont
+`addImage`, `addSvgAsImage`, `addMetadata` et `html()`, que l'application appelle zero fois.
+Le signaler comme une faille aurait ete un faux positif de plus.
+
+L'infrastructure, elle, etait deja bien durcie avant nous : `ufw` avec la chaine `DOCKER-USER`
+correctement cablee — le piege classique ou Docker court-circuite le pare-feu est traite —
+SSH par cle seule, TLS 1.2 et 1.3 uniquement, socket Docker en lecture seule sur Traefik.
+Le site de Felix ne partage aucun reseau Docker avec le WordPress voisin : une compromission
+de celui-ci ne l'atteindrait pas directement.
+
+Un faux positif est garde dans le rapport, exprès : le premier test TLS annoncait 1.1 accepte,
+alors que c'etait le client openssl qui refusait de l'offrir. Un audit qui ne dit pas ce qu'il
+a cru a tort n'est pas verifiable.
+
+**Le WordPress voisin n'a pas ete audite.** Felix en a les droits techniques, mais l'acces
+n'est pas l'autorisation : le site appartient a un tiers et contient vraisemblablement des
+donnees personnelles de clients. Il faut l'accord du proprietaire.
+
 ### 11 septembre 2026 — Une porte sur le site, et ce qu'elle vaut
 
 Félix veut envoyer l'adresse à sa loge, et veut un mot de passe : « philadelphia ».
