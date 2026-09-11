@@ -4,32 +4,33 @@ EMPREINTE DU DEPOT — Le Quiz Maconnique
 Auteur declare      : Felix Casellato
 Oeuvre              : Le Quiz Maconnique, application web d'instruction
                       maconnique au 1er degre (REAA)
-Date de l'empreinte : 2026-09-11 16:16:09 UTC
-Etat decrit         : commit 816cdfa70ffa58a91258499da3b8466141281460
-                      (du 2026-09-11T18:11:34+02:00)
+Date de l'empreinte : 2026-09-11 17:29:00 UTC
+Etat decrit         : commit bb648bab8bb49d105693bfd140c4d7a3fe7454ed
+                      (du 2026-09-11T19:28:34+02:00)
                       Un fichier ne peut pas contenir l'empreinte du commit
                       qui le contient : celle-ci depend de son propre contenu.
                       Ce numero designe donc l'etat mesure, et le commit qui
                       porte ce fichier en est l'enfant immediat. Le manifeste,
                       lui, reste exact dans les deux.
 Premier commit      : 2026-07-27T16:33:16+02:00 f8314705290e8cb9926bdf4482485ecea19acd85
-Nombre de commits   : 80
-Fichiers            : 26
-Poids total         : 3000942 octets (2.86 Mo)
+Nombre de commits   : 84
+Fichiers            : 27
+Poids total         : 3010694 octets (2.87 Mo)
 
 EMPREINTE GLOBALE (SHA-256 du manifeste ci-dessous) :
-  2d481c83c9730803007ebf49dbe73d67c8340f38cb4368f1caf5cdf41e0c117d
+  61e3e824a513a3496227de07e181b766be2ec6299452fe0e09b0c5dbfe460fdf
 
 MANIFESTE — SHA-256, taille en octets, chemin
 ------------------------------------------------------------------------
 282a9d7a2dc2439d091246fc0dff9a23ef6c189de8c46c45fdf02b62c9a6bf2a          4194  ACCES.md
-e923dbb914fa9a48b70ef3ec907eccc7144dcfa462bea7ad94b2b34313304b33         14994  CLAUDE.md
+3be5ebb67507e66424c6d6ac4abb2a6ba23bcd52fab70d69eff759601197140c         15140  CLAUDE.md
+5a84a4383525ca46d89b5ef2a6fdefce42199a5af1f758eba44d4069e1bea169          9534  COMMERCIALISATION.md
 6e326f10d0bf60876e172f6572159513d1dbed449fef590f87e17e69f61f1e97         12546  IMAGES.md
 6f7d20bfc34857094c9c6b37a9255a8a01c142f403c1fdac9de23b878f048b62         13302  JEU-PISTES.md
 a06001b702fa10d3bf813ad2cb76904d20d2bfe132a6a4066644423a03ed6035          1792  LICENSE
 d77ec0c8943048c84e5f19181904048f50a4ec3ff3d96d929c6c98d78142f8bb         14404  PASSATION.md
 f9734b6d5a2debd2e6012ea811114d30367e77f4f633fa4d620ae35ef206b400          3490  PROMPT-SUITE.md
-a1d48db84676acdf1b6badec0e9cb3c0f68a84d09161ad6c4c49cbb0bbcccd6d         13601  PROTECTION.md
+34e767d803d66619dd5077c79f1a8590047039c15e81dcc1300cc6976d916b00         13673  PROTECTION.md
 b2643b55ee153ae11acce18e49fcc3c11789ca587c9ac79226c51cdb1e50e707          2599  README.md
 a8bacb3f13ecb5db7d61b6c18da0621425cfa713233a68cd247fee52ad57bc34         11121  RELECTURE-V2.1.md
 5d29426c94e261416ca514d1e7b5d96c5d90641be0f2bc086f050c88bcf06303         42603  SUIVI.md
