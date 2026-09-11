@@ -29,6 +29,7 @@ découvre les conteneurs tout seul.
 /data/sites/lecherchant/
 ├── docker-compose.yml   ← le conteneur et ses labels Traefik
 ├── nginx.conf           ← la politique de cache
+├── .env                 ← l'empreinte du code d'accès — JAMAIS dans le dépôt
 ├── deploie.sh           ← met à jour depuis GitHub
 └── depot/               ← clone git du dépôt, c'est la racine web
 ```
@@ -42,6 +43,50 @@ C'était le choix le moins intrusif : poser un site statique ne valait pas de de
 au tableau de bord d'un tiers. Il redémarre seul (`restart: unless-stopped`) et survit aux
 reboots.
 
+## La porte — accès réservé
+
+Le site n'est pas public. Traefik demande un code avant de livrer quoi que ce soit :
+
+| | |
+|---|---|
+| Identifiant / code | `philadelphia` / `philadelphia` |
+| Empreinte (bcrypt) | `/data/sites/lecherchant/.env`, **sur le serveur uniquement** |
+| Limitation | 120 requêtes par minute et par IP |
+
+**L'empreinte n'est pas dans le dépôt, et ne doit jamais y entrer.** Ce dépôt est public ;
+une empreinte bcrypt d'un mot du dictionnaire se casse en quelques secondes, la publier
+reviendrait à publier le code. D'où le `.env`, en `chmod 600`, hors du dépôt.
+
+Changer le code :
+
+```sh
+ssh fts
+sudo docker run --rm httpd:2.4-alpine htpasswd -nbB <identifiant> <code>
+# coller le resultat dans /data/sites/lecherchant/.env, en DOUBLANT les $
+cd /data/sites/lecherchant && sudo docker compose up -d
+```
+
+**Les `$` doivent être doublés dans le `.env`.** Docker compose interpole aussi le contenu de
+ce fichier, pas seulement celui du `docker-compose.yml` : écrite telle quelle, une empreinte
+`$2y$05$EXw3...` voit `$EXw3...` traité comme une variable vide, et l'authentification échoue
+pour tout le monde sans message explicite.
+
+Le contexte et les limites de ce choix — notamment qu'il diverge du plan « un code par frère »
+retenu le matin même — sont dans `ACCES.md`, à lire avant d'y toucher.
+
+## Il n'y a plus d'adresse de secours
+
+`lecherchant.51.195.223.56.sslip.io` servait le site en clair pendant la bascule DNS. Elle a
+été retirée en même temps que la porte a été posée : elle en serait devenue le contournement,
+et l'y soumettre n'aurait rien valu de mieux — l'authentification Basic en HTTP fait circuler
+le code en clair.
+
+Pour diagnostiquer sans dépendre du DNS, depuis le serveur :
+
+```sh
+curl -u philadelphia:philadelphia --resolve lecherchant.fr:443:127.0.0.1 https://lecherchant.fr/
+```
+
 ## Attention : les fichiers de configuration existent en deux exemplaires
 
 `docker-compose.yml`, `nginx.conf` et `deploie.sh` vivent **à la fois** dans ce dossier du
@@ -50,6 +95,7 @@ lit ceux du serveur, pas ceux du clone. **Après avoir modifié l'un des trois i
 recopier**, sinon le dépôt décrit une configuration qui n'est pas celle qui tourne :
 
 ```sh
+# .env n'est pas dans cette liste : il n'existe que sur le serveur.
 scp deploiement/{docker-compose.yml,nginx.conf,deploie.sh} fts:/data/sites/lecherchant/
 ssh fts 'cd /data/sites/lecherchant && sudo docker compose up -d'
 ```

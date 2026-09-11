@@ -1,10 +1,46 @@
 # Restreindre l'accès — l'idée retenue
 
-Décision de Félix, 11 septembre 2026. **Rien n'est engagé** : cette page archive le principe
-pour qu'il ne se perde pas, et signale ce qu'il faudra regarder le jour où on le mettra en
-œuvre. À relire avant d'écrire la moindre ligne.
+Décision de Félix, 11 septembre 2026.
 
-## Le principe
+> **Mise à jour du 11 septembre 2026, en fin de journée : quelque chose EST engagé, et ce
+> n'est pas ce qui est décrit plus bas.** Lire la section suivante avant tout le reste.
+
+## Ce qui est en place aujourd'hui — un code commun
+
+Félix a demandé, le soir même, un mot de passe unique pour toute la loge, afin de pouvoir
+envoyer l'adresse aux frères sans attendre. C'est ce qui a été posé :
+
+| | |
+|---|---|
+| Mécanisme | authentification HTTP Basic, vérifiée par **Traefik**, sur le VPS |
+| Identifiant et code | `philadelphia` / `philadelphia` |
+| Où vit l'empreinte | `/data/sites/lecherchant/.env`, sur le serveur — **jamais dans le dépôt** |
+| Limitation de débit | 120 requêtes par minute et par IP, au titre du § 3 ci-dessous |
+
+**C'est une vraie porte**, et c'est le VPS qui le permet : Traefik répond `401` et ne transmet
+rien à nginx, donc les 2,3 Mo de l'application ne sont pas livrés. Rien à voir avec un mot de
+passe écrit dans la page, qui ne protégeait rien sur GitHub Pages.
+
+**Mais elle ne vaut pas ce que décrit la suite de ce document, et il faut le savoir :**
+
+- **Le code n'est pas révocable frère par frère.** Le § 3 l'exigeait. S'il circule, il faut le
+  changer pour tout le monde d'un coup.
+- **Le mot est le plus devinable possible** : c'est le nom de la loge, imprimé dans
+  l'application elle-même (« R.·.L.·. Philadelphia n°1604 »), dans le `README` et dans un dépôt
+  encore public. Qui a vu le site une fois connaît le code.
+- **Il n'y a pas de date d'expiration**, que le § 3 demandait de prévoir dès la première
+  version pour éviter d'avoir à tout redistribuer.
+
+Ce choix a été fait **en connaissance de cause** : l'objet est d'écarter le passant, pas de
+fermer à clé, et de pouvoir diffuser l'adresse le soir même. La limitation de débit a été
+ajoutée parce qu'elle ne coûtait rien et couvrait précisément la faiblesse la plus mécanique —
+l'essai en masse. Elle ne protège évidemment pas d'une devinette heureuse ; rien ne le peut.
+
+**Le principe décrit ci-dessous reste la cible.** Le jour où on y viendra, l'empreinte unique
+du `.env` sera simplement remplacée par une liste, une ligne par frère : le mécanisme est déjà
+le bon, seule la liste change.
+
+## Le principe visé — un code par frère
 
 Un mot de passe à l'entrée du site, avec **un code par frère** plutôt qu'un code commun.
 Forme retenue : `prenom_Quizz_Maconnique`. Félix en génère autant qu'il y a de frères dans sa

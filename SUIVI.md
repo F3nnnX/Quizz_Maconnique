@@ -6,6 +6,59 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Une porte sur le site, et ce qu'elle vaut
+
+Félix veut envoyer l'adresse à sa loge, et veut un mot de passe : « philadelphia ».
+
+**Le site était prêt** — vérifié en navigateur avant de répondre : application chargée,
+manifeste PWA valide, service worker actif sur la nouvelle origine, rechargement hors connexion
+à 200, aucune erreur. Rien ne s'opposait à l'envoi.
+
+**Et le mot de passe est désormais possible**, ce qu'il ne l'était pas le matin. Sur GitHub
+Pages, une porte de ce genre ne protégeait rien : tout était livré au visiteur avant qu'il ne
+tape quoi que ce soit. Depuis qu'il y a le VPS, Traefik répond `401` et ne transmet rien à
+nginx — les 2,3 Mo ne partent pas. C'est exactement le montage qu'`ACCES.md` décrivait comme
+« le seul où la porte est une vraie porte ».
+
+**Deux objections ont été posées avant d'écrire quoi que ce soit, et Félix a tranché.**
+`ACCES.md` enregistrait, du matin même, la décision inverse : un code par frère, révocable
+individuellement. Et « philadelphia » est le mot le plus devinable qui soit — c'est le nom de
+la loge, imprimé dans l'application, dans le `README`, dans un dépôt encore public. Félix a
+maintenu, en connaissance de cause : l'objet est d'écarter le passant, pas de fermer à clé, et
+de pouvoir diffuser l'adresse le soir même. `ACCES.md` porte maintenant cet écart en tête, pour
+qu'une session future ne lise pas un plan qui n'est pas celui qui tourne.
+
+Trois choses ont été faites autour, qui ne changent rien à sa demande mais sans lesquelles elle
+n'aurait pas tenu :
+
+- **L'adresse de secours a été retirée.** `lecherchant.51.195.223.56.sslip.io` servait le site
+  en clair et sans la porte : elle en devenait le contournement pur et simple. L'y soumettre
+  n'aurait rien valu de mieux — Basic en HTTP fait circuler le code en clair.
+- **L'empreinte du code n'est pas dans le dépôt.** bcrypt d'un mot du dictionnaire se casse en
+  quelques secondes : la publier dans un dépôt public reviendrait à publier le code. Elle vit
+  dans un `.env` en `chmod 600` sur le serveur, et le `docker-compose.yml` ne porte qu'une
+  référence.
+- **Une limitation de débit a été ajoutée** — 120 requêtes par minute et par IP — parce
+  qu'`ACCES.md` § 3 l'exigeait : « limiter les tentatives, sans quoi on essaie tous les prénoms
+  du calendrier en une nuit ». Elle ne protège pas d'une devinette heureuse ; elle rend l'essai
+  en masse inutilisable.
+
+**Le piège du jour, et c'est le même que celui de la redirection, en pire.** Docker compose
+interpole aussi le contenu du `.env`, pas seulement celui du `docker-compose.yml` : l'empreinte
+`$2y$05$EXw3...` y a d'abord été lue comme la variable `$EXw3...`, vide. Il faut doubler les
+`$` là aussi. Et le message d'erreur par défaut que j'avais écrit contenait un « : », ce qui a
+fait lire la ligne comme un dictionnaire YAML. Les deux échouaient en silence.
+
+Vérifié de bout en bout : `401` sans code, `401` avec un mauvais, `200` et 2 395 995 octets
+avec le bon. Et surtout, **la porte ne casse pas l'application** : service worker enregistré,
+précache réussi (les trois entrées), rechargement hors connexion à 200. Les requêtes du service
+worker portent bien les identifiants.
+
+Ce qui n'a pas pu être vérifié ici : **le comportement d'une application installée sur l'écran
+d'accueil d'un iPhone**. Safari en mode autonome gère l'authentification Basic à sa façon selon
+les versions, et il peut la redemander à chaque lancement. À faire confirmer par un frère sous
+iOS.
+
 ### 11 septembre 2026 — L'ancienne adresse redirige, et le compte à rebours est lancé
 
 La PR #18 est fusionnée, la production tourne sur le `main` fusionné, et

@@ -119,6 +119,7 @@ point qui fixe le calendrier de la commercialisation.
 | Branchement du domaine sur le VPS | Félix | **FAIT le 11 septembre** — `A` et `AAAA` posés chez OVH. **https://lecherchant.fr répond**, certificat Let's Encrypt valable jusqu'au 10 décembre 2026, renouvellement automatique par Traefik |
 | Redirection de GitHub Pages | **VS Code** | **FAIT le 11 septembre** — branche orpheline `gh-pages`, Pages basculé dessus. `index.html` non modifié. Désinscrit aussi le service worker de l'ancienne origine |
 | Passage du dépôt en privé | **Félix** | **Décidé, à faire dans quelques semaines.** Lire l'avertissement ci-dessous avant : la redirection mourra ce jour-là |
+| Accès réservé au site | **VS Code** | **FAIT le 11 septembre** — code commun `philadelphia`, vérifié par Traefik. Diverge du plan « un code par frère » d'`ACCES.md`, qui reste la cible. Lire `ACCES.md` avant d'y toucher |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
 
