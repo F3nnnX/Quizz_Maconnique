@@ -107,8 +107,9 @@ point qui fixe le calendrier de la commercialisation.
 |---|---|---|
 | Choix du nom commercial | Desktop | **« Le Cherchant » arrêté** le 11 septembre, vérifications INPI et RNE faites |
 | Achat du nom de domaine | Desktop | **FAIT** — `lecherchant.fr`, OVH, 3 ans + 1 an offert, domaine seul, titulaire particulier. Aucun DNS configuré : le domaine attend le VPS |
-| Sortie de GitHub Pages vers le VPS | **VS Code** | **Prêt à démarrer** — le domaine est acheté et libre de toute configuration |
-| Branchement du domaine sur le VPS | **VS Code** | À faire : un `A` vers l'IPv4 du VPS, un `AAAA` vers l'IPv6, depuis l'espace client OVH |
+| Sortie de GitHub Pages vers le VPS | **VS Code** | **FAIT le 11 septembre** — le site tourne sur le VPS, servi par Traefik. Voir `deploiement/LISEZ-MOI.md` |
+| Branchement du domaine sur le VPS | **Félix** | **SEULE ÉTAPE RESTANTE** — le DNS pointe encore sur le parking OVH `213.186.33.5`. Il faut un `A` et un `AAAA` vers `51.195.223.56` / `2001:41d0:801:2000::86fb`, depuis l'espace client OVH. Sans cela, pas de certificat |
+| Redirection de GitHub Pages | **VS Code** | À faire **après** la bascule DNS, par une branche `gh-pages` ne contenant qu'une page de redirection — `main` et `index.html` ne sont pas touchés |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
 
@@ -179,6 +180,15 @@ la loge à remplacer par une marque propre (voir `IMAGES.md`), et le dépôt de 
 
 Ces points ont été établis ici et il serait coûteux de les redécouvrir :
 
+- **Le VPS n'est pas une machine vierge, et c'est le fait qui commande tout le reste.** Il fait
+  tourner **Coolify** avec **Traefik v3.6** en proxy, et il héberge déjà deux sites en
+  production qui ne sont pas ceux de Félix : `fransktradgard.se` et `sohamnathayoga.fr`
+  (WordPress). **Les ports 80 et 443 appartiennent à Traefik.** N'installer aucun serveur web
+  sur l'hôte : au redémarrage suivant, il pourrait prendre les ports et éteindre les deux
+  sites du frère de Félix. La méthode est un conteneur de plus, avec des labels Traefik.
+- **Les en-têtes de sécurité sont déjà posés**, pour tous les sites de la machine, par
+  `/data/coolify/proxy/dynamic/securite.yaml` — un fichier écrit à la main, en français,
+  longuement commenté. Le lire avant d'y toucher. Ne pas redoubler ses en-têtes.
 - **L'application est un fichier unique et statique.** N'importe quel serveur web la sert.
   Il n'y a rien à construire, rien à installer, pas de dépendance à résoudre.
 - **Le service worker impose HTTPS** (ou `localhost`). Sans certificat, le mode hors connexion

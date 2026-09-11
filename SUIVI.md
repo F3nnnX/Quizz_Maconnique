@@ -6,6 +6,58 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Le site est sur le VPS, et le VPS n'était pas ce qu'on croyait
+
+La migration est faite, à une étape près : le DNS. Le site tourne sur le VPS, servi par
+Traefik, vérifié octet pour octet identique au dépôt.
+
+**Ce qui n'était écrit nulle part et qui a tout réorienté : le VPS n'est pas une machine
+vierge.** Il fait tourner **Coolify** avec **Traefik v3.6** en proxy, et il héberge déjà deux
+sites en production qui ne sont pas ceux de Félix — `fransktradgard.se` (statique) et
+`sohamnathayoga.fr` (WordPress + MariaDB). Les ports 80 et 443 étaient déjà pris, par des
+`docker-proxy`, alors qu'aucun serveur web n'était installé sur l'hôte.
+
+Le plan de départ — installer Caddy — aurait donc échoué, et pire : au redémarrage suivant,
+Caddy aurait pu prendre les ports et **éteindre les deux sites du frère de Félix**. La bonne
+méthode sur cette machine est l'inverse d'une installation : **un conteneur de plus, avec des
+labels Traefik**, que le proxy découvre seul.
+
+Le montage est dans `deploiement/`, copie exacte de `/data/sites/lecherchant/` sur le serveur :
+un conteneur `nginx:1.27-alpine` qui monte en lecture seule un clone git du dépôt. Il n'y a
+rien à construire — l'application est un fichier statique, le clone *est* le site, et
+`deploie.sh` se réduit à un `git pull`. Le conteneur n'est pas géré par Coolify : poser un site
+statique ne valait pas de demander un accès au tableau de bord d'un tiers.
+
+**Une découverte a servi de guide.** Le proxy porte déjà un `securite.yaml` écrit à la main, en
+français, longuement commenté : en-têtes de sécurité communs posés à l'entrypoint https, et
+l'explication de pourquoi la CSP en a été retirée — un middleware d'entrypoint écrase celui de
+la route, on ne peut donc pas l'affiner par site, et une CSP stricte casse l'administration
+d'un WordPress en silence. Ces en-têtes s'appliquent déjà à `lecherchant.fr` : HSTS deux ans,
+`nosniff`, `SAMEORIGIN`. **Rien à ajouter, et surtout rien à redoubler.**
+
+Restait ce qu'aucun middleware d'entrypoint ne sait faire, parce qu'il ne distingue pas les
+chemins : **la politique de cache**. `index.html` et `sw.js` en `no-cache`, jsPDF en
+`immutable` un an. Le premier n'est pas un détail — le service worker sert la page en réseau
+d'abord, et sans `no-cache` le cache HTTP du navigateur réintroduirait en amont exactement le
+figement que le service worker évite, en répondant avant lui.
+
+Deux points qu'il aurait coûté cher de rater :
+
+- **La racine web est un clone git**, donc `/.git/` était téléchargeable et livrait tout
+  l'historique. `nginx.conf` le refuse, avec `travaux/`, `outils/` et la documentation.
+  Le dépôt est public aujourd'hui, il ne le sera pas toujours.
+- **`${1}` dans un fichier compose est substitué par docker compose** avant que Traefik ne voie
+  le label. Écrit tel quel dans la redirection `www` → apex, le groupe capturé disparaissait et
+  toute page profonde serait retombée sur la racine, sans erreur. Il faut `$${1}`.
+
+Mesures : la page est servie en 0,2 s, **2 395 995 → 1 339 007 octets** compressée (44 %), et
+son empreinte est identique à celle du dépôt. Les deux sites voisins ont été recontrôlés après
+coup — 200, certificats valides, aucun conteneur redémarré.
+
+**Il manque le DNS.** `lecherchant.fr` pointe encore sur `213.186.33.5`, le parking OVH. Tant
+qu'il n'est pas changé, Let's Encrypt ne peut pas émettre le certificat. C'est la seule étape
+de la migration que Claude ne peut pas faire : elle est dans l'espace client OVH.
+
 ### 11 septembre 2026 — Passation : le travail se poursuit à deux endroits
 
 Félix ouvre une session Claude Code dans Visual Studio Code, sur sa machine, pour conduire la
