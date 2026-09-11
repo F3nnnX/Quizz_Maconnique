@@ -4,36 +4,43 @@ EMPREINTE DU DEPOT — Le Quiz Maconnique
 Auteur declare      : Felix Casellato
 Oeuvre              : Le Quiz Maconnique, application web d'instruction
                       maconnique au 1er degre (REAA)
-Date de l'empreinte : 2026-09-11 11:45:22 UTC
-Etat decrit         : commit 6a373620e7368fbc4679f4051c2c5c9cec6e2efa
-                      (du 2026-09-11T11:34:57+00:00)
+Date de l'empreinte : 2026-09-11 12:20:09 UTC
+Etat decrit         : commit 81a389036925f15aeb9eec8afb5265cec5723241
+                      (du 2026-09-11T12:12:28+00:00)
                       Un fichier ne peut pas contenir l'empreinte du commit
                       qui le contient : celle-ci depend de son propre contenu.
                       Ce numero designe donc l'etat mesure, et le commit qui
                       porte ce fichier en est l'enfant immediat. Le manifeste,
                       lui, reste exact dans les deux.
 Premier commit      : 2026-07-27T16:33:16+02:00 f8314705290e8cb9926bdf4482485ecea19acd85
-Nombre de commits   : 63
-Fichiers            : 15
-Poids total         : 2886658 octets (2.75 Mo)
+Nombre de commits   : 66
+Fichiers            : 22
+Poids total         : 3194160 octets (3.05 Mo)
 
 EMPREINTE GLOBALE (SHA-256 du manifeste ci-dessous) :
-  b5ddee238156e420fa6c2b474039cdd06b44edd15ce08ba2be10033020fbd807
+  38c7443ba54893653c583f4337e2cfffdf90a2a8a1a346b77baa17dcb0e51aa4
 
 MANIFESTE — SHA-256, taille en octets, chemin
 ------------------------------------------------------------------------
 282a9d7a2dc2439d091246fc0dff9a23ef6c189de8c46c45fdf02b62c9a6bf2a          4194  ACCES.md
-ca203fd1572e36daef0e0b41a9cb1f38b40eb6a66258784db025f8b38fa0c350         13934  CLAUDE.md
+5dea3bb3d262cbd6a5d8aacbf30daf3719d44dc4a3e88c9bc0f2dda54c5870c6         14727  CLAUDE.md
 6e326f10d0bf60876e172f6572159513d1dbed449fef590f87e17e69f61f1e97         12546  IMAGES.md
 6f7d20bfc34857094c9c6b37a9255a8a01c142f403c1fdac9de23b878f048b62         13302  JEU-PISTES.md
 a06001b702fa10d3bf813ad2cb76904d20d2bfe132a6a4066644423a03ed6035          1792  LICENSE
-5bb5d834d3257eb664eccded050209199f94ada9514f8168ebee4b2e7b8cb6a8          2618  PROMPT-SUITE.md
+c3360fc790e3dbafb3ab362c318a9135ba6075983b24f72bf8f91aa7d12435f0          9655  PASSATION.md
+f9734b6d5a2debd2e6012ea811114d30367e77f4f633fa4d620ae35ef206b400          3490  PROMPT-SUITE.md
 af8baf0dd993e60cded7aea01736a56bbe679bcb462c1eb5c53eed251a532680         13107  PROTECTION.md
 b2643b55ee153ae11acce18e49fcc3c11789ca587c9ac79226c51cdb1e50e707          2599  README.md
 a8bacb3f13ecb5db7d61b6c18da0621425cfa713233a68cd247fee52ad57bc34         11121  RELECTURE-V2.1.md
-1e2540674ec7faf4b7b7842867310cd62176afbb4e2d9653a1d623de10725178         33859  SUIVI.md
+733a0e1b3c8a0bb8d105ee5ea86696fed1666b8f66f9412f1c56f57efbbe2686         35282  SUIVI.md
 e5a199fc2f37a27ab57069fbeb0140d26c423ac45a00819ad006407dbf886d4f         10480  TIERS.md
 e4d6c47b161ef262a3ffdd57c2b67518c00244a6c9e630e4c0155569e0a3d4c5       2395995  index.html
 98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875        364463  jspdf.umd.min.js
 3b8b3ead996f2d626c6a893e8a12bf4277c679f5c930b8d217fda3446f1d1461          3902  outils/empreinte.py
 bb280816e1b05cd4b107dce603911ee0c7c48d60eb823c2a0fa9ed672879733d          2746  sw.js
+cee788dc4cbc1af1e461162fe8ab99fc82b64da0726ee6cf435135fa1fe3ef86          3000  travaux/tableau-svg/LISEZ-MOI.md
+3c8c87489c5758d8b4ea2cf35b43e98f6deef48c91007cb9482ef66bf0b01a9a          1758  travaux/tableau-svg/generer.py
+712d385130d82f0a4b197d0b2ba87dd653f3bd1d79e3f70291587a3c1ff2b35d          8504  travaux/tableau-svg/modele.svg
+6098e51fb18f1133deec2a841c1d0822fdeda2a65bbd8915b6599f8cf51ec621        177272  travaux/tableau-svg/tableau-500.png
+1d17b2fba6a04db8bd9c23a7936078c200902ac6a282f5ebc6e3426a2dd34c9e         90179  travaux/tableau-svg/tableau-reperes.png
+bd255c55ea3d9b0a15e04108163f62ffb1484e59c6fb824b7d9cb0f8e4b1a76d         14046  travaux/tableau-svg/tableau.svg

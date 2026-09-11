@@ -6,6 +6,28 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Passation : le travail se poursuit à deux endroits
+
+Félix ouvre une session Claude Code dans Visual Studio Code, sur sa machine, pour conduire la
+migration : sortir de GitHub Pages, poser le site sur le VPS de son frère, brancher un nom de
+domaine. La session distante garde le nom commercial, le domaine, la protection de l'œuvre et
+le contenu de l'application.
+
+Deux sessions qui ne se voient pas, c'est deux mémoires qui divergent. D'où **`PASSATION.md`**,
+à lire avant `CLAUDE.md` : la répartition, la discipline git qui tient lieu de lien entre les
+deux, l'état du projet, et ce que la session VS Code doit savoir avant de migrer — le service
+worker exige HTTPS, le cache est lié au domaine, les frères qui ont installé l'application
+depuis `github.io` garderont l'ancienne.
+
+Une chose à ne pas rater au passage : le dossier de travail de Félix doit être **un clone du
+dépôt**, pas une copie de fichiers. Sans l'historique git, la session perd la mémoire du projet
+et Félix perd sa meilleure preuve de paternité.
+
+La refonte du Tableau de Loge en SVG est rangée dans `travaux/tableau-svg/` — Félix ne la juge
+pas satisfaisante, et elle n'est pas urgente. Le travail fastidieux sur les 22 points chauds est
+acquis et documenté, il n'aura pas à être refait. Les seize symboles et les onze bijoux sont
+repoussés explicitement : « la priorité c'est migration ».
+
 ### 11 septembre 2026 — V2.3.2 : la cérémonie du heurtoir ne se joue plus qu'une fois
 
 Félix : « le fait de devoir cliquer 3x c'est rigolo mais usant à la longue ». Le code lui
