@@ -4,25 +4,26 @@ EMPREINTE DU DEPOT — Le Quiz Maconnique
 Auteur declare      : Felix Casellato
 Oeuvre              : Le Quiz Maconnique, application web d'instruction
                       maconnique au 1er degre (REAA)
-Date de l'empreinte : 2026-09-11 14:12:44 UTC
-Etat decrit         : commit ac87c1735ce740891e699544ef1635a6a069a9df
-                      (du 2026-09-11T16:12:32+02:00)
+Date de l'empreinte : 2026-09-11 14:59:02 UTC
+Etat decrit         : commit 551739759c1153ea39b6fe3e72d119c8c42f3c77
+                      (du 2026-09-11T16:58:51+02:00)
                       Un fichier ne peut pas contenir l'empreinte du commit
                       qui le contient : celle-ci depend de son propre contenu.
                       Ce numero designe donc l'etat mesure, et le commit qui
                       porte ce fichier en est l'enfant immediat. Le manifeste,
                       lui, reste exact dans les deux.
 Premier commit      : 2026-07-27T16:33:16+02:00 f8314705290e8cb9926bdf4482485ecea19acd85
-Nombre de commits   : 82
-Fichiers            : 26
-Poids total         : 3235995 octets (3.09 Mo)
+Nombre de commits   : 84
+Fichiers            : 27
+Poids total         : 3247310 octets (3.10 Mo)
 
 EMPREINTE GLOBALE (SHA-256 du manifeste ci-dessous) :
-  740af6a55d16c541d69af795bea2d5ec0e9c83b61a128bb744d110e026a5ae5f
+  1486e963e5eef8c77c6bd460f9ef843f6a0e49784df07072139ded1ebf001f5a
 
 MANIFESTE — SHA-256, taille en octets, chemin
 ------------------------------------------------------------------------
 64edeac7a288d0fda31f05fc9cde65da71e291f54e7455b07058a1b6f0c98bae          6290  ACCES.md
+7fa01ff5898c8e65f81d9297dd7d6d4091b4e626b05e1634c18c8d2f3dcad1a2          8543  AUDIT-SECURITE.md
 5dea3bb3d262cbd6a5d8aacbf30daf3719d44dc4a3e88c9bc0f2dda54c5870c6         14727  CLAUDE.md
 6e326f10d0bf60876e172f6572159513d1dbed449fef590f87e17e69f61f1e97         12546  IMAGES.md
 6f7d20bfc34857094c9c6b37a9255a8a01c142f403c1fdac9de23b878f048b62         13302  JEU-PISTES.md
@@ -32,7 +33,7 @@ f9734b6d5a2debd2e6012ea811114d30367e77f4f633fa4d620ae35ef206b400          3490  
 a1d48db84676acdf1b6badec0e9cb3c0f68a84d09161ad6c4c49cbb0bbcccd6d         13601  PROTECTION.md
 b2643b55ee153ae11acce18e49fcc3c11789ca587c9ac79226c51cdb1e50e707          2599  README.md
 a8bacb3f13ecb5db7d61b6c18da0621425cfa713233a68cd247fee52ad57bc34         11121  RELECTURE-V2.1.md
-eb5e107f20b54de54dc2761b471d4b2739fb65be3a4a6c0382c16ea00f209557         46915  SUIVI.md
+dd62ecc38574ccfde8ccf532cec251fcff98d517cdc6587e598cd40d43b5cf06         49687  SUIVI.md
 e5a199fc2f37a27ab57069fbeb0140d26c423ac45a00819ad006407dbf886d4f         10480  TIERS.md
 e6493ec67e278db4cce69b868adab3a5474857be95363c4eee3acc586b2f5761          8669  deploiement/LISEZ-MOI.md
 9f5c5551d1280de8eb2912633ceb00609cddf322f159267d6b86b32f668fc084          1767  deploiement/deploie.sh
