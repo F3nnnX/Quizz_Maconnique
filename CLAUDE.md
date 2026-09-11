@@ -21,7 +21,7 @@ build : le dépôt contient le produit fini.
 
 | Fichier | Rôle |
 |---|---|
-| `index.html` | **Toute l'application**, 2,3 Mo, un seul fichier |
+| `index.html` | **Toute l'application**, ~2,1 Mo, un seul fichier |
 | `sw.js` | Service worker : mode hors connexion (V2.3.0) |
 | `jspdf.umd.min.js` | jsPDF 2.5.1 (MIT), servie depuis le dépôt et non plus d'un CDN |
 | `README.md` | Présentation de l'outil pour un visiteur du dépôt |
@@ -51,7 +51,7 @@ le 10 septembre 2026 et restent récupérables dans l'historique git.
 ## Architecture d'index.html
 
 **En-tête** — un long commentaire de changelog, une section par thème (BUGS CORRIGÉS,
-SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.3.2**,
+SÉCURITÉ, PÉDAGOGIE, CONFORT, ACCESSIBILITÉ, DONNÉES, BONUS). Version courante : **V2.3.3**,
 répétée dans le `<title>`. Ce changelog est la mémoire du projet côté code : **le tenir à jour
 à chaque changement**, dans le même style — le bug, sa cause technique, sa conséquence pour
 l'utilisateur.
@@ -98,12 +98,15 @@ de Félix, pas un hasard d'ordre.
 `DEGRE_ACTIF = 1` filtre les questions servies ; `questionsDuDegre(n)` est prête pour ouvrir
 un autre grade.
 
-**Écran d'entrée** — `#door-screen` recouvre tout au chargement ; il faut frapper trois fois
-au heurtoir pour entrer. **Depuis la V2.3.2, seulement à la première visite** :
-`SETTINGS.dejaFrappe` retient le franchissement et `entrerSansCeremonie()` entre directement
-ensuite. Les deux chemins appellent `preparerAccueil()` — **toute nouveauté à préparer au
-lancement va là, sinon elle ne sera faite que sur un des deux chemins**. Le bouton « Rejouer
-la cérémonie d'entrée » des Réglages remet le drapeau à `false`, pour un rejeu unique.
+**Écran d'entrée — supprimé en V2.3.3.** Il n'y a plus de porte ni de cérémonie du heurtoir :
+ouvrir l'application affiche directement le parvis (`#welcome-screen`, désormais visible par
+défaut). `initQuizMaconnique()` appelle `preparerAccueil()` sans condition — **toute nouveauté
+à préparer au lancement va là**. `preparerAccueil()` reste donc le seul point d'entrée du
+lancement ; `#door-screen`, `frapperPorte()`, `ouvrirLeTemple()`, `entrerSansCeremonie()`,
+`rejouerCeremonie()`, le bouton « Rejouer la cérémonie » des Réglages et l'easter egg
+`secretTapCheck()`/`skipToMenuInstant()` ont tous été retirés, avec la photo de la porte
+(image 04, venue d'internet — un souci de moins pour la commercialisation). Le champ
+`SETTINGS.dejaFrappe` subsiste, inutilisé, dans l'objet des réglages.
 
 **Progression** — stockée en `localStorage` : répétition espacée (J+1, J+3, J+7, J+15),
 maîtrise acquise à deux succès consécutifs, banque d'erreurs, reprise de session.
