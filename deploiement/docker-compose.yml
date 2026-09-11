@@ -1,0 +1,92 @@
+# Le Cherchant — le conteneur qui sert lecherchant.fr.
+#
+# Ce service n'est PAS géré par Coolify, et c'est volontaire : Coolify tient les
+# deux sites du frère de Félix (fransktradgard.se et sohamnathayoga.fr) et il n'y
+# avait aucune raison de demander un accès à son tableau de bord pour poser un
+# site statique. Traefik, lui, découvre les conteneurs par leurs labels : il route
+# celui-ci exactement comme les autres, sans rien savoir de Coolify.
+#
+# Conséquence à connaître : ce conteneur n'apparaîtra pas dans l'interface de
+# Coolify. Il se redémarre seul (restart: unless-stopped) et survit aux reboots.
+#
+# Tout se défait par : docker compose down (et rien d'autre n'en dépend).
+
+services:
+  lecherchant:
+    image: nginx:1.27-alpine
+    container_name: lecherchant
+    restart: unless-stopped
+
+    volumes:
+      # La racine web est le clone git, monté en LECTURE SEULE : le serveur web
+      # n'a aucune raison d'écrire dans le dépôt, et « ro » le garantit plutôt
+      # que de l'espérer.
+      - ./depot:/usr/share/nginx/html:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+
+    networks:
+      # Le réseau de Traefik. Sans cela le proxy ne peut pas joindre le conteneur
+      # et répond 502.
+      - coolify
+
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=coolify
+
+      # Le port interne du conteneur. nginx:alpine écoute sur 80.
+      - traefik.http.services.lch.loadbalancer.server.port=80
+
+      # --- Middlewares propres à ce site ---------------------------------
+      #
+      # Tous préfixés « lch- » : les noms de middlewares déclarés par labels sont
+      # globaux au fournisseur docker, et un nom générique comme « gzip » est
+      # déjà pris par le conteneur de fransktradgard.se.
+      - traefik.http.middlewares.lch-vers-https.redirectscheme.scheme=https
+      - traefik.http.middlewares.lch-vers-https.redirectscheme.permanent=true
+
+      # www -> apex, en 301. L'apex est la forme canonique : le domaine a été
+      # choisi pour dire le nom de la marque, « Le Cherchant », article compris.
+      # (Le site voisin fait l'inverse, apex -> www ; ce n'est pas une
+      # incohérence, c'est un autre propriétaire et un autre choix.)
+      # $${1} et non ${1} : docker compose substitue les variables avant que
+      # Traefik ne voie le label. Ecrit ${1}, le groupe capture disparait et
+      # www.lecherchant.fr/page redirige vers la racine, en silence.
+      - traefik.http.middlewares.lch-www-vers-apex.redirectregex.regex=^https://www\.lecherchant\.fr/(.*)
+      - traefik.http.middlewares.lch-www-vers-apex.redirectregex.replacement=https://lecherchant.fr/$${1}
+      - traefik.http.middlewares.lch-www-vers-apex.redirectregex.permanent=true
+
+      # --- HTTP : on ne sert rien en clair, on redirige ------------------
+      - traefik.http.routers.lch-http.rule=Host(`lecherchant.fr`) || Host(`www.lecherchant.fr`)
+      - traefik.http.routers.lch-http.entryPoints=http
+      - traefik.http.routers.lch-http.middlewares=lch-vers-https
+      - traefik.http.routers.lch-http.service=lch
+
+      # --- HTTPS : le site ------------------------------------------------
+      - traefik.http.routers.lch-https.rule=Host(`lecherchant.fr`)
+      - traefik.http.routers.lch-https.entryPoints=https
+      - traefik.http.routers.lch-https.tls=true
+      - traefik.http.routers.lch-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.lch-https.service=lch
+
+      # --- HTTPS : www, qui ne fait que rediriger --------------------------
+      # Router distinct, sinon la redirection s'appliquerait aussi à l'apex.
+      - traefik.http.routers.lch-https-www.rule=Host(`www.lecherchant.fr`)
+      - traefik.http.routers.lch-https-www.entryPoints=https
+      - traefik.http.routers.lch-https-www.tls=true
+      - traefik.http.routers.lch-https-www.tls.certresolver=letsencrypt
+      - traefik.http.routers.lch-https-www.middlewares=lch-www-vers-apex
+      - traefik.http.routers.lch-https-www.service=lch
+
+      # --- Adresse de secours, en clair, sans certificat -------------------
+      # sslip.io résout n'importe quel nom de la forme <x>.51.195.223.56.sslip.io
+      # vers 51.195.223.56. Elle permet de vérifier que le site est bien servi
+      # AVANT que le DNS du domaine ne pointe ici, et de diagnostiquer ensuite
+      # sans dépendre du DNS ni du certificat. Coolify en pose une identique sur
+      # ses propres applications.
+      - traefik.http.routers.lch-test.rule=Host(`lecherchant.51.195.223.56.sslip.io`)
+      - traefik.http.routers.lch-test.entryPoints=http
+      - traefik.http.routers.lch-test.service=lch
+
+networks:
+  coolify:
+    external: true

@@ -54,7 +54,7 @@ cd Quizz_Maconnique
 Puis, dans Claude Code : demander de lire `PASSATION.md`, `CLAUDE.md` et `SUIVI.md` avant de
 toucher à quoi que ce soit.
 
-**Deux différences d'environnement à connaître, parce qu'elles font échouer ce qui marchait ici :**
+**Trois différences d'environnement à connaître, parce qu'elles font échouer ce qui marchait ici :**
 
 - Les chemins de ce dépôt sont écrits pour Linux. Sur Windows, `python3` s'appelle souvent
   `python`, et Playwright n'est pas installé au même endroit — le chemin
@@ -62,6 +62,14 @@ toucher à quoi que ce soit.
 - L'environnement distant bloque `github.io`, `fonts.googleapis.com` et la plupart des
   domaines externes. **Sur la machine de Félix, ces blocages n'existent pas** : la session
   VS Code peut visiter le site déployé, ce que celle-ci n'a jamais pu faire.
+- **Ne jamais régénérer `EMPREINTE.txt` depuis Windows.** Le dépôt y est cloné avec
+  `core.autocrlf=true` : tous les fichiers texte ont des CRLF sur le disque, et
+  `outils/empreinte.py` hache les fichiers du disque. Les SHA-256 produits ne
+  correspondraient à rien de reproductible — `index.html` y pèse 2 400 511 octets au lieu de
+  2 395 995, soit exactement les 4 516 retours chariot ajoutés — et la sortie serait en plus
+  écrite en cp1252 au lieu d'UTF-8. Pour une pièce destinée à l'INPI, **cela casserait la
+  chaîne probatoire en silence**. La régénérer sur une machine Linux : un clone jetable sur le
+  VPS suffit (`git clone --branch <branche> ... /tmp/x && python3 outils/empreinte.py`).
 
 ## 4. Où en est le projet — au 11 septembre 2026
 
@@ -107,8 +115,9 @@ point qui fixe le calendrier de la commercialisation.
 |---|---|---|
 | Choix du nom commercial | Desktop | **« Le Cherchant » arrêté** le 11 septembre, vérifications INPI et RNE faites |
 | Achat du nom de domaine | Desktop | **FAIT** — `lecherchant.fr`, OVH, 3 ans + 1 an offert, domaine seul, titulaire particulier. Aucun DNS configuré : le domaine attend le VPS |
-| Sortie de GitHub Pages vers le VPS | **VS Code** | **Prêt à démarrer** — le domaine est acheté et libre de toute configuration |
-| Branchement du domaine sur le VPS | **VS Code** | À faire : un `A` vers l'IPv4 du VPS, un `AAAA` vers l'IPv6, depuis l'espace client OVH |
+| Sortie de GitHub Pages vers le VPS | **VS Code** | **FAIT le 11 septembre** — le site tourne sur le VPS, servi par Traefik. Voir `deploiement/LISEZ-MOI.md` |
+| Branchement du domaine sur le VPS | Félix | **FAIT le 11 septembre** — `A` et `AAAA` posés chez OVH. **https://lecherchant.fr répond**, certificat Let's Encrypt valable jusqu'au 10 décembre 2026, renouvellement automatique par Traefik |
+| Redirection de GitHub Pages | **VS Code** | À faire **après** la bascule DNS, par une branche `gh-pages` ne contenant qu'une page de redirection — `main` et `index.html` ne sont pas touchés |
 
 ## 4 bis. Le nom de domaine — critères arrêtés le 11 septembre 2026
 
@@ -179,6 +188,15 @@ la loge à remplacer par une marque propre (voir `IMAGES.md`), et le dépôt de 
 
 Ces points ont été établis ici et il serait coûteux de les redécouvrir :
 
+- **Le VPS n'est pas une machine vierge, et c'est le fait qui commande tout le reste.** Il fait
+  tourner **Coolify** avec **Traefik v3.6** en proxy, et il héberge déjà deux sites en
+  production qui ne sont pas ceux de Félix : `fransktradgard.se` et `sohamnathayoga.fr`
+  (WordPress). **Les ports 80 et 443 appartiennent à Traefik.** N'installer aucun serveur web
+  sur l'hôte : au redémarrage suivant, il pourrait prendre les ports et éteindre les deux
+  sites du frère de Félix. La méthode est un conteneur de plus, avec des labels Traefik.
+- **Les en-têtes de sécurité sont déjà posés**, pour tous les sites de la machine, par
+  `/data/coolify/proxy/dynamic/securite.yaml` — un fichier écrit à la main, en français,
+  longuement commenté. Le lire avant d'y toucher. Ne pas redoubler ses en-têtes.
 - **L'application est un fichier unique et statique.** N'importe quel serveur web la sert.
   Il n'y a rien à construire, rien à installer, pas de dépendance à résoudre.
 - **Le service worker impose HTTPS** (ou `localhost`). Sans certificat, le mode hors connexion

@@ -6,6 +6,82 @@ Journal des travaux et liste de ce qui reste à faire. Tenu à jour à chaque se
 
 ## Journal
 
+### 11 septembre 2026 — Le site est sur le VPS, et le VPS n'était pas ce qu'on croyait
+
+La migration est faite, à une étape près : le DNS. Le site tourne sur le VPS, servi par
+Traefik, vérifié octet pour octet identique au dépôt.
+
+**Ce qui n'était écrit nulle part et qui a tout réorienté : le VPS n'est pas une machine
+vierge.** Il fait tourner **Coolify** avec **Traefik v3.6** en proxy, et il héberge déjà deux
+sites en production qui ne sont pas ceux de Félix — `fransktradgard.se` (statique) et
+`sohamnathayoga.fr` (WordPress + MariaDB). Les ports 80 et 443 étaient déjà pris, par des
+`docker-proxy`, alors qu'aucun serveur web n'était installé sur l'hôte.
+
+Le plan de départ — installer Caddy — aurait donc échoué, et pire : au redémarrage suivant,
+Caddy aurait pu prendre les ports et **éteindre les deux sites du frère de Félix**. La bonne
+méthode sur cette machine est l'inverse d'une installation : **un conteneur de plus, avec des
+labels Traefik**, que le proxy découvre seul.
+
+Le montage est dans `deploiement/`, copie exacte de `/data/sites/lecherchant/` sur le serveur :
+un conteneur `nginx:1.27-alpine` qui monte en lecture seule un clone git du dépôt. Il n'y a
+rien à construire — l'application est un fichier statique, le clone *est* le site, et
+`deploie.sh` se réduit à un `git pull`. Le conteneur n'est pas géré par Coolify : poser un site
+statique ne valait pas de demander un accès au tableau de bord d'un tiers.
+
+**Une découverte a servi de guide.** Le proxy porte déjà un `securite.yaml` écrit à la main, en
+français, longuement commenté : en-têtes de sécurité communs posés à l'entrypoint https, et
+l'explication de pourquoi la CSP en a été retirée — un middleware d'entrypoint écrase celui de
+la route, on ne peut donc pas l'affiner par site, et une CSP stricte casse l'administration
+d'un WordPress en silence. Ces en-têtes s'appliquent déjà à `lecherchant.fr` : HSTS deux ans,
+`nosniff`, `SAMEORIGIN`. **Rien à ajouter, et surtout rien à redoubler.**
+
+Restait ce qu'aucun middleware d'entrypoint ne sait faire, parce qu'il ne distingue pas les
+chemins : **la politique de cache**. `index.html` et `sw.js` en `no-cache`, jsPDF en
+`immutable` un an. Le premier n'est pas un détail — le service worker sert la page en réseau
+d'abord, et sans `no-cache` le cache HTTP du navigateur réintroduirait en amont exactement le
+figement que le service worker évite, en répondant avant lui.
+
+Deux points qu'il aurait coûté cher de rater :
+
+- **La racine web est un clone git**, donc `/.git/` était téléchargeable et livrait tout
+  l'historique. `nginx.conf` le refuse, avec `travaux/`, `outils/` et la documentation.
+  Le dépôt est public aujourd'hui, il ne le sera pas toujours.
+- **`${1}` dans un fichier compose est substitué par docker compose** avant que Traefik ne voie
+  le label. Écrit tel quel dans la redirection `www` → apex, le groupe capturé disparaissait et
+  toute page profonde serait retombée sur la racine, sans erreur. Il faut `$${1}`.
+
+Mesures : la page est servie en 0,2 s, **2 395 995 → 1 339 007 octets** compressée (44 %), et
+son empreinte est identique à celle du dépôt. Les deux sites voisins ont été recontrôlés après
+coup — 200, certificats valides, aucun conteneur redémarré.
+
+**Un piège trouvé en chemin, et qui ne concerne pas la migration.** `CLAUDE.md` demande de
+régénérer `EMPREINTE.txt` après toute modification du dépôt. Fait depuis Windows, cela produit
+une pièce fausse : `core.autocrlf=true` met des CRLF sur tous les fichiers texte du disque, et
+`empreinte.py` hache les fichiers du disque. Tous les SHA-256 divergent, `index.html` y pèse
+2 400 511 octets au lieu de 2 395 995 — les 4 516 retours chariot ajoutés — et la sortie part
+en cp1252 au lieu d'UTF-8. Pour une pièce destinée à l'INPI, la chaîne probatoire serait
+cassée, sans le moindre signe. L'empreinte de ce lot a donc été générée sur le VPS, dans un
+clone jetable, et vérifiée : les fichiers inchangés y portent exactement les empreintes de la
+version précédente. C'est consigné dans `PASSATION.md` § 3.
+
+**Le DNS a été fait par Félix dans la foulée, et la migration est terminée.**
+**https://lecherchant.fr répond**, certificat Let's Encrypt émis, valable jusqu'au
+10 décembre 2026. Page servie en 0,3 s, contenu identique au dépôt, `www` et `http` redirigés
+en 301, `/.git/` et la documentation toujours en 403.
+
+Une chose à savoir si le cas se représente : **Traefik n'a pas réessayé tout seul.** Ses deux
+tentatives dataient du déploiement, quand le domaine pointait encore sur le parking OVH — les
+journaux montrent Let's Encrypt recevant la page « Site en construction » d'OVH. Une fois le
+DNS corrigé, il a fallu recréer le conteneur pour que le routeur soit réévalué et la demande
+relancée ; le certificat est arrivé en cinq secondes. Recréer *son* conteneur ne touche pas au
+proxy et laisse les sites voisins intacts — ce qui a été recontrôlé après coup.
+
+Au passage, un faux négatif qui aurait pu égarer : au moment de la vérification, Google DNS
+servait encore l'ancien A de l'apex alors que l'AAAA et `www` étaient déjà passés. Les
+enregistrements de Félix étaient corrects depuis le début. **Interroger le serveur faisant
+autorité — `nslookup -type=A lecherchant.fr ns111.ovh.net` — tranche en une commande** ce que
+les résolveurs publics laissent croire pendant la durée du TTL.
+
 ### 11 septembre 2026 — Passation : le travail se poursuit à deux endroits
 
 Félix ouvre une session Claude Code dans Visual Studio Code, sur sa machine, pour conduire la
