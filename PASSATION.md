@@ -105,8 +105,8 @@ point qui fixe le calendrier de la commercialisation.
 
 | Sujet | Session | État |
 |---|---|---|
-| Choix du nom commercial | Desktop | **« Le Cherchant » retenu** le 11 septembre, sous réserve des vérifications INPI et OVH |
-| Achat du nom de domaine | Desktop | **OVH retenu**, `.fr`, création 3 ans, domaine seul, titulaire particulier. `lecherchant.fr` ou `cherchant.fr` |
+| Choix du nom commercial | Desktop | **« Le Cherchant » arrêté** le 11 septembre, vérifications INPI et RNE faites |
+| Achat du nom de domaine | Desktop | **OVH**, `.fr`, création 3 ans, domaine seul, titulaire particulier. `cherchant.fr` de préférence, `lecherchant.fr` sinon. **Achat en cours** |
 | Sortie de GitHub Pages vers le VPS | **VS Code** | À démarrer |
 | Branchement du domaine sur le VPS | **VS Code** | Dépend du nom retenu |
 
@@ -136,9 +136,18 @@ Le `.com` chez Porkbun si le nom retenu n'est libre que là.
 
 ### Le nom retenu : **Le Cherchant**
 
-Décidé par Félix le 11 septembre 2026, **sous réserve de deux vérifications qu'il mène
-lui-même** : la base des marques de `data.inpi.fr` pour « cherchant », et la disponibilité de
-`lecherchant.fr` (ou `cherchant.fr`, plus court et plus fort) sur le moteur d'OVH.
+Décidé par Félix le 11 septembre 2026, **après vérification** :
+
+| Contrôle | Résultat |
+|---|---|
+| Marque « cherchant » à l'INPI | **aucune** |
+| Société active du même nom | **aucune** — « Au Parvis du Cherchant », librairie du Var, radiée le 10/12/2018 |
+| Site concurrent | **aucun** — trois domaines testés, zéro résolution |
+| `cherchant.fr` / `lecherchant.fr` | libres selon le DNS, à confirmer chez OVH |
+
+Une société radiée ne détient plus rien : la protection d'une dénomination sociale suppose un
+usage effectif dans le commerce, et il a cessé il y a huit ans. Aucun des quatre obstacles qui
+ont fait tomber « Le Tuileur » ne se présente ici.
 
 Le cherchant, c'est celui qui frappe à la porte du Temple et demande la lumière. Le mot est
 déjà dans l'application, au premier coup de heurtoir : « C'est un peu timide pour un
