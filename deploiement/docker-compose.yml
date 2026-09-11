@@ -55,6 +55,47 @@ services:
       - traefik.http.middlewares.lch-www-vers-apex.redirectregex.replacement=https://lecherchant.fr/$${1}
       - traefik.http.middlewares.lch-www-vers-apex.redirectregex.permanent=true
 
+      # --- La porte ---------------------------------------------------
+      #
+      # Authentification HTTP Basic, verifiee par Traefik. C'est une VRAIE porte :
+      # le proxy repond 401 et ne transmet rien a nginx, donc les 2,3 Mo de
+      # l'application ne sont pas livres tant que le code n'est pas donne. C'est
+      # tout ce qui separe ce montage d'un mot de passe ecrit dans la page, qui
+      # ne protegeait rien sur GitHub Pages — voir ACCES.md.
+      #
+      # L'empreinte est en bcrypt. Le mot de passe lui-meme n'apparait nulle part,
+      # ni ici, ni sur le serveur, ni dans le depot.
+      #
+      # L'empreinte elle-meme n'est PAS dans ce fichier : elle vit dans
+      # /data/sites/lecherchant/.env, sur le serveur, et nulle part ailleurs.
+      # Motif : ce depot est public. Une empreinte bcrypt d'un mot du
+      # dictionnaire se casse en quelques secondes — la publier reviendrait a
+      # publier le mot de passe. Le fichier .env n'est pas dans le depot et ne
+      # doit jamais y entrer.
+      #
+      # Pour changer le code :
+      #   sudo docker run --rm httpd:2.4-alpine htpasswd -nbB <identifiant> <mdp>
+      #   puis coller le resultat dans .env, et docker compose up -d
+      #
+      # Le label est entre guillemets et le message de defaut ne contient pas de
+      # deux-points : sans cela YAML lit « cle : valeur » et rejette la ligne.
+      # Et dans .env, les $ de l'empreinte doivent etre DOUBLES — compose
+      # interpole aussi le contenu de .env, pas seulement celui de ce fichier.
+      - "traefik.http.middlewares.lch-porte.basicauth.users=${PORTE_USERS:?definir PORTE_USERS dans .env}"
+      - traefik.http.middlewares.lch-porte.basicauth.realm=Le Cherchant
+
+      # Limitation de debit, par adresse IP source. ACCES.md § 3 l'exige :
+      # « limiter les tentatives, sans quoi on essaie tous les prenoms du
+      # calendrier en une nuit ». Elle ne protege pas d'une devinette heureuse —
+      # rien ne le peut — mais elle rend l'essai en masse inutilisable.
+      #
+      # 120 par minute : une visite normale fait trois requetes (la page, le
+      # service worker, jsPDF), et toute la loge peut etre derriere une seule IP
+      # si les freres sont sur le wifi du temple. La marge est donc large.
+      - traefik.http.middlewares.lch-limite.ratelimit.average=120
+      - traefik.http.middlewares.lch-limite.ratelimit.period=1m
+      - traefik.http.middlewares.lch-limite.ratelimit.burst=60
+
       # --- HTTP : on ne sert rien en clair, on redirige ------------------
       - traefik.http.routers.lch-http.rule=Host(`lecherchant.fr`) || Host(`www.lecherchant.fr`)
       - traefik.http.routers.lch-http.entryPoints=http
@@ -66,6 +107,7 @@ services:
       - traefik.http.routers.lch-https.entryPoints=https
       - traefik.http.routers.lch-https.tls=true
       - traefik.http.routers.lch-https.tls.certresolver=letsencrypt
+      - traefik.http.routers.lch-https.middlewares=lch-limite,lch-porte
       - traefik.http.routers.lch-https.service=lch
 
       # --- HTTPS : www, qui ne fait que rediriger --------------------------
@@ -77,15 +119,14 @@ services:
       - traefik.http.routers.lch-https-www.middlewares=lch-www-vers-apex
       - traefik.http.routers.lch-https-www.service=lch
 
-      # --- Adresse de secours, en clair, sans certificat -------------------
-      # sslip.io résout n'importe quel nom de la forme <x>.51.195.223.56.sslip.io
-      # vers 51.195.223.56. Elle permet de vérifier que le site est bien servi
-      # AVANT que le DNS du domaine ne pointe ici, et de diagnostiquer ensuite
-      # sans dépendre du DNS ni du certificat. Coolify en pose une identique sur
-      # ses propres applications.
-      - traefik.http.routers.lch-test.rule=Host(`lecherchant.51.195.223.56.sslip.io`)
-      - traefik.http.routers.lch-test.entryPoints=http
-      - traefik.http.routers.lch-test.service=lch
+      # --- L'adresse de secours a ete RETIREE ------------------------------
+      # Elle servait le site sur lecherchant.51.195.223.56.sslip.io, en clair et
+      # sans la porte. Elle etait utile tant que le DNS ne pointait pas ici ; une
+      # fois la porte posee, elle en devenait le contournement — et l'y soumettre
+      # n'aurait rien valu de mieux, l'authentification Basic en HTTP faisant
+      # circuler le code en clair sur le reseau.
+      # Pour diagnostiquer sans passer par le DNS, interroger le conteneur depuis
+      # le serveur : curl --resolve lecherchant.fr:443:127.0.0.1 https://lecherchant.fr/
 
 networks:
   coolify:

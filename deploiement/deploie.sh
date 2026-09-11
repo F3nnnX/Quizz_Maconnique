@@ -38,5 +38,13 @@ git --no-pager log --oneline "$avant..$apres" | sed 's/^/  /'
 # navigation, sans rien vider.
 echo ""
 echo "Vérification : le site répond-il ?"
-code=$(curl -s -o /dev/null -w '%{http_code}' -H 'Host: lecherchant.fr' http://127.0.0.1/ --max-time 10 || echo 000)
-echo "  http://127.0.0.1 (Host: lecherchant.fr) -> $code"
+
+# On interroge nginx DIRECTEMENT dans le conteneur, pas l'URL publique : celle-ci
+# passe par la porte d'accès (basicauth) et renverrait 401 sans le code, ce qui
+# ferait crier le script à chaque déploiement alors que tout va bien. Sonder
+# nginx en interne prouve que le contenu est servi, sans dépendre de la porte.
+if sudo docker exec lecherchant wget -q -O /dev/null http://127.0.0.1/ 2>/dev/null; then
+    echo "  nginx interne -> 200, le contenu est servi."
+else
+    echo "  ATTENTION : nginx interne ne répond pas 200."
+fi

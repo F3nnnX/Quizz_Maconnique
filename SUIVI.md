@@ -33,6 +33,138 @@ seul le changelog nomme encore les fonctions retirees.
 Cette modification touche `index.html`, normalement du ressort de la session Desktop. Elle a
 ete faite par la session VS Code **a la demande explicite de Felix** ; voir `PASSATION.md`.
 
+### 11 septembre 2026 — Audit de securite : deux choses a corriger, le reste est sain
+
+Audit complet dans `AUDIT-SECURITE.md`, conduit avec le skill `agamm/claude-code-owasp` (MIT,
+361 etoiles, maintenu), installe hors du depot : il outille la machine, il n'est pas un
+composant du produit. Celui qu'avait trouve Felix, `VicKayro/claude-security-audit`, a ete
+ecarte pour une raison qui compte dans ce projet — **il n'a aucune licence**, donc tous droits
+reserves, donc juridiquement inutilisable.
+
+**Le point le plus grave n'est pas dans le code : la cle SSH de Felix n'a pas de phrase de
+passe**, et le compte qu'elle ouvre a `sudo` sans mot de passe. Une copie du profil Windows
+suffit a obtenir root sur un serveur qui heberge aussi la production d'un tiers. Le correctif
+tient en une commande, mais elle doit etre lancee par Felix : une phrase de passe n'a pas a
+transiter par une session Claude, ou elle serait journalisee.
+
+Le second est connu et attendait le VPS : **le jeton d'analytique est servi dans `index.html`**
+a chaque visiteur. Le changer ne servirait a rien — le nouveau serait publie pareil. Seul le
+relais par le VPS corrige, et cela touche `index.html`, donc la session Desktop.
+
+**Ce que l'audit a surtout etabli, c'est ce qui ne pose pas de probleme**, et c'est la le
+travail utile. L'application n'a **aucun vecteur d'injection** : zero source controlable par un
+attaquant — pas de parametre d'URL, pas de `hash`, pas de `postMessage`, pas de `referrer`. Les
+35 `innerHTML` ne sont alimentes que par les constantes du fichier. Les quatre appels reseau
+sont en `no-cors` sans lecture de reponse.
+
+Et les CVE de jsPDF 2.5.1 **ne sont pas atteignables** : les methodes vulnerables sont
+`addImage`, `addSvgAsImage`, `addMetadata` et `html()`, que l'application appelle zero fois.
+Le signaler comme une faille aurait ete un faux positif de plus.
+
+L'infrastructure, elle, etait deja bien durcie avant nous : `ufw` avec la chaine `DOCKER-USER`
+correctement cablee — le piege classique ou Docker court-circuite le pare-feu est traite —
+SSH par cle seule, TLS 1.2 et 1.3 uniquement, socket Docker en lecture seule sur Traefik.
+Le site de Felix ne partage aucun reseau Docker avec le WordPress voisin : une compromission
+de celui-ci ne l'atteindrait pas directement.
+
+Un faux positif est garde dans le rapport, exprès : le premier test TLS annoncait 1.1 accepte,
+alors que c'etait le client openssl qui refusait de l'offrir. Un audit qui ne dit pas ce qu'il
+a cru a tort n'est pas verifiable.
+
+**Le WordPress voisin n'a pas ete audite.** Felix en a les droits techniques, mais l'acces
+n'est pas l'autorisation : le site appartient a un tiers et contient vraisemblablement des
+donnees personnelles de clients. Il faut l'accord du proprietaire.
+
+### 11 septembre 2026 — Une porte sur le site, et ce qu'elle vaut
+
+Félix veut envoyer l'adresse à sa loge, et veut un mot de passe : « philadelphia ».
+
+**Le site était prêt** — vérifié en navigateur avant de répondre : application chargée,
+manifeste PWA valide, service worker actif sur la nouvelle origine, rechargement hors connexion
+à 200, aucune erreur. Rien ne s'opposait à l'envoi.
+
+**Et le mot de passe est désormais possible**, ce qu'il ne l'était pas le matin. Sur GitHub
+Pages, une porte de ce genre ne protégeait rien : tout était livré au visiteur avant qu'il ne
+tape quoi que ce soit. Depuis qu'il y a le VPS, Traefik répond `401` et ne transmet rien à
+nginx — les 2,3 Mo ne partent pas. C'est exactement le montage qu'`ACCES.md` décrivait comme
+« le seul où la porte est une vraie porte ».
+
+**Deux objections ont été posées avant d'écrire quoi que ce soit, et Félix a tranché.**
+`ACCES.md` enregistrait, du matin même, la décision inverse : un code par frère, révocable
+individuellement. Et « philadelphia » est le mot le plus devinable qui soit — c'est le nom de
+la loge, imprimé dans l'application, dans le `README`, dans un dépôt encore public. Félix a
+maintenu, en connaissance de cause : l'objet est d'écarter le passant, pas de fermer à clé, et
+de pouvoir diffuser l'adresse le soir même. `ACCES.md` porte maintenant cet écart en tête, pour
+qu'une session future ne lise pas un plan qui n'est pas celui qui tourne.
+
+Trois choses ont été faites autour, qui ne changent rien à sa demande mais sans lesquelles elle
+n'aurait pas tenu :
+
+- **L'adresse de secours a été retirée.** `lecherchant.51.195.223.56.sslip.io` servait le site
+  en clair et sans la porte : elle en devenait le contournement pur et simple. L'y soumettre
+  n'aurait rien valu de mieux — Basic en HTTP fait circuler le code en clair.
+- **L'empreinte du code n'est pas dans le dépôt.** bcrypt d'un mot du dictionnaire se casse en
+  quelques secondes : la publier dans un dépôt public reviendrait à publier le code. Elle vit
+  dans un `.env` en `chmod 600` sur le serveur, et le `docker-compose.yml` ne porte qu'une
+  référence.
+- **Une limitation de débit a été ajoutée** — 120 requêtes par minute et par IP — parce
+  qu'`ACCES.md` § 3 l'exigeait : « limiter les tentatives, sans quoi on essaie tous les prénoms
+  du calendrier en une nuit ». Elle ne protège pas d'une devinette heureuse ; elle rend l'essai
+  en masse inutilisable.
+
+**Le piège du jour, et c'est le même que celui de la redirection, en pire.** Docker compose
+interpole aussi le contenu du `.env`, pas seulement celui du `docker-compose.yml` : l'empreinte
+`$2y$05$EXw3...` y a d'abord été lue comme la variable `$EXw3...`, vide. Il faut doubler les
+`$` là aussi. Et le message d'erreur par défaut que j'avais écrit contenait un « : », ce qui a
+fait lire la ligne comme un dictionnaire YAML. Les deux échouaient en silence.
+
+Vérifié de bout en bout : `401` sans code, `401` avec un mauvais, `200` et 2 395 995 octets
+avec le bon. Et surtout, **la porte ne casse pas l'application** : service worker enregistré,
+précache réussi (les trois entrées), rechargement hors connexion à 200. Les requêtes du service
+worker portent bien les identifiants.
+
+Ce qui n'a pas pu être vérifié ici : **le comportement d'une application installée sur l'écran
+d'accueil d'un iPhone**. Safari en mode autonome gère l'authentification Basic à sa façon selon
+les versions, et il peut la redemander à chaque lancement. À faire confirmer par un frère sous
+iOS.
+
+### 11 septembre 2026 — L'ancienne adresse redirige, et le compte à rebours est lancé
+
+La PR #18 est fusionnée, la production tourne sur le `main` fusionné, et
+**https://f3nnnx.github.io/Quizz_Maconnique/ ne sert plus l'application** : elle redirige vers
+`lecherchant.fr`. Vérifié en navigateur réel — l'ancienne adresse conduit à la nouvelle,
+l'application charge, aucune erreur JavaScript.
+
+La redirection vit sur une **branche orpheline `gh-pages`**, sans aucun lien avec `main`, et
+Pages a été basculé dessus. C'était la condition posée : `index.html` ne devait pas être
+modifié pour cela. La branche a été fabriquée avec les commandes de plomberie git
+(`hash-object`, `mktree`, `commit-tree`) plutôt qu'avec un `checkout --orphan`, ce qui évite
+de faire passer l'arbre de travail par un état vide.
+
+**La page ne se contente pas de rediriger, et c'est le vrai travail.** L'application installait
+un service worker sur cette origine. Laissé en place, il continuerait de servir l'ancienne
+version depuis son cache ; et le jour où le dépôt passera en privé, GitHub Pages s'éteindra
+sur un compte gratuit — ce cache deviendrait alors **la seule chose que les frères verraient,
+sans aucun moyen de s'en défaire**. La page désinscrit donc le service worker et vide ses
+caches avant de partir. Le départ ne dépend pas du succès de ce ménage : une promesse qui
+n'aboutit pas laisserait le visiteur bloqué là, d'où un `meta refresh` à 3 secondes, un
+`setTimeout` à 2,5 et un lien visible. `404.html` porte la même page, pour les adresses
+profondes.
+
+**Ce qu'il faut avoir en tête pour la suite.** Le passage du dépôt en privé est décidé, dans
+quelques semaines, le temps que les frères basculent. Ce jour-là, **la redirection meurt avec
+Pages** : elle n'est qu'une passerelle temporaire. Et elle ne profite qu'à ceux qui ouvrent
+l'application pendant la fenêtre — ceux qui ne l'ouvrent pas garderont leur version installée,
+figée, jusqu'à ce qu'ils y reviennent. Plus la fenêtre est longue, moins il en reste.
+
+L'archive du Drive a été refaite : celle de 11h03 ne connaissait ni la migration ni le domaine.
+La nouvelle décrit l'état fusionné, avec tout l'historique git, et elle a été fabriquée sur
+Linux — pour la même raison que l'empreinte (voir l'entrée précédente).
+
+Un défaut de mon propre script a été corrigé au passage : `deploie.sh` vérifiait le site en
+HTTP, où le proxy répond 301. Il n'apprenait donc rien. Il interroge désormais HTTPS.
+
+
 ### 11 septembre 2026 — Le site est sur le VPS, et le VPS n'était pas ce qu'on croyait
 
 La migration est faite, à une étape près : le DNS. Le site tourne sur le VPS, servi par
